@@ -1,116 +1,115 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                xmlns="" id="root">
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns="" id="root">
+    <xsd:element name="root" msdata:IsDataSet="true">
 
         </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="AssignableAssertion" xml:space="preserve">
+  </resheader>
+  <data name="AssignableAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}可被转为{ExpectedType}但它是{ValueType}。</value>
     </data>
-    <data name="ContainAssertion" xml:space="preserve">
+  <data name="ContainAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含{ExpectedValue}，但这里是{Subject}。</value>
     </data>
-    <data name="ContainExpressionAssertion" xml:space="preserve">
+  <data name="ContainExpressionAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含一个元素能匹配{Expression}，但是他们是{Subject}。</value>
     </data>
-    <data name="ContainSingleExpressionAssertion" xml:space="preserve">
+  <data name="ContainSingleExpressionAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}有且仅有一个元素能匹配{Expression}，但是这儿有{MatchedCount}个能够匹配。</value>
     </data>
-    <data name="Could" xml:space="preserve">
+  <data name="Could" xml:space="preserve">
         <value>可以</value>
     </data>
-    <data name="CountAssertion" xml:space="preserve">
+  <data name="CountAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含{ExpectedCount}个元素，但是这里有{ActualCount}个元素。</value>
     </data>
-    <data name="CountGreaterAssertion" xml:space="preserve">
+  <data name="CountGreaterAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含超过{ExpectedCount}个元素，但是这里有{ActualCount}个元素。</value>
     </data>
-    <data name="CountGreaterOrEqualAssertion" xml:space="preserve">
+  <data name="CountGreaterOrEqualAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含起码{ExpectedCount}个元素，但是这里有{ActualCount}个元素。</value>
     </data>
-    <data name="CountLessAssertion" xml:space="preserve">
+  <data name="CountLessAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含少于{ExpectedCount}个元素，但是这里有{ActualCount}个元素。</value>
     </data>
-    <data name="CountLessOrEqualAssertion" xml:space="preserve">
+  <data name="CountLessOrEqualAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}包含至多{ExpectedCount}个元素，但是这里有{ActualCount}个元素。</value>
     </data>
-    <data name="EqualityAssertion" xml:space="preserve">
+  <data name="EqualityAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}为{ExpectedValue}，但它是{Subject}。</value>
     </data>
-    <data name="GreaterAssertion" xml:space="preserve">
+  <data name="GreaterAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}大于{ComparedValue}，但它是{Subject}。</value>
     </data>
-    <data name="GreaterOrEqualAssertion" xml:space="preserve">
+  <data name="GreaterOrEqualAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}大于或等于{ComparedValue}，但它是{Subject}。</value>
     </data>
-    <data name="LessAssertion" xml:space="preserve">
+  <data name="LessAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}小于{ComparedValue}，但它是{Subject}。</value>
     </data>
-    <data name="LessOrEqualAssertion" xml:space="preserve">
+  <data name="LessOrEqualAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}大于或等于{ComparedValue}，但它是{Subject}。</value>
     </data>
-    <data name="MatchAssertion" xml:space="preserve">
+  <data name="MatchAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}匹配{Expression}，但它是{Subject}。</value>
     </data>
-    <data name="Must" xml:space="preserve">
+  <data name="Must" xml:space="preserve">
         <value>必须</value>
     </data>
-    <data name="Not" xml:space="preserve">
+  <data name="Not" xml:space="preserve">
         <value>不</value>
     </data>
-    <data name="NullAssertion" xml:space="preserve">
+  <data name="NullAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}为null，但它是{Subject}。</value>
     </data>
-    <data name="OneOfAssertion" xml:space="preserve">
+  <data name="OneOfAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}为{ExpectedValues}之一，但它是{Subject}。</value>
     </data>
-    <data name="RangeAssertion" xml:space="preserve">
+  <data name="RangeAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}在{MinimumValue}到{MaximumValue}之间，但它是{Subject}。</value>
     </data>
-    <data name="Reason" xml:space="preserve">
+  <data name="Reason" xml:space="preserve">
         <value>原因：{0}</value>
     </data>
-    <data name="Should" xml:space="preserve">
+  <data name="Should" xml:space="preserve">
         <value>应该</value>
     </data>
-    <data name="TypeAssertion" xml:space="preserve">
+  <data name="TypeAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}为{ExpectedType}，但它是{ValueType}。</value>
         <comment>This is the message displayed on the home page.</comment>
     </data>
-    <data name="HaveValueAssertion" xml:space="preserve">
+  <data name="HaveValueAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}有一个值，但它是{Subject}。</value>
     </data>
-    <data name="FlagAssertion" xml:space="preserve">
+  <data name="FlagAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}有flag{Flag}，但它是{Subject}。</value>
     </data>
-    <data name="EnumDefinedAssertion" xml:space="preserve">
+  <data name="EnumDefinedAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}被定义，但它是{Subject}。</value>
     </data>
-    <data name="EmptyAssertion" xml:space="preserve">
+  <data name="EmptyAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}为空，但它是{Subject}。</value>
     </data>
-    <data name="MatchCountAssertion" xml:space="preserve">
+  <data name="MatchCountAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}匹配{Expression}达{ExpectedMatchCount}次，但实际为{ActualMatchCount}次。</value>
     </data>
-    <data name="ContainSingleAssertion" xml:space="preserve">
+  <data name="ContainSingleAssertion" xml:space="preserve">
         <value>数值[{SubjectName}]{AssertionType}{Not}必须有一个元素为{ExpectedValue}，但实际有{MatchedCount}个元素。</value>
     </data>
   <data name="AllSatisfyAssertion" xml:space="preserve">
