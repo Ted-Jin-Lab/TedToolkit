@@ -6,6 +6,9 @@ public static class NumberExtensions
 
     extension(double d)
     {
+        /// <inheritdoc cref="Math.Sign(double)"/>
+        public int Sign => Math.Sign(d);
+
         /// <inheritdoc cref="double.IsNaN(double)"/>
         public bool IsNaN => double.IsNaN(d);
     }
