@@ -35,13 +35,23 @@ public static class UnitsExtensions
 
     extension(Angle angle)
     {
+        /// <summary>
+        /// Returns the complement of this angle (π/2 - angle).
+        /// The complement is the angle that, when added to this angle, equals 90 degrees (π/2 radians).
+        /// </summary>
+        public Angle Complement => Angle.FromDegrees(90).ToUnit(angle.Unit) - angle;
+
+        /// <summary>
+        /// Returns the supplement of this angle (π - angle).
+        /// The supplement is the angle that, when added to this angle, equals 180 degrees (π radians).
+        /// </summary>
+        public Angle Supplement => Angle.FromDegrees(180).ToUnit(angle.Unit) - angle;
+
         /// <inheritdoc cref="Math.Tan"/>
         public double Tan => Math.Tan(angle.Radians);
 
-
         /// <inheritdoc cref="Math.Sin"/>
         public double Sin => Math.Sin(angle.Radians);
-
 
         /// <inheritdoc cref="Math.Cos"/>
         public double Cos => Math.Cos(angle.Radians);
