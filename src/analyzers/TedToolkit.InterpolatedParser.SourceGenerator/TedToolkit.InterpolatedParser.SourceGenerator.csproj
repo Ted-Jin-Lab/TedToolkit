@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\..\libraries\TedToolkit.InterpolatedParser.Sources\*.cs"
+                          Exclude="..\..\libraries\TedToolkit.InterpolatedParser.Sources\Program.cs"
+                          Visible="false"/>
+        <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
+    </ItemGroup>
+</Project>

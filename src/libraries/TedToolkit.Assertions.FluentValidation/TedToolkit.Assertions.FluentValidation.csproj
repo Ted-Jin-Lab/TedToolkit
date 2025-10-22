@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Assertion.FluentValidation</Title>
+        <Description>Use this package with Fluent Validation</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\TedToolkit.Assertions\TedToolkit.Assertions.csproj" />
+        <PackageReference Include="FluentValidation"/>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\ValidationLocalization.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>ValidationLocalization.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Resources\ValidationLocalization.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ValidationLocalization.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+</Project>

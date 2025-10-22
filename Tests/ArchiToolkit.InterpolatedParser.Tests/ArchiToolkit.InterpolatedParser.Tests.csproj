@@ -1,7 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\analyzers\ArchiToolkit.InterpolatedParser.SourceGenerator\ArchiToolkit.InterpolatedParser.SourceGenerator.csproj" OutputItemType="analyzer"/>
-        <ProjectReference Include="..\..\src\libraries\ArchiToolkit.InterpolatedParser\ArchiToolkit.InterpolatedParser.csproj"/>
-        <ProjectReference Include="..\..\src\libraries\ArchiToolkit.RoslynHelper\ArchiToolkit.RoslynHelper.csproj" OutputItemType="analyzer"/>
-    </ItemGroup>
-</Project>

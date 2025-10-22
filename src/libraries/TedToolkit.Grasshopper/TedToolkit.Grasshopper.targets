@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup Condition="'$(KeepTedToolkitAttributes)' == 'true'">
+        <DefineConstants>$(DefineConstants);KEEP_TedToolkit_ATTRIBUTES</DefineConstants> <!-- Define the symbol if true -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Icons/*.png"/>
+    </ItemGroup>
+</Project>

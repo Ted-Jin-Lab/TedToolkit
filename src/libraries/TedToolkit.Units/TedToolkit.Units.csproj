@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Units</Title>
+        <TargetFramework>.net9.0</TargetFramework>
+        <Description>Struct Units Conversions</Description>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    </PropertyGroup>
+</Project>
