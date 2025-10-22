@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\..\libraries\TedToolkit.Grasshopper.Sources\*.cs"
+                          Exclude="..\..\libraries\TedToolkit.Grasshopper.Sources\*_Exclude.cs"
+                          Visible="false"/>
+        <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
+    </ItemGroup>
+</Project>

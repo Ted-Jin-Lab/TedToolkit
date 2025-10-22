@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <TargetExt>.gha</TargetExt>
+        <NoWarn>NU1701;NETSDK1086</NoWarn>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CSharp"/>
+        <PackageReference Include="PolySharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.Grasshopper.SourceGenerator\TedToolkit.Grasshopper.SourceGenerator.csproj" OutputItemType="analyzer" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Grasshopper\TedToolkit.Grasshopper.csproj" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer" />
+        <PackageReference Include="Grasshopper"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Icons/*.png"/>
+    </ItemGroup>
+</Project>

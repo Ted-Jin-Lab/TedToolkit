@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
+    </ItemGroup>
+
+</Project>
