@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>CppInteropGen</Title>
+        <Description>Generate the Codes</Description>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\analyzers\TedToolkit.CppInteropGen.SourceGenerator\bin\$(Configuration)\netstandard2.0\TedToolkit.CppInteropGen.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\libraries\TedToolkit.RoslynHelper\bin\$(Configuration)\netstandard2.0\TedToolkit.RoslynHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\TedToolkit.CppInteropGen.Cpp\csharp_interop.h" Pack="true" PackagePath="build/native/include/" Visible="false"/>
+        <None Include="..\TedToolkit.CppInteropGen.Cpp\TedToolkitCppInteropGenConfig.cmake" Pack="true" PackagePath="build/cmake/" Visible="false"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="
+        $(TargetFramework.StartsWith('netstandard')) Or 
+        $(TargetFramework.StartsWith('net4'))
+    ">
+      <PackageReference Include="NativeLibraryLoader" />
+    </ItemGroup>
+</Project>

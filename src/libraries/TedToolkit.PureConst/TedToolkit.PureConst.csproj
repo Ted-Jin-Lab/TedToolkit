@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Pure Const</Title>
+        <Description>Check the method for pure and the const thing</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\analyzers\TedToolkit.PureConst.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit.PureConst.Analyzer.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.PureConst.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit.RoslynHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
+</Project>

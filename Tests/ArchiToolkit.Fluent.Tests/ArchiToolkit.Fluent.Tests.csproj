@@ -1,7 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\analyzers\ArchiToolkit.Fluent.SourceGenerator\ArchiToolkit.Fluent.SourceGenerator.csproj" OutputItemType="analyzer"/>
-        <ProjectReference Include="..\..\src\libraries\ArchiToolkit.Fluent\ArchiToolkit.Fluent.csproj"/>
-        <ProjectReference Include="..\..\src\libraries\ArchiToolkit.RoslynHelper\ArchiToolkit.RoslynHelper.csproj" OutputItemType="analyzer"/>
-    </ItemGroup>
-</Project>

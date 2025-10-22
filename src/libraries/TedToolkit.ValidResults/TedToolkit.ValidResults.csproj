@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Valid Results</Title>
+        <Description>Get And check the results validations</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\analyzers\TedToolkit.ValidResults.SourceGenerator\bin\$(Configuration)\netstandard2.0\TedToolkit.ValidResults.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.ValidResults.SourceGenerator\bin\$(Configuration)\netstandard2.0\TedToolkit.RoslynHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentResults"/>
+        <PackageReference Include="FluentValidation"/>
+    </ItemGroup>
+</Project>

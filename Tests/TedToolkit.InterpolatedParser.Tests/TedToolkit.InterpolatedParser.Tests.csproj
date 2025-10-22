@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.InterpolatedParser.SourceGenerator\TedToolkit.InterpolatedParser.SourceGenerator.csproj" OutputItemType="analyzer" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.InterpolatedParser\TedToolkit.InterpolatedParser.csproj" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer" />
+    </ItemGroup>
+</Project>

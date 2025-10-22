@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions\TedToolkit.Assertions.csproj" />
+    </ItemGroup>
+</Project>
