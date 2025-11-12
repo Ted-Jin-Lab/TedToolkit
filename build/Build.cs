@@ -25,12 +25,15 @@ using Project = Nuke.Common.ProjectModel.Project;
 namespace NukeBuilder;
 
 [GitHubActions("bump_version", GitHubActionsImage.WindowsLatest,
+    Submodules = GitHubActionsSubmodules.True,
     OnPullRequestBranches = ["main"],
     InvokedTargets = [nameof(BumpVersion)])]
 [GitHubActions("test", GitHubActionsImage.WindowsLatest,
+    Submodules = GitHubActionsSubmodules.True,
     OnPushBranchesIgnore = ["main"],
     InvokedTargets = [nameof(Test)])]
 [GitHubActions("release", GitHubActionsImage.WindowsLatest,
+    Submodules = GitHubActionsSubmodules.True,
     OnPushBranches = ["main"],
     ImportSecrets = [nameof(NuGetApiKey), nameof(GithubToken)],
     InvokedTargets = [nameof(Release)])]
