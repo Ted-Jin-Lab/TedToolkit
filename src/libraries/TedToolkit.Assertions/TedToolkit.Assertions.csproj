@@ -18,4 +18,8 @@
             <DependentUpon>AssertionLocalization.resx</DependentUpon>
         </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TedToolkit.Scopes\TedToolkit.Scopes.csproj" />
+    </ItemGroup>
 </Project>

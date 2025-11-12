@@ -1,15 +1,14 @@
 ﻿using TedToolkit.Assertions.AssertionItems;
 using TedToolkit.Assertions.Assertions;
+using TedToolkit.Scopes;
 
 namespace TedToolkit.Assertions.Execution;
 
 /// <summary>
 /// </summary>
-public class AssertionScope : IDisposable
+public class AssertionScope : ScopeBase<AssertionScope>
 {
-    private static readonly AsyncLocal<AssertionScope?> CurrentScope = new();
     private readonly List<IAssertion> _assertions = [];
-    private readonly AssertionScope? _parent;
     private readonly MergedAssertionStrategy _strategy;
 
     private bool _handledFailure;
@@ -26,11 +25,8 @@ public class AssertionScope : IDisposable
     internal AssertionScope(MergedAssertionStrategy strategy, string context = "", object? tag = null)
     {
         _strategy = strategy;
-        _parent = CurrentScope.Value;
         Context = context;
         Tag = tag;
-
-        CurrentScope.Value = this;
     }
 
     /// <summary>
@@ -54,19 +50,9 @@ public class AssertionScope : IDisposable
     /// </summary>
     public object? Tag { get; }
 
-    internal static AssertionScope Current
-    {
-        get => CurrentScope.Value ?? new AssertionScope(AssertionService.MergedPushStrategy);
-        set => CurrentScope.Value = value;
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
+    protected override void OnDispose()
     {
         if (!_handledFailure) HandleFailure();
-
-        CurrentScope.Value = _parent;
-        GC.SuppressFinalize(this);
     }
 
     /// <summary>
