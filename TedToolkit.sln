@@ -110,6 +110,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Fluent.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Generator", "src\applications\TedToolkit.Units.Generator\TedToolkit.Units.Generator.csproj", "{151B4180-7201-4352-83A7-84ED208D0D65}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scopes", "Scopes", "{BE60A1F8-D937-4687-A027-E8D677065B64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Scopes", "src\libraries\TedToolkit.Scopes\TedToolkit.Scopes.csproj", "{141BF19C-5F38-451F-90B0-C332B7611611}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +230,10 @@ Global
 		{151B4180-7201-4352-83A7-84ED208D0D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151B4180-7201-4352-83A7-84ED208D0D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151B4180-7201-4352-83A7-84ED208D0D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141BF19C-5F38-451F-90B0-C332B7611611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141BF19C-5F38-451F-90B0-C332B7611611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141BF19C-5F38-451F-90B0-C332B7611611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141BF19C-5F38-451F-90B0-C332B7611611}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,5 +276,7 @@ Global
 		{63532A50-0C47-46B5-B262-7F34AA1447CE} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 		{4A9BE35C-C82F-4A4F-839C-14E6ED10591A} = {C40CB50D-D8A5-4267-A0DB-E24911B80E5F}
 		{151B4180-7201-4352-83A7-84ED208D0D65} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
+		{BE60A1F8-D937-4687-A027-E8D677065B64} = {752493CD-971A-4559-B5F1-C931C2AB58BE}
+		{141BF19C-5F38-451F-90B0-C332B7611611} = {BE60A1F8-D937-4687-A027-E8D677065B64}
 	EndGlobalSection
 EndGlobal
