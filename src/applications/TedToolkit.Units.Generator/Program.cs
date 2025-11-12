@@ -11,6 +11,12 @@ Console.WriteLine("Hello, World!");
 
 var assembly = Assembly.GetExecutingAssembly();
 
+var unitFolder = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Parent?.Parent?.Parent?.Parent
+    ?.CreateSubdirectory("libraries").CreateSubdirectory("TedToolkit.Units");
+
+if (unitFolder is null) return;
+var quantitiesFolder = unitFolder.CreateSubdirectory("Quantities");
+
 var regex = new Regex(@"TedToolkit\.Units\.Generator\.Json\..*\.json");
 var options = new JsonSerializerOptions
 {
@@ -27,6 +33,8 @@ foreach (var manifestResourceName in assembly.GetManifestResourceNames())
     }
 
     Console.WriteLine(quantity.Name);
+    var generator = new UnitStructGenerator(quantity);
+    generator.GenerateCode(quantitiesFolder.FullName);
 }
 
 Console.WriteLine("Done");

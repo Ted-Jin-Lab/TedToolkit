@@ -5,4 +5,8 @@
         <Description>Struct Units Conversions</Description>
         <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TedToolkit.Scopes\TedToolkit.Scopes.csproj" />
+    </ItemGroup>
 </Project>
