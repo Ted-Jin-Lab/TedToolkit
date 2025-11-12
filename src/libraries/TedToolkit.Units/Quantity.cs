@@ -2,8 +2,8 @@
 //
 // namespace TedToolkit.Units;
 //
-// public interface IQuantity<out TValue>
-//     where TValue : struct, INumber<TValue>
+// public struct Quantity<TValue>
+//     where TValue : struct
 // {
 //     /// <summary>
 //     /// Value

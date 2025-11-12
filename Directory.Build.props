@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
   <PropertyGroup Condition="$(NeedAlmostAllFrameWorks)">
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net472;net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0;net472;net48;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup Condition="$(NeedAlmostAllFrameWorks) and !$(MSBuildProjectName.EndsWith('Sources'))">
     <PackageReference Include="PolySharp">

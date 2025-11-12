@@ -16,6 +16,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageVersion Include="System.CodeDom" Version="8.0.0" />
     <PackageVersion Include="System.Drawing.Common" Version="9.0.9" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.0" />
     <PackageVersion Include="TUnit" Version="1.0.78" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
     <PackageVersion Include="Seq.Extensions.Logging" Version="8.0.0" />
