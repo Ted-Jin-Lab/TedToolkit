@@ -2,4 +2,4 @@
 using TedToolkit.Fluent.Tests;
 
 [assembly: FluentApi(typeof(BasicType<,>))]
-[assembly: FluentApi(typeof(int))]
+//[assembly: FluentApi(typeof(int))]
