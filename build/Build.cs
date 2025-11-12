@@ -52,14 +52,17 @@ class Build : NukeBuild
         .Before(Restore)
         .Executes(() =>
         {
-            DotNetTasks.DotNetClean(s => s.SetProject(Solution));
+            DotNetTasks.DotNetClean(s => s
+                .SetProject(Solution)
+                .SetConfiguration(Configuration.Release));
         });
 
     Target Restore => d => d
         .DependsOn(Clean)
         .Executes(() =>
         {
-            DotNetTasks.DotNetRestore(s => s.SetProjectFile(Solution));
+            DotNetTasks.DotNetRestore(s => s
+                .SetProjectFile(Solution));
         });
 
     Target Compile => d => d
