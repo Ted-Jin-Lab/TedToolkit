@@ -66,6 +66,10 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            DotNetTasks.DotNetRun(s => s
+                .SetProjectFile(Solution.src.Units.TedToolkit_Units_Generator)
+                .SetConfiguration(Configuration.Release));
+            
             DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration.Release));
