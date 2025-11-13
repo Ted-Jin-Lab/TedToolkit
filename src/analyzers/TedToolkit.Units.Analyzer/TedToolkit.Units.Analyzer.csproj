@@ -9,7 +9,7 @@
         <ProjectReference Include="..\..\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj"/>
     </ItemGroup>
     <ItemGroup>
-<!--        <PackageReference Include="MathNet.Symbolics"/>-->
+        <PackageReference Include="MathNet.Symbolics"/>
         <PackageReference Include="PolySharp">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -25,7 +25,7 @@ public class UnitsGenerator : IIncrementalGenerator
         if (tDataType is null) return;
 
         var arguments = attrData.ConstructorArguments;
-        if (arguments.Length < 8) return;
+        if (arguments.Length < 9) return;
 
         var length = (byte)attrData.ConstructorArguments[0].Value!;
         var mass = (byte)attrData.ConstructorArguments[1].Value!;
@@ -35,6 +35,7 @@ public class UnitsGenerator : IIncrementalGenerator
         var amount = (byte)attrData.ConstructorArguments[5].Value!;
         var luminousIntensity = (byte)attrData.ConstructorArguments[6].Value!;
         var access = (byte)attrData.ConstructorArguments[7].Value!;
+        var simplify = (bool)attrData.ConstructorArguments[8].Value!;
 
         try
         {
@@ -42,13 +43,15 @@ public class UnitsGenerator : IIncrementalGenerator
 
             foreach (var quantity in Quantity.Quantities.Result)
             {
-                new UnitStructGenerator(quantity, tDataType, unit, access is not 0)
+                new UnitStructGenerator(quantity, tDataType, unit, access is not 0, simplify)
                     .GenerateCode(context);
             }
         }
         catch (Exception e)
         {
-            context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor("ERR", e.Message + "\n" + e.StackTrace, e.Message + "\n" + e.StackTrace, "Error", DiagnosticSeverity.Error, true), Location.None));
+            var msg = e.GetType().Name + ": " + e.Message + "\n" + e.StackTrace;
+            context.ReportDiagnostic(Diagnostic.Create(
+                new DiagnosticDescriptor("ERR", msg, msg, "Error", DiagnosticSeverity.Error, true), Location.None));
         }
     }
 }

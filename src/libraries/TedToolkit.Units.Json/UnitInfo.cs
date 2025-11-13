@@ -5,6 +5,7 @@ public readonly record struct UnitInfo(Unit Unit, Prefix Prefix)
     public PrefixInfo PrefixInfo => PrefixInfo.Entries[Prefix];
 
     public string Name => Prefix is Prefix.None ? Unit.SingularName : Prefix + Unit.SingularName;
+    public string Names => Prefix is Prefix.None ? Unit.PluralName : Prefix + Unit.PluralName;
 
     public string UnitToBase
     {
