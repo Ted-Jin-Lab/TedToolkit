@@ -14,7 +14,7 @@ public sealed class UnitsAttribute<TData>(
     AmountOfSubstanceUnit amount = AmountOfSubstanceUnit.Mole,
     LuminousIntensityUnit luminousIntensity = LuminousIntensityUnit.Candela,
     Access access = Access.Public,
-    bool simplifyExpression = false) : Attribute
+    bool simplifyExpression = true) : Attribute
     where TData : struct,
 #if NET8_0_OR_GREATER
     System.Numerics.INumber<TData>;

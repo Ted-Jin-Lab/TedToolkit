@@ -3,8 +3,9 @@
 public class ExampleTest
 {
     [Test]
-    public Task DummyTest()
+    public async Task DummyTest()
     {
-        return Task.CompletedTask;
+        var meter = new Length(5, LengthUnit.Meter);
+        await Assert.That(meter.As(LengthUnit.Meter)).IsEqualTo(5);
     }
 }

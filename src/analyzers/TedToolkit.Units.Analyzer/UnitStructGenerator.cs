@@ -50,7 +50,7 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                                         SyntaxKind.SimpleAssignmentExpression,
                                         IdentifierName("_value"),
                                         info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
-                                            .ToExpression("value", simplify))),
+                                            .ToExpression("value", simplify, typeName.Symbol))),
                                     ReturnStatement()
                                 ])
                             )),
@@ -69,7 +69,7 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                                 CreateSwitchStatement(info =>
                                 [
                                     ReturnStatement(info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
-                                        .ToExpression("_value", simplify))
+                                        .ToExpression("_value", simplify, typeName.Symbol))
                                 ])
                             )),
 

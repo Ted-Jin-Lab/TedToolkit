@@ -24,10 +24,15 @@ public sealed class Unit
 
     private static string GetFunc(string func)
     {
-        return Regex.Replace(func
+        return  RemoveSci(func
                 .Replace("d", "")
-                .Replace("Math.", ""),
-            @"[-]?\d+(\.\d+)?[eE][+-]?\d+", 
+                .Replace("Math.", ""));
+    }
+
+    public static string RemoveSci(string str)
+    {
+        return Regex.Replace(str ,
+            @"[-]?\d+(\.\d+)?[eE][+-]?\d+(\.\d+)?", 
             match => SciToString(match.Value));
     }
     
@@ -43,7 +48,7 @@ public sealed class Unit
 
         var eIndex = sci.IndexOfAny(['e', 'E']);
         var mantissa = sci[..eIndex];
-        var exponent = int.Parse(sci[(eIndex + 1)..]);
+        var exponent = (int)double.Parse(sci[(eIndex + 1)..]);
 
         var intPart = mantissa;
         var fracPart = "";
