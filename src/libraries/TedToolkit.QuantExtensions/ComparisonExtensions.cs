@@ -1,4 +1,7 @@
-﻿namespace TedToolkit.QuantExtensions;
+﻿using UnitsNet;
+using UnitsNet.Units;
+
+namespace TedToolkit.QuantExtensions;
 
 public static class ComparisonExtensions
 {

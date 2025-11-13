@@ -1,6 +1,6 @@
-namespace TedToolkit.Units.Generator.JsonTypes;
+namespace TedToolkit.Units.Json;
 
-internal enum Prefix
+public enum Prefix
 {
     // SI prefixes
     Yocto,

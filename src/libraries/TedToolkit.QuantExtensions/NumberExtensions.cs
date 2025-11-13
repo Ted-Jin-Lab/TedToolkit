@@ -18,8 +18,7 @@ public static class NumberExtensions
 
     /// <inheritdoc cref="Math.Pow(double, double)"/>
     public static double Pow(this double x, double y) => Math.Pow(x, y);
-
-
+    
     /// <inheritdoc cref="Math.Sqrt(double)"/>
     public static double Sqrt(this double d) => Math.Sqrt(d);
 

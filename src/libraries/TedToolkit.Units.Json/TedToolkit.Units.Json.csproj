@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <NoWarn>CS1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\..\..\externals\UnitsNet\Common\UnitDefinitions\*.json" >
+            <Link>Json\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Text.Json" />
+    </ItemGroup>
+</Project>

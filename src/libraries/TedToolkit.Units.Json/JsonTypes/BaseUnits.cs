@@ -1,6 +1,6 @@
-namespace TedToolkit.Units.Generator.JsonTypes;
+namespace TedToolkit.Units.Json;
 
-internal struct BaseUnits()
+public struct BaseUnits()
 {
     /// <summary>AmountOfSubstance.</summary>
     public string N { get; set; } = string.Empty;

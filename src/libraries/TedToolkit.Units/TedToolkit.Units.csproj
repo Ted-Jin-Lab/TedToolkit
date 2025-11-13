@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit.Units.Analyzer.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit.RoslynHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Units.Json\bin\$(Configuration)\netstandard2.0\TedToolkit.Units.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
       <ProjectReference Include="..\TedToolkit.Scopes\TedToolkit.Scopes.csproj" />
     </ItemGroup>
 </Project>

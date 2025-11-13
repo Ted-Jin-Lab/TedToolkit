@@ -1,40 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using TedToolkit.Units.Generator;
-using TedToolkit.Units.Generator.JsonTypes;
+using TedToolkit.Units.Json;
 
 Console.WriteLine("Hello, World!");
-
-var assembly = Assembly.GetExecutingAssembly();
 
 var unitFolder = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Parent?.Parent?.Parent?.Parent
     ?.CreateSubdirectory("libraries").CreateSubdirectory("TedToolkit.Units");
 
 if (unitFolder is null) return;
 var quantitiesFolder = unitFolder.CreateSubdirectory("Quantities");
+var unitsFolder = unitFolder.CreateSubdirectory("Units");
 
-var regex = new Regex(@"TedToolkit\.Units\.Generator\.Json\..*\.json");
-var options = new JsonSerializerOptions
+foreach (var quantity in await Quantity.Quantities)
 {
-    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false) }
-};
-foreach (var manifestResourceName in assembly.GetManifestResourceNames())
-{
-    if (!regex.IsMatch(manifestResourceName)) continue;
-    Quantity quantity;
-    await using (var stream = assembly.GetManifestResourceStream(manifestResourceName))
-    {
-        if (stream is null) continue;
-        quantity = await JsonSerializer.DeserializeAsync<Quantity>(stream, options);
-    }
-
     Console.WriteLine(quantity.Name);
-    var generator = new UnitStructGenerator(quantity);
-    generator.GenerateCode(quantitiesFolder.FullName);
+    var structGenerator = new UnitStructGenerator(quantity);
+    structGenerator.GenerateCode(quantitiesFolder.FullName);
+    var enumGenerator = new UnitEnumGenerator(quantity);
+    enumGenerator.GenerateCode(unitsFolder.FullName);
 }
 
 Console.WriteLine("Done");

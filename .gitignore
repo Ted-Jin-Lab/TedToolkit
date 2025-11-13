@@ -365,3 +365,5 @@ FodyWeavers.xsd
 .idea
 
 temp
+
+*.g.cs
