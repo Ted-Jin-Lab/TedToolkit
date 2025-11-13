@@ -13,9 +13,9 @@ using TedToolkit.QuantExtensions;
 using TedToolkit.Units.Json;
 using TedToolkit.ValidResults;
 
-
-Console.WriteLine(int.Parse("0.0"));
+Console.WriteLine(Thread.CurrentThread.CurrentCulture.Name);
 return;
+
 foreach (var quantity in await Quantity.Quantities)
 {
     var regex = new Regex(@"[-]?\d+(\.\d+)?[eE][+-]?\d+");
