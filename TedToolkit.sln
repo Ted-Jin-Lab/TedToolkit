@@ -105,6 +105,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Units", "Units", "{BF802F5C-A96C-464C-B337-6225DAFE1AC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units", "src\libraries\TedToolkit.Units\TedToolkit.Units.csproj", "{63532A50-0C47-46B5-B262-7F34AA1447CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8D597C86-3C37-4E27-B197-403FB689BF33} = {8D597C86-3C37-4E27-B197-403FB689BF33}
+		{005715D8-219D-494A-9222-834C40C8B034} = {005715D8-219D-494A-9222-834C40C8B034}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Fluent.Tests", "tests\TedToolkit.Fluent.Tests\TedToolkit.Fluent.Tests.csproj", "{4A9BE35C-C82F-4A4F-839C-14E6ED10591A}"
 EndProject
@@ -113,6 +117,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scopes", "Scopes", "{BE60A1F8-D937-4687-A027-E8D677065B64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Scopes", "src\libraries\TedToolkit.Scopes\TedToolkit.Scopes.csproj", "{141BF19C-5F38-451F-90B0-C332B7611611}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Analyzer", "src\analyzers\TedToolkit.Units.Analyzer\TedToolkit.Units.Analyzer.csproj", "{005715D8-219D-494A-9222-834C40C8B034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Tests", "tests\TedToolkit.Units.Tests\TedToolkit.Units.Tests.csproj", "{EE91776E-9DE9-4CF1-8CF2-618893029825}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Json", "src\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj", "{8D597C86-3C37-4E27-B197-403FB689BF33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -234,6 +244,18 @@ Global
 		{141BF19C-5F38-451F-90B0-C332B7611611}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{141BF19C-5F38-451F-90B0-C332B7611611}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{141BF19C-5F38-451F-90B0-C332B7611611}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005715D8-219D-494A-9222-834C40C8B034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005715D8-219D-494A-9222-834C40C8B034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005715D8-219D-494A-9222-834C40C8B034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005715D8-219D-494A-9222-834C40C8B034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE91776E-9DE9-4CF1-8CF2-618893029825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE91776E-9DE9-4CF1-8CF2-618893029825}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE91776E-9DE9-4CF1-8CF2-618893029825}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE91776E-9DE9-4CF1-8CF2-618893029825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D597C86-3C37-4E27-B197-403FB689BF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D597C86-3C37-4E27-B197-403FB689BF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D597C86-3C37-4E27-B197-403FB689BF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D597C86-3C37-4E27-B197-403FB689BF33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -278,5 +300,8 @@ Global
 		{151B4180-7201-4352-83A7-84ED208D0D65} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 		{BE60A1F8-D937-4687-A027-E8D677065B64} = {752493CD-971A-4559-B5F1-C931C2AB58BE}
 		{141BF19C-5F38-451F-90B0-C332B7611611} = {BE60A1F8-D937-4687-A027-E8D677065B64}
+		{005715D8-219D-494A-9222-834C40C8B034} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
+		{EE91776E-9DE9-4CF1-8CF2-618893029825} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
+		{8D597C86-3C37-4E27-B197-403FB689BF33} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 	EndGlobalSection
 EndGlobal

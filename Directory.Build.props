@@ -1,60 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <PropertyGroup>
-    <Version>2025.11.12.0</Version>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
-    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/ArchiDog1998/TedToolkit</RepositoryUrl>
-    <IsTestProject>$(MSBuildProjectDirectory.Contains('\tests\'))</IsTestProject>
-    <IsRoslynProject>$(MSBuildProjectDirectory.Contains('\analyzers\'))</IsRoslynProject>
-    <IsApplicationProject>$(MSBuildProjectDirectory.Contains('\applications\'))</IsApplicationProject>
-    <IsLibraryProject>$(MSBuildProjectDirectory.Contains('\libraries\'))</IsLibraryProject>
-    <NeedPackage>False</NeedPackage>
-    <NeedPackage Condition="!$(IsTestProject) and !$(IsApplicationProject) and !$(IsRoslynProject)  and '$(Configuration)' == 'Release'">True</NeedPackage>
-    <NeedRoslyn>False</NeedRoslyn>
-    <NeedRoslyn Condition="!$(IsTestProject) and $(IsRoslynProject)">True</NeedRoslyn>
-    <NeedAlmostAllFrameWorks>False</NeedAlmostAllFrameWorks>
-    <NeedAlmostAllFrameWorks Condition="!$(IsTestProject) and $(IsLibraryProject) and !$(MSBuildProjectName.EndsWith('RoslynHelper'))">True</NeedAlmostAllFrameWorks>
-    <NeedTestsPackage>False</NeedTestsPackage>
-    <NeedTestsPackage Condition="$(IsTestProject) and $(MSBuildProjectName.EndsWith('Tests'))">True</NeedTestsPackage>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(NeedTestsPackage)">
-    <IsPackable>false</IsPackable>
-    <TargetFramework>net9.0</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup Condition="$(NeedTestsPackage)">
-    <PackageReference Include="TUnit" />
-  </ItemGroup>
-  <PropertyGroup Condition="$(NeedPackage)">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>ArchiTed</Authors>
-  </PropertyGroup>
-  <ItemGroup Condition="$(NeedPackage)">
-    <None Include="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-  <PropertyGroup Condition="$(NeedRoslyn)">
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <IsRoslynComponent>true</IsRoslynComponent>
-  </PropertyGroup>
-  <ItemGroup Condition="$(NeedRoslyn)">
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-  </ItemGroup>
-  <PropertyGroup Condition="$(NeedAlmostAllFrameWorks)">
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0;net472;net48;netstandard2.0</TargetFrameworks>
-  </PropertyGroup>
-  <ItemGroup Condition="$(NeedAlmostAllFrameWorks) and !$(MSBuildProjectName.EndsWith('Sources'))">
-    <PackageReference Include="PolySharp">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup>
+        <Version>2025.11.12.0</Version>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/ArchiDog1998/TedToolkit</RepositoryUrl>
+        <IsTestProject>$(MSBuildProjectDirectory.Contains('\tests\'))</IsTestProject>
+        <IsRoslynProject>$(MSBuildProjectDirectory.Contains('\analyzers\'))</IsRoslynProject>
+        <IsApplicationProject>$(MSBuildProjectDirectory.Contains('\applications\'))</IsApplicationProject>
+        <IsLibraryProject>$(MSBuildProjectDirectory.Contains('\libraries\'))</IsLibraryProject>
+        <NeedPackage>False</NeedPackage>
+        <NeedPackage Condition="!$(IsTestProject) and !$(IsApplicationProject) and !$(IsRoslynProject)  and '$(Configuration)' == 'Release'">True</NeedPackage>
+        <NeedRoslyn>False</NeedRoslyn>
+        <NeedRoslyn Condition="!$(IsTestProject) and $(IsRoslynProject)">True</NeedRoslyn>
+        <NeedAlmostAllFrameWorks>False</NeedAlmostAllFrameWorks>
+        <NeedAlmostAllFrameWorks Condition="!$(IsTestProject) and $(IsLibraryProject) and !$(MSBuildProjectName.EndsWith('RoslynHelper'))">True</NeedAlmostAllFrameWorks>
+        <NeedTestsPackage>False</NeedTestsPackage>
+        <NeedTestsPackage Condition="$(IsTestProject) and $(MSBuildProjectName.EndsWith('Tests'))">True</NeedTestsPackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(NeedTestsPackage)">
+        <IsPackable>false</IsPackable>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup Condition="$(NeedTestsPackage)">
+        <PackageReference Include="TUnit"/>
+    </ItemGroup>
+    <PropertyGroup Condition="$(NeedPackage)">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Authors>ArchiTed</Authors>
+    </PropertyGroup>
+    <ItemGroup Condition="$(NeedPackage)">
+        <None Include="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+    <PropertyGroup Condition="$(NeedRoslyn)">
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+    </PropertyGroup>
+    <ItemGroup Condition="$(NeedRoslyn)">
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+    </ItemGroup>
+    <PropertyGroup Condition="$(NeedAlmostAllFrameWorks)">
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net472;net48;netstandard2.0</TargetFrameworks>
+    </PropertyGroup>
+    <ItemGroup Condition="$(NeedAlmostAllFrameWorks) and !$(MSBuildProjectName.EndsWith('Sources'))">
+        <PackageReference Include="PolySharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 </Project>

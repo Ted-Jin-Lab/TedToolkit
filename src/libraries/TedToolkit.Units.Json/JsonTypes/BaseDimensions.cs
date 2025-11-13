@@ -1,6 +1,6 @@
-﻿namespace TedToolkit.Units.Generator.JsonTypes;
+﻿namespace TedToolkit.Units.Json;
 
-internal struct BaseDimensions()
+public struct BaseDimensions()
 {
     /// <summary>AmountOfSubstance.</summary>
     public int N { get; set; } = 0;

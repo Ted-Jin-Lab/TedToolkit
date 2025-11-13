@@ -12,6 +12,7 @@
         <EmbeddedResource Include="..\..\..\externals\UnitsNet\Common\UnitDefinitions\*.json" >
             <Link>Json\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </EmbeddedResource>
+        <ProjectReference Include="..\..\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj" />
     </ItemGroup>
 
     <ItemGroup>

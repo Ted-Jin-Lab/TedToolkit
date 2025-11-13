@@ -1,11 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>TedToolkit.Pure.Tests</RootNamespace>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing"/>
-    </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\..\src\analyzers\TedToolkit.PureConst.Analyzer\TedToolkit.PureConst.Analyzer.csproj" />
     </ItemGroup>
