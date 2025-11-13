@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace TedToolkit.Units.Json;
 
@@ -8,14 +8,18 @@ public struct Quantity()
 {
     private static Quantity[]? _quantities;
 
-    private static async ValueTask<Quantity[]> GetQuantities()
+    private static async Task<Quantity[]> GetQuantities()
     {
         if (_quantities is not null) return _quantities;
 
         var regex = new Regex(@"TedToolkit\.Units\.Json\.Json\..*\.json");
-        var options = new JsonSerializerOptions
+        var settings = new JsonSerializerSettings
         {
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false) }
+            Converters =
+            {
+                new StringEnumConverter(namingStrategy: new Newtonsoft.Json.Serialization.CamelCaseNamingStrategy(),
+                    allowIntegerValues: false)
+            }
         };
 
         var assembly = typeof(Quantity).Assembly;
@@ -28,8 +32,10 @@ public struct Quantity()
 #if NET6_0_OR_GREATER
                     await
 #endif
-                        using var stream = assembly.GetManifestResourceStream(manifestResourceName);
-                    return await JsonSerializer.DeserializeAsync<Quantity>(stream!, options);
+                    using var stream = assembly.GetManifestResourceStream(manifestResourceName);
+                    using var reader = new StreamReader(stream!);
+                    var str = await reader.ReadToEndAsync();
+                    return JsonConvert.DeserializeObject<Quantity>(str, settings);
                 })
         );
 
@@ -38,7 +44,7 @@ public struct Quantity()
         return _quantities = quantities.Where(q => !deltaEntities.Contains(q.Name)).ToArray();
     }
 
-    public static ValueTask<Quantity[]> Quantities => GetQuantities();
+    public static Task<Quantity[]> Quantities => GetQuantities();
 
     public bool IsNoDimensions => BaseDimensions == default;
     public BaseDimensions BaseDimensions { get; set; } = new(); // Default to empty

@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\*.dll"  />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Units\TedToolkit.Units.csproj"/>
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit*.dll" />
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Units\TedToolkit.Units.csproj" />
     
     </ItemGroup>
 </Project>

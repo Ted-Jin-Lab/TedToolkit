@@ -48,7 +48,7 @@ public class UnitsGenerator : IIncrementalGenerator
         }
         catch (Exception e)
         {
-            context.AddSource("ERROR", e.Message + "\n" + e.StackTrace);
+            context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor("ERR", e.Message + "\n" + e.StackTrace, e.Message + "\n" + e.StackTrace, "Error", DiagnosticSeverity.Error, true), Location.None));
         }
     }
 }
