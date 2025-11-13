@@ -1,23 +1,27 @@
-﻿using MathNet.Symbolics;
+﻿using System.Text.RegularExpressions;
+using MathNet.Symbolics;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TedToolkit.Units.Json;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
+
 namespace TedToolkit.Units.Analyzer;
+
 
 internal static class Helpers
 {
-    public static ExpressionSyntax ToExpression(this string expression, string parameterName, bool simplify)
+    public static ExpressionSyntax ToExpression(this string expression, string parameterName, bool simplify, ITypeSymbol dataType)
     {
         try
         {
             expression = expression.SetExpressionValue("value");
             if (simplify)
             {
-                expression = SymbolicExpression.Parse(expression).ToString(); //TODO: Better simplify.
+                expression = Unit.RemoveSci(SymbolicExpression.Parse(expression).ToString()); //TODO: Better simplify.
             }
             expression = expression
+                .AddPostfix(dataType)
                 .Replace("PI", "global::System.Math.PI")
                 .Replace("value", parameterName);
             return ParseExpression(expression);
@@ -28,6 +32,35 @@ internal static class Helpers
                 SyntaxKind.StringLiteralExpression,
                 Literal(expression + ": " + e.Message));
         }
+    }
+
+    private static string AddPostfix(this string formula, ITypeSymbol dataType)
+    {
+        return Regex.Replace(formula, @"\d+(?:\.\d+)?", m =>
+        {
+            var num = m.Value;
+
+            // 如果是小数 → double
+            if (!num.Contains('.'))
+            {
+                if (int.TryParse(num, out _))
+                {
+                    return num;
+                }
+
+                if (long.TryParse(num, out _))
+                {
+                    return num + "l";
+                }
+            }
+
+            if (dataType.SpecialType is SpecialType.System_Decimal && decimal.TryParse(num, out _))
+            {
+                return num + "m";
+            }
+
+            return num + "d";
+        });
     }
     
     public static string GetUnitToSystem(this UnitInfo info, UnitSystem system, BaseDimensions dimensions)
