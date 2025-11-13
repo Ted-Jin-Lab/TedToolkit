@@ -1,7 +1,9 @@
 namespace TedToolkit.Units.Json;
 
-public enum Prefix
+public enum Prefix : byte
 {
+    None,
+    
     // SI prefixes
     Yocto,
     Zepto,

@@ -40,6 +40,7 @@ public struct Quantity()
 
     public static ValueTask<Quantity[]> Quantities => GetQuantities();
 
+    public bool IsNoDimensions => BaseDimensions == default;
     public BaseDimensions BaseDimensions { get; set; } = new(); // Default to empty
     public string BaseUnit { get; set; } = string.Empty;
     public string AffineOffsetType { get; set; } = string.Empty;
@@ -49,8 +50,15 @@ public struct Quantity()
     public int LogarithmicScalingFactorValue => int.Parse(LogarithmicScalingFactor);
     public string LogarithmicScalingFactor { get; set; } = "1";
     public string Name { get; set; } = string.Empty;
+    public string UnitName => Name + "Unit";
     public Unit[] Units { get; set; } = [];
     public string XmlDocRemarks { get; set; } = string.Empty;
     public string XmlDocSummary { get; set; } = null!;
     public string ObsoleteText { get; set; } = string.Empty;
+
+    public IEnumerable<UnitInfo> UnitsInfos => Units.SelectMany(u => (IEnumerable<UnitInfo>)
+    [
+        new UnitInfo(u, Prefix.None),
+        ..u.Prefixes.OrderBy(p => p).Select(p => new UnitInfo(u, p))
+    ]);
 }

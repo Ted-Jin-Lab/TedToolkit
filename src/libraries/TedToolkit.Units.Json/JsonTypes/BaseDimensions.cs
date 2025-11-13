@@ -1,25 +1,13 @@
 ﻿namespace TedToolkit.Units.Json;
 
-public struct BaseDimensions()
-{
-    /// <summary>AmountOfSubstance.</summary>
-    public int N { get; set; } = 0;
-
-    /// <summary>ElectricCurrent.</summary>
-    public int I { get; set; } = 0;
-
-    /// <summary>Length.</summary>
-    public int L { get; set; } = 0;
-
-    /// <summary>LuminousIntensity.</summary>
-    public int J { get; set; } = 0;
-
-    /// <summary>Mass.</summary>
-    public int M { get; set; } = 0;
-
-    /// <summary>Temperature.</summary>
-    public int Θ { get; set; } = 0;
-
-    /// <summary>Time.</summary>
-    public int T { get; set; } = 0;
-}
+/// <summary>
+/// 
+/// </summary>
+/// <param name="N">AmountOfSubstance</param>
+/// <param name="I">ElectricCurrent</param>
+/// <param name="L">Length</param>
+/// <param name="J">LuminousIntensity</param>
+/// <param name="M">Mass</param>
+/// <param name="Θ">Temperature</param>
+/// <param name="T">Time</param>
+public readonly record struct BaseDimensions(int N, int I, int L, int J, int M, int Θ, int T);
