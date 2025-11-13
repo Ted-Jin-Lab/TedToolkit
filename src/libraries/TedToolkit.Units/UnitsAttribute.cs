@@ -1,4 +1,5 @@
-﻿namespace TedToolkit.Units;
+﻿#pragma warning disable CS9113 // Parameter is unread.
+namespace TedToolkit.Units;
 
 /// <summary>
 /// Generate the Data.
@@ -13,8 +14,7 @@ public sealed class UnitsAttribute<TData>(
     TemperatureUnit temperature = TemperatureUnit.Kelvin,
     AmountOfSubstanceUnit amount = AmountOfSubstanceUnit.Mole,
     LuminousIntensityUnit luminousIntensity = LuminousIntensityUnit.Candela,
-    Access access = Access.Public,
-    bool simplifyExpression = true) : Attribute
+    UnitFlag flag = UnitFlag.SimplifyExpression) : Attribute
     where TData : struct,
 #if NET8_0_OR_GREATER
     System.Numerics.INumber<TData>;

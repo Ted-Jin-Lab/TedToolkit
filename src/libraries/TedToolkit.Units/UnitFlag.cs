@@ -3,15 +3,21 @@
 /// <summary>
 /// The Generated Type access
 /// </summary>
-public enum Access : byte
+[Flags]
+public enum UnitFlag : byte
 {
     /// <summary>
-    /// 
+    /// Nothing
     /// </summary>
-    Internal,
+    None = 0,
     
     /// <summary>
     /// 
     /// </summary>
-    Public,
+    InternalUnit = 1 << 0,
+
+    /// <summary>
+    /// 
+    /// </summary>
+    SimplifyExpression = 1 << 1,
 }
