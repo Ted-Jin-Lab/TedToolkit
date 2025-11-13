@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\TedToolkit.Units.Analyzer.csproj" OutputItemType="analyzer"/>
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\*.dll"  />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.Units\TedToolkit.Units.csproj"/>
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer"/>
     
     </ItemGroup>
 </Project>

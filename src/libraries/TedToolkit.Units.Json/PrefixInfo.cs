@@ -1,9 +1,6 @@
-﻿namespace TedToolkit.Units.Json;
+﻿using System.Text;
 
-public static class PrefixExtensions
-{
-    public static PrefixInfo GetInfo(this Prefix prefix) => PrefixInfo.Entries[prefix];
-}
+namespace TedToolkit.Units.Json;
 
 public struct PrefixInfo
 {
@@ -16,7 +13,7 @@ public struct PrefixInfo
         new PrefixInfo(Prefix.Yocto, -24, PrefixType.SI, "y", (Chinese, "夭")),
         new PrefixInfo(Prefix.Zepto, -21, PrefixType.SI, "z", (Chinese, "仄")),
         new PrefixInfo(Prefix.Atto, -18, PrefixType.SI, "a", (Russian, "а"), (Chinese, "阿")),
-        new PrefixInfo(Prefix.Femto, 15, PrefixType.SI, "f", (Russian, "ф"), (Chinese, "飞")),
+        new PrefixInfo(Prefix.Femto, -15, PrefixType.SI, "f", (Russian, "ф"), (Chinese, "飞")),
         new PrefixInfo(Prefix.Pico, -12, PrefixType.SI, "p", (Russian, "п"), (Chinese, "皮")),
         new PrefixInfo(Prefix.Nano, -9, PrefixType.SI, "n", (Russian, "н"), (Chinese, "纳")),
         new PrefixInfo(Prefix.Micro, -6, PrefixType.SI, "µ", (Russian, "мк"), (Chinese, "微")),
@@ -70,6 +67,48 @@ public struct PrefixInfo
     ///     The unit prefix abbreviation, such as "k" for kilo or "m" for milli.
     /// </summary>
     private string SiPrefix { get; }
+
+    public string BaseToUnit
+    {
+        get
+        {
+            switch (Type)
+            {
+                case PrefixType.SI:
+                    return $"{{x}} {(Factor > 0 ? "*" : "/")} 1{new string('0', Math.Abs(Factor))}";
+                case PrefixType.Binary:
+                    var builder = new StringBuilder().Append("{x}");
+                    for (var i = 0; i < Factor; i++)
+                    {
+                        builder.Append(" * 1024");
+                    }
+                    return builder.ToString();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+    }
+
+    public string UnitToBase 
+    {
+        get
+        {
+            switch (Type)
+            {
+                case PrefixType.SI:
+                    return $"{{x}} {(Factor > 0 ? "/" : "*")} 1{new string('0', Math.Abs(Factor))}";
+                case PrefixType.Binary:
+                    var builder = new StringBuilder().Append("{x}");
+                    for (var i = 0; i < Factor; i++)
+                    {
+                        builder.Append(" / 1024");
+                    }
+                    return builder.ToString();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+    }
 
     /// <summary>
     ///     Mapping from culture name to localized prefix abbreviation.

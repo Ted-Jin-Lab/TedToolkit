@@ -1,15 +1,22 @@
 ﻿namespace TedToolkit.Units;
 
-public readonly struct Length<TData> where TData : struct
+public readonly partial struct Length
 {
-    private readonly TData _value;
-
-    public Length(TData value, LengthUnit unit)
+    private readonly double _value;
+    public Length(double value, LengthUnit unit)
     {
-        
+        switch (unit)
+        {
+            case LengthUnit.Meter:
+                _value = value;
+                return;
+            
+            default:
+                throw new ArgumentOutOfRangeException(nameof(unit), unit, null);
+        }
     }
 
-    public TData As(LengthUnit unit)
+    public double As(LengthUnit unit)
     {
         return _value;
     }

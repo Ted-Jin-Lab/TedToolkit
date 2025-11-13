@@ -1,3 +1,3 @@
 ﻿using TedToolkit.Units;
 
-[assembly:Units<double>]
+[assembly:Units<double>(LengthUnit.CentiMeter, access:Access.Internal)]

@@ -14,11 +14,13 @@ var unitsFolder = unitFolder.CreateSubdirectory("Units");
 
 foreach (var quantity in await Quantity.Quantities)
 {
-    Console.WriteLine(quantity.Name);
-    var structGenerator = new UnitStructGenerator(quantity);
-    structGenerator.GenerateCode(quantitiesFolder.FullName);
     var enumGenerator = new UnitEnumGenerator(quantity);
     enumGenerator.GenerateCode(unitsFolder.FullName);
 }
 
+foreach (var quantity in await Quantity.Quantities)
+{
+    if(!quantity.IsNoDimensions) continue;
+    Console.WriteLine(quantity.Name);
+}
 Console.WriteLine("Done");

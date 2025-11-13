@@ -16,7 +16,7 @@
         <NeedRoslyn>False</NeedRoslyn>
         <NeedRoslyn Condition="!$(IsTestProject) and $(IsRoslynProject)">True</NeedRoslyn>
         <NeedAlmostAllFrameWorks>False</NeedAlmostAllFrameWorks>
-        <NeedAlmostAllFrameWorks Condition="!$(IsTestProject) and $(IsLibraryProject) and !$(MSBuildProjectName.EndsWith('RoslynHelper'))">True</NeedAlmostAllFrameWorks>
+        <NeedAlmostAllFrameWorks Condition="!$(IsTestProject) and $(IsLibraryProject) and !$(MSBuildProjectName.EndsWith('RoslynHelper')) and !$(MSBuildProjectName.EndsWith('Json'))">True</NeedAlmostAllFrameWorks>
         <NeedTestsPackage>False</NeedTestsPackage>
         <NeedTestsPackage Condition="$(IsTestProject) and $(MSBuildProjectName.EndsWith('Tests'))">True</NeedTestsPackage>
     </PropertyGroup>
