@@ -49,7 +49,8 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                                     ExpressionStatement(AssignmentExpression(
                                         SyntaxKind.SimpleAssignmentExpression,
                                         IdentifierName("_value"),
-                                        ParseExpression(info.GetUnitToSystem(unitSystem, quantity.BaseDimensions).SetExpressionValue("value")))),
+                                        ParseExpression(info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
+                                            .SetExpressionValue("value").Replace("PI", "global::System.Math.PI")))),
                                     ReturnStatement()
                                 ])
                             )),
@@ -67,13 +68,14 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                             .WithBody(Block(
                                 CreateSwitchStatement(info =>
                                 [
-                                    ReturnStatement(ParseExpression(info.GetSystemToUnit(unitSystem, quantity.BaseDimensions).SetExpressionValue("_value")))
+                                    ReturnStatement(ParseExpression(info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
+                                        .SetExpressionValue("_value").Replace("PI", "global::System.Math.PI")))
                                 ])
                             )),
 
                         ..quantity.UnitsInfos.Select(info =>
                         {
-                            var parameterName = char.ToLowerInvariant(info.Name[0]) + info.Name.Substring(1);
+                            var parameterName = "@" + char.ToLowerInvariant(info.Name[0]) + info.Name[1..];
                             return MethodDeclaration(
                                     IdentifierName(quantity.Name),
                                     Identifier("From" + info.Name))

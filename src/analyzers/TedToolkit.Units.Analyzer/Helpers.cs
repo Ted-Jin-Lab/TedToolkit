@@ -1,4 +1,4 @@
-﻿using MathNet.Symbolics;
+﻿//using MathNet.Symbolics;
 using TedToolkit.Units.Json;
 
 namespace TedToolkit.Units.Analyzer;

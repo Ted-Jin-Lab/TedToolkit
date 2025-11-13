@@ -12,8 +12,4 @@
         <ProjectReference Include="..\..\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="System.Text.Json" />
-    </ItemGroup>
-
 </Project>
