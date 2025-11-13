@@ -1,5 +1,6 @@
 ﻿// ReSharper disable LocalizableElement
 
+using System.Globalization;
 using System.Text.RegularExpressions;
 using MathNet.Symbolics;
 using TedToolkit.Assertions;
@@ -12,6 +13,9 @@ using TedToolkit.QuantExtensions;
 using TedToolkit.Units.Json;
 using TedToolkit.ValidResults;
 
+
+Console.WriteLine(int.Parse("0.0"));
+return;
 foreach (var quantity in await Quantity.Quantities)
 {
     var regex = new Regex(@"[-]?\d+(\.\d+)?[eE][+-]?\d+");

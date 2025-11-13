@@ -9,7 +9,7 @@ using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
 namespace TedToolkit.Units.Analyzer;
 
-internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSystem unitSystem, bool isPublic)
+internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSystem unitSystem, bool isPublic, bool simplify)
 {
     public void GenerateCode(SourceProductionContext context)
     {
@@ -49,8 +49,8 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                                     ExpressionStatement(AssignmentExpression(
                                         SyntaxKind.SimpleAssignmentExpression,
                                         IdentifierName("_value"),
-                                        ParseExpression(info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
-                                            .SetExpressionValue("value").Replace("PI", "global::System.Math.PI")))),
+                                        info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
+                                            .ToExpression("value", simplify))),
                                     ReturnStatement()
                                 ])
                             )),
@@ -68,8 +68,8 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                             .WithBody(Block(
                                 CreateSwitchStatement(info =>
                                 [
-                                    ReturnStatement(ParseExpression(info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
-                                        .SetExpressionValue("_value").Replace("PI", "global::System.Math.PI")))
+                                    ReturnStatement(info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
+                                        .ToExpression("_value", simplify))
                                 ])
                             )),
 
@@ -78,7 +78,7 @@ internal class UnitStructGenerator(Quantity quantity, TypeName typeName, UnitSys
                             var parameterName = "@" + char.ToLowerInvariant(info.Name[0]) + info.Name[1..];
                             return MethodDeclaration(
                                     IdentifierName(quantity.Name),
-                                    Identifier("From" + info.Name))
+                                    Identifier("From" + info.Names))
                                 .WithModifiers(
                                     TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                                 .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])

@@ -8,6 +8,9 @@
     <ItemGroup>
         <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
         <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\MathNet.*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\FSharp.Core.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\FParsec*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
         <ProjectReference Include="..\TedToolkit.Scopes\TedToolkit.Scopes.csproj"/>
     </ItemGroup>
 </Project>

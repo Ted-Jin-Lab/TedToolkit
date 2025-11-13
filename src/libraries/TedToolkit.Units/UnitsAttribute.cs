@@ -13,7 +13,8 @@ public sealed class UnitsAttribute<TData>(
     TemperatureUnit temperature = TemperatureUnit.Kelvin,
     AmountOfSubstanceUnit amount = AmountOfSubstanceUnit.Mole,
     LuminousIntensityUnit luminousIntensity = LuminousIntensityUnit.Candela,
-    Access access = Access.Public) : Attribute
+    Access access = Access.Public,
+    bool simplifyExpression = false) : Attribute
     where TData : struct,
 #if NET8_0_OR_GREATER
     System.Numerics.INumber<TData>;
