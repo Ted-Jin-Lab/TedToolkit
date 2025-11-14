@@ -19,23 +19,6 @@ internal class UnitStructGenerator(
     {
         List<MemberDeclarationSyntax> members = [];
 
-        if (quantity.IsNoDimensions)
-        {
-            members.Add(ConversionOperatorDeclaration(Token(SyntaxKind.ImplicitKeyword),
-                    IdentifierName(typeName.FullName)).WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
-                    Token(SyntaxKind.StaticKeyword)))
-                .WithParameterList(ParameterList(
-                [
-                    Parameter(Identifier("quantity"))
-                        .WithType(IdentifierName(quantity.Name))
-                ]))
-                .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                .WithXmlComment()
-                .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression, IdentifierName("quantity"), IdentifierName("_value"))))
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
-        }
-
         var nameSpace = NamespaceDeclaration("TedToolkit.Units")
             .WithMembers([
                 StructDeclaration(quantity.Name)
@@ -53,14 +36,16 @@ internal class UnitStructGenerator(
                                 VariableDeclaration(IdentifierName(typeName.FullName))
                                     .WithVariables(
                                     [
-                                        VariableDeclarator(Identifier("_value"))
+                                        VariableDeclarator(Identifier("Value"))
                                     ]))
-                            .WithModifiers(TokenList(Token(SyntaxKind.PrivateKeyword),
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.ReadOnlyKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))]),
 
                         ConstructorDeclaration(Identifier(quantity.Name))
-                            .WithModifiers(TokenList(Token(SyntaxKind.PrivateKeyword)))
+                            .WithModifiers(TokenList(Token(quantity.IsNoDimensions
+                                ? SyntaxKind.PublicKeyword
+                                : SyntaxKind.PrivateKeyword)))
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("value"))
@@ -72,7 +57,7 @@ internal class UnitStructGenerator(
                                 ExpressionStatement(
                                     AssignmentExpression(
                                         SyntaxKind.SimpleAssignmentExpression,
-                                        IdentifierName("_value"),
+                                        IdentifierName("Value"),
                                         IdentifierName("value"))))),
 
                         #region Unit Conversions
@@ -92,11 +77,12 @@ internal class UnitStructGenerator(
                                 ExpressionStatement(
                                     AssignmentExpression(
                                         SyntaxKind.SimpleAssignmentExpression,
-                                        IdentifierName("_value"),CastExpression(
-                                            IdentifierName(typeName.FullName),ParenthesizedExpression(CreateSwitchStatement(info => 
-                                            info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
-                                                .ToExpression("value", typeName.Symbol))))))
-                                )),
+                                        IdentifierName("Value"), CastExpression(
+                                            IdentifierName(typeName.FullName), ParenthesizedExpression(
+                                                CreateSwitchStatement(info =>
+                                                    info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
+                                                        .ToExpression("value", typeName.Symbol))))))
+                            )),
 
                         MethodDeclaration(IdentifierName(typeName.FullName),
                                 Identifier("As"))
@@ -109,11 +95,12 @@ internal class UnitStructGenerator(
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
-                                    ReturnStatement(
-                                        CastExpression(
-                                            IdentifierName(typeName.FullName),ParenthesizedExpression(CreateSwitchStatement(info => 
-                                        info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
-                                            .ToExpression("_value", typeName.Symbol)))))
+                                ReturnStatement(
+                                    CastExpression(
+                                        IdentifierName(typeName.FullName), ParenthesizedExpression(
+                                            CreateSwitchStatement(info =>
+                                                info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
+                                                    .ToExpression("Value", typeName.Symbol)))))
                             )),
 
                         #endregion
@@ -169,7 +156,7 @@ internal class UnitStructGenerator(
                                 ReturnStatement(BinaryExpression(SyntaxKind.AddExpression, BinaryExpression(
                                         SyntaxKind.AddExpression, InvocationExpression(MemberAccessExpression(
                                                 SyntaxKind.SimpleMemberAccessExpression,
-                                                IdentifierName("_value"),
+                                                IdentifierName("Value"),
                                                 IdentifierName("ToString")))
                                             .WithArgumentList(ArgumentList(
                                             [
@@ -263,6 +250,48 @@ internal class UnitStructGenerator(
                                                     IdentifierName(info.Name)))
                                         ])))));
                         }),
+                        
+                        #region Conversions
+
+                        ConversionOperatorDeclaration(
+                                Token(quantity.IsNoDimensions
+                                    ? SyntaxKind.ImplicitKeyword
+                                    : SyntaxKind.ExplicitKeyword),
+                                IdentifierName(typeName.FullName)).WithModifiers(TokenList(
+                                Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("quantity"))
+                                    .WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression, IdentifierName("quantity"),
+                                IdentifierName("Value"))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        ConversionOperatorDeclaration(Token(SyntaxKind.ExplicitKeyword),
+                                IdentifierName(quantity.Name))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("value"))
+                                    .WithType(IdentifierName(typeName.FullName))
+                            ]))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(ArrowExpressionClause(
+                                ImplicitObjectCreationExpression()
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(IdentifierName("value"))
+                                    ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        #endregion
 
                         ..members
                     ])
