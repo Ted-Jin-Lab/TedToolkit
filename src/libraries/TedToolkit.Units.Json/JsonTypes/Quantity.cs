@@ -7,7 +7,7 @@ namespace TedToolkit.Units.Json;
 
 public struct Quantity()
 {
-    public static async Task<Quantity[]> GetQuantitiesAsync(params string[] otherJsonObjects)
+    public static async Task<Quantity[]> GetQuantitiesAsync(params IEnumerable<string> otherJsonObjects)
     {
         var regex = new Regex(@"TedToolkit\.Units\.Json\..*\.json");
         var assembly = typeof(Quantity).Assembly;
