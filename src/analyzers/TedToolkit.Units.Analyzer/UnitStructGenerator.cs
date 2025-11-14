@@ -13,8 +13,7 @@ internal class UnitStructGenerator(
     Quantity quantity,
     TypeName typeName,
     UnitSystem unitSystem,
-    bool isPublic,
-    bool simplify)
+    bool isPublic)
 {
     public void GenerateCode(SourceProductionContext context)
     {
@@ -96,7 +95,7 @@ internal class UnitStructGenerator(
                                         IdentifierName("_value"),CastExpression(
                                             IdentifierName(typeName.FullName),ParenthesizedExpression(CreateSwitchStatement(info => 
                                             info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
-                                                .ToExpression("value", simplify, typeName.Symbol))))))
+                                                .ToExpression("value", typeName.Symbol))))))
                                 )),
 
                         MethodDeclaration(IdentifierName(typeName.FullName),
@@ -114,7 +113,7 @@ internal class UnitStructGenerator(
                                         CastExpression(
                                             IdentifierName(typeName.FullName),ParenthesizedExpression(CreateSwitchStatement(info => 
                                         info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
-                                            .ToExpression("_value", simplify, typeName.Symbol)))))
+                                            .ToExpression("_value", typeName.Symbol)))))
                             )),
 
                         #endregion

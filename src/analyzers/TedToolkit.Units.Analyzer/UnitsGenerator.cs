@@ -43,8 +43,7 @@ public class UnitsGenerator : IIncrementalGenerator
             foreach (var quantity in Quantity.Quantities.Result)
             {
                 new UnitStructGenerator(quantity, tDataType, unit, 
-                        (flag & 1 << 0) is 0, 
-                        (flag & 1 << 1) is not 0)
+                        (flag & 1 << 0) is 0)
                     .GenerateCode(context);
             }
         }

@@ -14,7 +14,7 @@ public sealed class UnitsAttribute<TData>(
     TemperatureUnit temperature = TemperatureUnit.Kelvin,
     AmountOfSubstanceUnit amount = AmountOfSubstanceUnit.Mole,
     LuminousIntensityUnit luminousIntensity = LuminousIntensityUnit.Candela,
-    UnitFlag flag = UnitFlag.SimplifyExpression) : Attribute
+    UnitFlag flag = 0) : Attribute
     where TData : struct,
 #if NET8_0_OR_GREATER
     System.Numerics.INumber<TData>;

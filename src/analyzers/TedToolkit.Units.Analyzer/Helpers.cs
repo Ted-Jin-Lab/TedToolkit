@@ -8,18 +8,15 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace TedToolkit.Units.Analyzer;
 
-
 internal static class Helpers
 {
-    public static ExpressionSyntax ToExpression(this string expression, string parameterName, bool simplify, ITypeSymbol dataType)
+    public static ExpressionSyntax ToExpression(this string expression, string parameterName, ITypeSymbol dataType)
     {
         try
         {
             expression = expression.SetExpressionValue("value");
-            if (simplify)
-            {
-                expression = Unit.RemoveSci(SymbolicExpression.Parse(expression).ToString()); //TODO: Better simplify.
-            }
+            expression = SymbolicExpression.Parse(expression).ToString();
+            expression = Unit.RemoveSci(expression);
             expression = expression
                 .AddPostfix(dataType)
                 .Replace("PI", "global::System.Math.PI")
@@ -40,7 +37,7 @@ internal static class Helpers
         {
             var num = m.Value;
 
-            if (!num.Contains('.'))
+            if (!IsFloatingPoint(dataType) && !num.Contains('.'))
             {
                 if (int.TryParse(num, out _))
                 {
@@ -60,8 +57,15 @@ internal static class Helpers
 
             return num + "d";
         });
+
+        static bool IsFloatingPoint(ITypeSymbol type)
+        {
+            return type.SpecialType is SpecialType.System_Single
+                or SpecialType.System_Double
+                or SpecialType.System_Decimal;
+        }
     }
-    
+
     public static string GetUnitToSystem(this UnitInfo info, UnitSystem system, BaseDimensions dimensions)
     {
         var expression = info.UnitToBase;
@@ -96,7 +100,7 @@ internal static class Helpers
         ModifyOne(dimensions.Θ, system.Temperature);
         ModifyOne(dimensions.T, system.Time);
         expression = info.UnitToBase.SetExpressionValue(expression);
-        
+
         return expression;
 
         void ModifyOne(int index, UnitInfo unitInfo)
@@ -124,7 +128,7 @@ internal static class Helpers
                 candidates.Add((dp[i, j], i));
             }
         }
-        
+
         candidates = candidates
             .Where(c => c.len > 0)
             .OrderByDescending(c => c.len)
@@ -132,7 +136,7 @@ internal static class Helpers
 
         var result = new List<(int start, int end)>();
         var used = new List<(int start, int end)>();
-        
+
         foreach (var (len, end) in candidates)
         {
             var start = end - len;
