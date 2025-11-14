@@ -12,6 +12,7 @@
         <EmbeddedResource Include="..\..\..\externals\UnitsNet\Common\UnitDefinitions\*.json" >
             <Link>Json\%(RecursiveDir)%(Filename)%(Extension)</Link>
         </EmbeddedResource>
+        <EmbeddedResource Include="AdditionalJson\*.json" />
     </ItemGroup>
 
     <ItemGroup>

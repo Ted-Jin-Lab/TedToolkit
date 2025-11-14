@@ -15,9 +15,11 @@ internal class UnitStructGenerator(
     UnitSystem unitSystem,
     bool isPublic)
 {
-    private static ExpressionSyntax CreateTolerance(BaseDimensions dimensions, string quantityName)
+    private static ExpressionSyntax CreateTolerance(BaseDimensions dimensions, string quantityName, string typeName)
     {
-        ExpressionSyntax? tolerance = null;
+        ExpressionSyntax tolerance = CastExpression(IdentifierName(typeName), LiteralExpression(
+            SyntaxKind.NumericLiteralExpression,
+            Literal(1)));
         if (dimensions == new BaseDimensions())
         {
             return AddToleranceName(tolerance, quantityName, 1)!;
@@ -39,17 +41,13 @@ internal class UnitStructGenerator(
             }
         }
 
-        return tolerance ?? LiteralExpression(
-            SyntaxKind.NumericLiteralExpression,
-            Literal(1));
+        return tolerance;
 
-        static ExpressionSyntax? AddToleranceName(ExpressionSyntax? expressionSyntax, string unitName, int count)
+        static ExpressionSyntax AddToleranceName(ExpressionSyntax expressionSyntax, string unitName, int count)
         {
             for (var i = 0; i < Math.Abs(count); i++)
             {
-                expressionSyntax = expressionSyntax is null
-                    ? CreateToleranceName(unitName)
-                    : BinaryExpression(
+                expressionSyntax =  BinaryExpression(
                         count > 0 ? SyntaxKind.MultiplyExpression : SyntaxKind.DivideExpression,
                         expressionSyntax,
                         CreateToleranceName(unitName));
@@ -373,7 +371,7 @@ internal class UnitStructGenerator(
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                             .WithExpressionBody(ArrowExpressionClause(CastExpression(
                                 IdentifierName(typeName.FullName),
-                                ParenthesizedExpression(CreateTolerance(quantity.BaseDimensions, quantity.Name)))))
+                                ParenthesizedExpression(CreateTolerance(quantity.BaseDimensions, quantity.Name, typeName.FullName)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))

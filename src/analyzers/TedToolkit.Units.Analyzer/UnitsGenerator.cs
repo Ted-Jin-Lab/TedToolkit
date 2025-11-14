@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using TedToolkit.RoslynHelper.Extensions;
 using TedToolkit.Units.Json;
 
@@ -9,12 +10,21 @@ public class UnitsGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var assemblyAttributes = context.CompilationProvider;
-        context.RegisterSourceOutput(assemblyAttributes, Generate);
+        var additionalJsonFiles = context.AdditionalTextsProvider
+            .Where(file => Path.GetFileName(file.Path).StartsWith("Unit", StringComparison.OrdinalIgnoreCase)
+                           && Path.GetExtension(file.Path).Equals(".json", StringComparison.OrdinalIgnoreCase));
+        var compilationProvider = context.CompilationProvider;
+
+        var combined = compilationProvider.Combine(additionalJsonFiles.Collect());
+
+        context.RegisterSourceOutput(combined, Generate);
     }
 
-    private static void Generate(SourceProductionContext context, Compilation compilations)
+    private void Generate(SourceProductionContext context,
+        (Compilation Compilation, ImmutableArray<AdditionalText> Texts) arg)
     {
+        var (compilations, texts) = arg;
+        
         if (compilations.Assembly.GetAttributes()
                 .FirstOrDefault(a =>
                     a.AttributeClass is { IsGenericType: true } attributeClass &&
@@ -38,21 +48,23 @@ public class UnitsGenerator : IIncrementalGenerator
 
         try
         {
-            var quantities = Quantity.GetQuantitiesAsync().Result;
+            var quantities = Quantity
+                .GetQuantitiesAsync(texts.Select(file => file.GetText(context.CancellationToken)?.ToString())
+                    .OfType<string>()).Result;
             var unit = new UnitSystem(amount, current, length, luminousIntensity, mass, temperature, time, quantities);
 
             foreach (var quantity in quantities)
             {
-                new UnitStructGenerator(quantity, tDataType, unit, 
+                new UnitStructGenerator(quantity, tDataType, unit,
                         (flag & 1 << 0) is 0)
                     .GenerateCode(context);
-                
+
                 var type = compilations.GetTypeByMetadataName($"TedToolkit.Units.{quantity.UnitName}");
                 if (type != null) continue;
                 var enumGenerator = new UnitEnumGenerator(quantity);
                 context.AddSource(enumGenerator.FileName, enumGenerator.GenerateCode());
             }
-            
+
             new ToleranceGenerator(unit, [..quantities.Where(q => q.IsNoDimensions)])
                 .Generate(context);
         }
