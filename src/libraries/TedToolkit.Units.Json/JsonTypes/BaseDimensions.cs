@@ -10,4 +10,4 @@
 /// <param name="M">Mass</param>
 /// <param name="Θ">Temperature</param>
 /// <param name="T">Time</param>
-public readonly record struct BaseDimensions(int N, int I, int L, int J, int M, int Θ, int T);
+public readonly record struct BaseDimensions(int N, int I, int L, int J, int M, int Θ, int T, Dictionary<string, int> AdditionDimensions);

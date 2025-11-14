@@ -15,6 +15,53 @@ internal class UnitStructGenerator(
     UnitSystem unitSystem,
     bool isPublic)
 {
+    private static ExpressionSyntax CreateTolerance(BaseDimensions dimensions, string quantityName)
+    {
+        ExpressionSyntax? tolerance = null;
+        if (dimensions == new BaseDimensions())
+        {
+            return AddToleranceName(tolerance, quantityName, 1)!;
+        }
+
+        tolerance = AddToleranceName(tolerance, "AmountOfSubstance", dimensions.N);
+        tolerance = AddToleranceName(tolerance, "ElectricCurrent", dimensions.I);
+        tolerance = AddToleranceName(tolerance, "Length", dimensions.L);
+        tolerance = AddToleranceName(tolerance, "LuminousIntensity", dimensions.J);
+        tolerance = AddToleranceName(tolerance, "Mass", dimensions.M);
+        tolerance = AddToleranceName(tolerance, "Temperature", dimensions.Θ);
+        tolerance = AddToleranceName(tolerance, "Duration", dimensions.T);
+
+        foreach (var pair in dimensions.AdditionDimensions)
+        {
+            tolerance = AddToleranceName(tolerance, pair.Key, pair.Value);
+        }
+
+        return tolerance ?? LiteralExpression(
+            SyntaxKind.NumericLiteralExpression,
+            Literal(1));
+
+        static ExpressionSyntax? AddToleranceName(ExpressionSyntax? expressionSyntax, string unitName, int count)
+        {
+            for (var i = 0; i < Math.Abs(count); i++)
+            {
+                expressionSyntax = expressionSyntax is null
+                    ? CreateToleranceName(unitName)
+                    : BinaryExpression(
+                        count > 0 ? SyntaxKind.MultiplyExpression : SyntaxKind.DivideExpression,
+                        expressionSyntax,
+                        CreateToleranceName(unitName));
+            }
+
+            return expressionSyntax;
+        }
+
+        static IdentifierNameSyntax CreateToleranceName(string unitName)
+        {
+            return IdentifierName($"global::TedToolkit.Units.Tolerance.CurrentDefault.{unitName}.Value");
+        }
+    }
+
+
     public void GenerateCode(SourceProductionContext context)
     {
         List<MemberDeclarationSyntax> members = [];
@@ -26,7 +73,11 @@ internal class UnitStructGenerator(
                         Token(SyntaxKind.ReadOnlyKeyword), Token(SyntaxKind.PartialKeyword)))
                     .WithBaseList(BaseList(
                     [
-                        SimpleBaseType(IdentifierName("global::System.IFormattable"))
+                        SimpleBaseType(IdentifierName("global::System.IFormattable")),
+                        SimpleBaseType(GenericName(Identifier("global::System.IEquatable"))
+                            .WithTypeArgumentList(TypeArgumentList([IdentifierName(quantity.Name)]))),
+                        SimpleBaseType(GenericName(Identifier("global::System.IComparable"))
+                            .WithTypeArgumentList(TypeArgumentList([IdentifierName(quantity.Name)])))
                     ]))
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                     .WithXmlComment($"/// <inheritdoc cref=\"{quantity.UnitName}\"/>")
@@ -222,35 +273,53 @@ internal class UnitStructGenerator(
 
                         #endregion
 
-                        ..quantity.UnitsInfos.Select(info =>
+                        ..quantity.UnitsInfos.SelectMany(info =>
                         {
                             var parameterName = "@" + char.ToLowerInvariant(info.Name[0]) + info.Name[1..];
-                            return MethodDeclaration(
-                                    IdentifierName(quantity.Name),
-                                    Identifier("From" + info.Names))
-                                .WithModifiers(
-                                    TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                                .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                                .WithXmlComment(
-                                    $"/// <summary> From <see cref=\"{quantity.UnitName}.{info.Name}\"/> </summary>")
-                                .WithParameterList(ParameterList(
-                                [
-                                    Parameter(Identifier(parameterName))
-                                        .WithType(IdentifierName(typeName.FullName))
-                                ]))
-                                .WithBody(Block(
-                                    ReturnStatement(ObjectCreationExpression(IdentifierName(quantity.Name))
-                                        .WithArgumentList(ArgumentList(
-                                        [
-                                            Argument(IdentifierName(parameterName)),
-                                            Argument(
-                                                MemberAccessExpression(
+                            return (IEnumerable<MemberDeclarationSyntax>)
+                            [
+                                MethodDeclaration(
+                                        IdentifierName(quantity.Name),
+                                        Identifier("From" + info.Names))
+                                    .WithModifiers(
+                                        TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                                    .WithXmlComment(
+                                        $"/// <summary> From <see cref=\"{quantity.UnitName}.{info.Name}\"/> </summary>")
+                                    .WithParameterList(ParameterList(
+                                    [
+                                        Parameter(Identifier(parameterName))
+                                            .WithType(IdentifierName(typeName.FullName))
+                                    ]))
+                                    .WithBody(Block(
+                                        ReturnStatement(ObjectCreationExpression(IdentifierName(quantity.Name))
+                                            .WithArgumentList(ArgumentList(
+                                            [
+                                                Argument(IdentifierName(parameterName)),
+                                                Argument(
+                                                    MemberAccessExpression(
+                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                        IdentifierName(quantity.UnitName),
+                                                        IdentifierName(info.Name)))
+                                            ]))))),
+
+                                PropertyDeclaration(IdentifierName(typeName.FullName), Identifier(info.Names))
+                                    .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                                    .WithXmlCommentInheritDoc($"{quantity.UnitName}.{info.Name}")
+                                    .WithExpressionBody(ArrowExpressionClause(
+                                        InvocationExpression(IdentifierName("As"))
+                                            .WithArgumentList(ArgumentList(
+                                            [
+                                                Argument(MemberAccessExpression(
                                                     SyntaxKind.SimpleMemberAccessExpression,
                                                     IdentifierName(quantity.UnitName),
                                                     IdentifierName(info.Name)))
-                                        ])))));
+                                            ]))))
+                                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                            ];
                         }),
-                        
+
                         #region Conversions
 
                         ConversionOperatorDeclaration(
@@ -289,6 +358,108 @@ internal class UnitStructGenerator(
                                     [
                                         Argument(IdentifierName("value"))
                                     ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        #endregion
+
+                        #region Comparisons
+
+                        PropertyDeclaration(IdentifierName(typeName.FullName), Identifier("Tolerance"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(
+                                IdentifierName(typeName.FullName),
+                                ParenthesizedExpression(CreateTolerance(quantity.BaseDimensions, quantity.Name)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("other"))
+                                    .WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(BinaryExpression(
+                                SyntaxKind.LessThanOrEqualExpression, CastExpression(
+                                    IdentifierName(typeName.FullName),
+                                    InvocationExpression(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::System.Math"),
+                                            IdentifierName("Abs")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(
+                                                BinaryExpression(SyntaxKind.SubtractExpression, IdentifierName("Value"),
+                                                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                                        IdentifierName("other"), IdentifierName("Value"))))
+                                        ]))),
+                                IdentifierName("Tolerance"))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("obj"))
+                                    .WithType(NullableType(PredefinedType(Token(SyntaxKind.ObjectKeyword))))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.LogicalAndExpression, IsPatternExpression(
+                                        IdentifierName("obj"),
+                                        DeclarationPattern(IdentifierName(quantity.Name),
+                                            SingleVariableDesignation(Identifier("other")))),
+                                    InvocationExpression(IdentifierName("Equals"))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("other"))
+                                        ])))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(
+                                ArrowExpressionClause(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("Value"),
+                                            IdentifierName("GetHashCode")))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("other"))
+                                    .WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(ArrowExpressionClause(ConditionalExpression(
+                                InvocationExpression(IdentifierName("Equals"))
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(IdentifierName("other"))
+                                    ])),
+                                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)),
+                                InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("Value"), IdentifierName("CompareTo")))
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("other"),
+                                            IdentifierName("Value")))
+                                    ])))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         #endregion
@@ -469,37 +640,5 @@ internal class UnitStructGenerator(
                                 Argument(LiteralExpression(SyntaxKind.NullLiteralExpression))
                             ]))))
             ]);
-
-        // return SwitchStatement(IdentifierName("unit"))
-        //     .WithSections(
-        //     [
-        //         ..quantity.UnitsInfos.Select(info =>
-        //             SwitchSection().WithLabels(
-        //                 [
-        //                     CaseSwitchLabel(
-        //                         MemberAccessExpression(
-        //                             SyntaxKind.SimpleMemberAccessExpression,
-        //                             IdentifierName(quantity.UnitName),
-        //                             IdentifierName(info.Name)))
-        //                 ])
-        //                 .WithStatements(
-        //                 [
-        //                     ..getStatements(info),
-        //                 ])),
-        //
-        //         SwitchSection().WithLabels([DefaultSwitchLabel()])
-        //             .WithStatements(
-        //             [
-        //                 ThrowStatement(ObjectCreationExpression(
-        //                         IdentifierName("global::System.ArgumentOutOfRangeException"))
-        //                     .WithArgumentList(
-        //                         ArgumentList(
-        //                         [
-        //                             Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal("unit"))),
-        //                             Argument(IdentifierName("unit")),
-        //                             Argument(LiteralExpression(SyntaxKind.NullLiteralExpression))
-        //                         ])))
-        //             ])
-        //     ]);
     }
 }
