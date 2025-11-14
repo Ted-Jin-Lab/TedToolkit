@@ -121,6 +121,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Analyzer", "src\analyzers\TedToolkit.Units.Analyzer\TedToolkit.Units.Analyzer.csproj", "{005715D8-219D-494A-9222-834C40C8B034}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Tests", "tests\TedToolkit.Units.Tests\TedToolkit.Units.Tests.csproj", "{EE91776E-9DE9-4CF1-8CF2-618893029825}"
+	ProjectSection(ProjectDependencies) = postProject
+		{005715D8-219D-494A-9222-834C40C8B034} = {005715D8-219D-494A-9222-834C40C8B034}
+		{8D597C86-3C37-4E27-B197-403FB689BF33} = {8D597C86-3C37-4E27-B197-403FB689BF33}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Json", "src\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj", "{8D597C86-3C37-4E27-B197-403FB689BF33}"
 EndProject

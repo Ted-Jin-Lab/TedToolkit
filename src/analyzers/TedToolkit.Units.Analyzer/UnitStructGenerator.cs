@@ -18,6 +18,25 @@ internal class UnitStructGenerator(
 {
     public void GenerateCode(SourceProductionContext context)
     {
+        List<MemberDeclarationSyntax> members = [];
+
+        if (quantity.IsNoDimensions)
+        {
+            members.Add(ConversionOperatorDeclaration(Token(SyntaxKind.ImplicitKeyword),
+                    IdentifierName(typeName.FullName)).WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                    Token(SyntaxKind.StaticKeyword)))
+                .WithParameterList(ParameterList(
+                [
+                    Parameter(Identifier("quantity"))
+                        .WithType(IdentifierName(quantity.Name))
+                ]))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                .WithXmlComment()
+                .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression, IdentifierName("quantity"), IdentifierName("_value"))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
+        }
+
         var nameSpace = NamespaceDeclaration("TedToolkit.Units")
             .WithMembers([
                 StructDeclaration(quantity.Name)
@@ -40,6 +59,22 @@ internal class UnitStructGenerator(
                             .WithModifiers(TokenList(Token(SyntaxKind.PrivateKeyword),
                                 Token(SyntaxKind.ReadOnlyKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))]),
+
+                        ConstructorDeclaration(Identifier(quantity.Name))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PrivateKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("value"))
+                                    .WithType(IdentifierName(typeName.FullName)),
+                            ]))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithBody(Block(
+                                ExpressionStatement(
+                                    AssignmentExpression(
+                                        SyntaxKind.SimpleAssignmentExpression,
+                                        IdentifierName("_value"),
+                                        IdentifierName("value"))))),
 
                         #region Unit Conversions
 
@@ -240,6 +275,8 @@ internal class UnitStructGenerator(
                                                     IdentifierName(info.Name)))
                                         ])))));
                         }),
+
+                        ..members
                     ])
             ]);
         context.AddSource(quantity.Name + ".g.cs", nameSpace.NodeToString());
@@ -309,7 +346,7 @@ internal class UnitStructGenerator(
                 .ThenByDescending(i => Helpers.GetCommonCharactersCount(i.Name, quantity.BaseUnit))
                 .First().Name);
         }
-        
+
         return InvocationExpression(MemberAccessExpression(
                 SyntaxKind.SimpleMemberAccessExpression,
                 IdentifierName("global::TedToolkit.Units.Internal"),
@@ -318,43 +355,43 @@ internal class UnitStructGenerator(
             [
                 Argument(IdentifierName("index")),
                 Argument(IdentifierName("formatProvider")),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                        IdentifierName("LengthUnit"), IdentifierName(unitSystem.Length.Name))),
+                    IdentifierName("LengthUnit"), IdentifierName(unitSystem.Length.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-                        Literal(quantity.BaseDimensions.L))),
-                
+                    Literal(quantity.BaseDimensions.L))),
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("MassUnit"), IdentifierName(unitSystem.Mass.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.M))),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("DurationUnit"), IdentifierName(unitSystem.Time.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.T))),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("ElectricCurrentUnit"), IdentifierName(unitSystem.ElectricCurrent.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.I))),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("TemperatureUnit"), IdentifierName(unitSystem.Temperature.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.Θ))),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("AmountOfSubstanceUnit"), IdentifierName(unitSystem.AmountOfSubstance.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.N))),
-                
+
                 Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                     IdentifierName("LuminousIntensityUnit"), IdentifierName(unitSystem.LuminousIntensity.Name))),
                 Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
                     Literal(quantity.BaseDimensions.J))),
             ]));
-        
+
         static bool StringEquals(string a, string b) =>
             string.Equals(a, b, StringComparison.InvariantCultureIgnoreCase);
 
