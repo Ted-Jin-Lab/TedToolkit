@@ -15,9 +15,4 @@ public enum UnitFlag : byte
     /// 
     /// </summary>
     InternalUnit = 1 << 0,
-
-    /// <summary>
-    /// 
-    /// </summary>
-    SimplifyExpression = 1 << 1,
 }

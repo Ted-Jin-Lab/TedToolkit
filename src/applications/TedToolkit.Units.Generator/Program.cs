@@ -25,26 +25,9 @@ foreach (var quantity in await Quantity.Quantities)
     var enumGenerator = new UnitEnumGenerator(quantity);
     enumGenerator.GenerateCode(unitsFolder.FullName);
     toStringExtensionClass = toStringExtensionClass.AddMembers(enumGenerator.GenerateToString());
-    if (string.IsNullOrEmpty(quantity.BaseUnit))
-    {
-        Console.WriteLine(quantity.Name);
-    }
-
-    var baseUnit = quantity.UnitsInfos.FirstOrDefault(i => 
-        string.Equals(i.Name, quantity.BaseUnit, StringComparison.InvariantCultureIgnoreCase));
-    if(baseUnit.Unit is null)
-    {
-        Console.WriteLine(quantity.Name);
-    }
 }
 
 File.WriteAllText(Path.Combine(unitFolder.FullName, "UnitToStringExtensions.g.cs"),
     NamespaceDeclaration("TedToolkit.Units").WithMembers([toStringExtensionClass]).NodeToString());
-
-// foreach (var quantity in await Quantity.Quantities)
-// {
-//     if (!quantity.IsNoDimensions) continue;
-//     Console.WriteLine(quantity.Name);
-// }
 
 Console.WriteLine("Done");
