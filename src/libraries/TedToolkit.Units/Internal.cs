@@ -79,6 +79,8 @@ public static class Internal
 
     public static string GetCulture(IFormatProvider? formatProvider)
     {
-        return formatProvider is CultureInfo cultureInfo ? cultureInfo.Name : "en-US";
+        return formatProvider is CultureInfo cultureInfo 
+            ? cultureInfo.Name 
+            : CultureInfo.CurrentCulture.Name;
     }
 }
