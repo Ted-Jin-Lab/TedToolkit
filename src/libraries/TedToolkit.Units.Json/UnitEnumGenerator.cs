@@ -1,14 +1,12 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TedToolkit.RoslynHelper.Extensions;
-using TedToolkit.Units.Json;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
-namespace TedToolkit.Units.Generator;
+namespace TedToolkit.Units.Json;
 
-internal sealed class UnitEnumGenerator(Quantity quantity)
+public sealed class UnitEnumGenerator(Quantity quantity)
 {
     private static string GetXmlComment(string summary, string remark)
     {
@@ -96,7 +94,7 @@ internal sealed class UnitEnumGenerator(Quantity quantity)
                     ]))));
     }
 
-    public void GenerateCode(string path)
+    public string GenerateCode()
     {
         var namescape = NamespaceDeclaration("TedToolkit.Units")
             .WithMembers([
@@ -125,6 +123,8 @@ internal sealed class UnitEnumGenerator(Quantity quantity)
                     ])
             ]);
 
-        File.WriteAllText(Path.Combine(path, quantity.Name + ".g.cs"), namescape.NodeToString());
+        return namescape.NodeToString();
     }
+
+    public string FileName => quantity.UnitName + ".g.cs";
 }

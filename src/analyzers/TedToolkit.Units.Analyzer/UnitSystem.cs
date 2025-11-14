@@ -25,9 +25,9 @@ public readonly record struct UnitSystem
     /// <param name="m">Mass</param>
     /// <param name="θ">Temperature</param>
     /// <param name="t">Time</param>
-    public UnitSystem(byte n, byte i, byte l, byte j, byte m, byte θ, byte t)
+    /// <param name="quantities"></param>
+    public UnitSystem(byte n, byte i, byte l, byte j, byte m, byte θ, byte t, Quantity[] quantities)
     {
-        var quantities = Quantity.Quantities.Result;
         AmountOfSubstance = GetUnitInfo(quantities, "AmountOfSubstance", n);
         ElectricCurrent = GetUnitInfo(quantities, "ElectricCurrent", i);
         Length = GetUnitInfo(quantities, "Length", l);

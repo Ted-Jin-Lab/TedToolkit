@@ -21,4 +21,8 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
+    </ItemGroup>
 </Project>

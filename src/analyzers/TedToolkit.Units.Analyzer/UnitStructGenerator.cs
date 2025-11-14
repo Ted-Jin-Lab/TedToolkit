@@ -31,9 +31,12 @@ internal class UnitStructGenerator(
         tolerance = AddToleranceName(tolerance, "Temperature", dimensions.Θ);
         tolerance = AddToleranceName(tolerance, "Duration", dimensions.T);
 
-        foreach (var pair in dimensions.AdditionDimensions)
+        if (dimensions.AdditionDimensions is { } dictionary)
         {
-            tolerance = AddToleranceName(tolerance, pair.Key, pair.Value);
+            foreach (var pair in dictionary)
+            {
+                tolerance = AddToleranceName(tolerance, pair.Key, pair.Value);
+            }
         }
 
         return tolerance ?? LiteralExpression(

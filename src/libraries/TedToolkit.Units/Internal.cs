@@ -26,7 +26,11 @@ public static class Internal
         var sb = new StringBuilder(s.Length);
         foreach (var c in s)
         {
+#if NET6_0_OR_GREATER
+            sb.Append(Superscripts.GetValueOrDefault(c, c));
+#else
             sb.Append(Superscripts.TryGetValue(c, out var i) ? i : c);
+#endif
         }
 
         return sb.ToString();
@@ -79,8 +83,8 @@ public static class Internal
 
     public static string GetCulture(IFormatProvider? formatProvider)
     {
-        return formatProvider is CultureInfo cultureInfo 
-            ? cultureInfo.Name 
+        return formatProvider is CultureInfo cultureInfo
+            ? cultureInfo.Name
             : CultureInfo.CurrentCulture.Name;
     }
 }
