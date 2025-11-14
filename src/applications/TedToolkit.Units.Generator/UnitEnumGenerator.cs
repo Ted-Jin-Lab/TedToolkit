@@ -18,6 +18,84 @@ internal sealed class UnitEnumGenerator(Quantity quantity)
         return result;
     }
 
+    public MethodDeclarationSyntax GenerateToString()
+    {
+        return MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)),
+                Identifier("ToString"))
+            .WithModifiers(
+                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitEnumGenerator))])
+            .WithXmlComment()
+            .WithParameterList(ParameterList(
+            [
+                Parameter(Identifier("unit"))
+                    .WithModifiers(TokenList(Token(SyntaxKind.ThisKeyword)))
+                    .WithType(IdentifierName(quantity.UnitName)),
+                Parameter(Identifier("index"))
+                    .WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
+                Parameter(Identifier("formatProvider"))
+                    .WithType(NullableType(IdentifierName("global::System.IFormatProvider")))
+            ]))
+            .WithBody(Block(
+                LocalDeclarationStatement(
+                    VariableDeclaration(IdentifierName("var"))
+                        .WithVariables(
+                        [
+                            VariableDeclarator(Identifier("culture"))
+                                .WithInitializer(EqualsValueClause(
+                                    InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("global::TedToolkit.Units.Internal"),
+                                            IdentifierName("GetCulture")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(
+                                                IdentifierName("formatProvider"))
+                                        ]))))
+                        ])),
+                ReturnStatement(SwitchExpression(IdentifierName("unit"))
+                    .WithArms(
+                    [
+                        ..quantity.UnitsInfos.Select(i =>
+                            SwitchExpressionArm(ConstantPattern(MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName(quantity.UnitName),
+                                    IdentifierName(i.Name))),
+                                SwitchExpression(IdentifierName("culture"))
+                                    .WithArms(
+                                    [
+                                        ..i.LocalNames.OrderBy(i => i.Key == "en-US").Select(k =>
+                                        {
+                                            var getStringExpr = InvocationExpression(
+                                                    MemberAccessExpression(
+                                                        SyntaxKind.SimpleMemberAccessExpression,
+                                                        IdentifierName("global::TedToolkit.Units.Internal"),
+                                                        IdentifierName("GetString")))
+                                                .WithArgumentList(ArgumentList(
+                                                [
+                                                    Argument(IdentifierName("index")),
+                                                    ..k.Value.Select(n => Argument(
+                                                        LiteralExpression(
+                                                            SyntaxKind.StringLiteralExpression,
+                                                            Literal(n))))
+                                                ]));
+
+                                            return SwitchExpressionArm(
+                                                k.Key == "en-US"
+                                                    ? DiscardPattern()
+                                                    : ConstantPattern(
+                                                        LiteralExpression(
+                                                            SyntaxKind.StringLiteralExpression,
+                                                            Literal(k.Key))),
+                                                getStringExpr);
+                                        }),
+                                    ]))),
+                        SwitchExpressionArm(DiscardPattern(),
+                            InvocationExpression(MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("unit"), IdentifierName("ToString")))),
+                    ]))));
+    }
+
     public void GenerateCode(string path)
     {
         var namescape = NamespaceDeclaration("TedToolkit.Units")

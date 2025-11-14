@@ -5,7 +5,7 @@ public class ExampleTest
     [Test]
     public async Task DummyTest()
     {
-        var meter = new Length(5, LengthUnit.Meter);
+        var meter = Length.FromMeters(5);
         await Assert.That(meter.As(LengthUnit.Meter)).IsEqualTo(5);
     }
 }
