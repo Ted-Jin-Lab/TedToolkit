@@ -46,6 +46,9 @@ public class UnitsGenerator : IIncrementalGenerator
                         (flag & 1 << 0) is 0)
                     .GenerateCode(context);
             }
+            
+            new ToleranceGenerator(unit, [..Quantity.Quantities.Result.Where(q => q.IsNoDimensions)])
+                .Generate(context);
         }
         catch (Exception e)
         {
