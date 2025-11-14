@@ -2,7 +2,6 @@
 
 using Microsoft.CodeAnalysis.CSharp;
 using TedToolkit.RoslynHelper.Extensions;
-using TedToolkit.Units.Generator;
 using TedToolkit.Units.Json;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
@@ -20,14 +19,16 @@ var toStringExtensionClass = ClassDeclaration("UnitToStringExtensions")
         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
     .WithAttributeLists([GeneratedCodeAttribute(typeof(Program))]);
 
-foreach (var quantity in await Quantity.Quantities)
+foreach (var quantity in await Quantity.GetQuantitiesAsync())
 {
     var enumGenerator = new UnitEnumGenerator(quantity);
-    enumGenerator.GenerateCode(unitsFolder.FullName);
+
+    await File.WriteAllTextAsync(Path.Combine(unitsFolder.FullName, enumGenerator.FileName),
+        enumGenerator.GenerateCode());
     toStringExtensionClass = toStringExtensionClass.AddMembers(enumGenerator.GenerateToString());
 }
 
-File.WriteAllText(Path.Combine(unitFolder.FullName, "UnitToStringExtensions.g.cs"),
+await File.WriteAllTextAsync(Path.Combine(unitFolder.FullName, "UnitToStringExtensions.g.cs"),
     NamespaceDeclaration("TedToolkit.Units").WithMembers([toStringExtensionClass]).NodeToString());
 
 Console.WriteLine("Done");

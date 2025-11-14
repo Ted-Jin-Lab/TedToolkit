@@ -1,30 +1,18 @@
 ﻿using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace TedToolkit.Units.Json;
 
 public struct Quantity()
 {
-    private static Quantity[]? _quantities;
-
-    private static async Task<Quantity[]> GetQuantities()
+    public static async Task<Quantity[]> GetQuantitiesAsync(params string[] otherJsonObjects)
     {
-        if (_quantities is not null) return _quantities;
-
-        var regex = new Regex(@"TedToolkit\.Units\.Json\.Json\..*\.json");
-        var settings = new JsonSerializerSettings
-        {
-            Converters =
-            {
-                new StringEnumConverter(namingStrategy: new Newtonsoft.Json.Serialization.CamelCaseNamingStrategy(),
-                    allowIntegerValues: false)
-            }
-        };
-
+        var regex = new Regex(@"TedToolkit\.Units\.Json\..*\.json");
         var assembly = typeof(Quantity).Assembly;
-
-        var quantities = await Task.WhenAll(
+        
+        var objects = await Task.WhenAll(
             assembly.GetManifestResourceNames()
                 .Where(name => regex.IsMatch(name))
                 .Select(async manifestResourceName =>
@@ -35,16 +23,42 @@ public struct Quantity()
                     using var stream = assembly.GetManifestResourceStream(manifestResourceName);
                     using var reader = new StreamReader(stream!);
                     var str = await reader.ReadToEndAsync();
-                    return JsonConvert.DeserializeObject<Quantity>(str, settings);
+                    return JObject.Parse(str);
                 })
         );
+        
+        var serializer = JsonSerializer.Create(new JsonSerializerSettings
+        {
+            Converters =
+            {
+                new StringEnumConverter(namingStrategy: new Newtonsoft.Json.Serialization.CamelCaseNamingStrategy(),
+                    allowIntegerValues: false)
+            }
+        });
+        
+        var quantities = objects.Concat(otherJsonObjects.Select(JObject.Parse))
+            .GroupBy(i => (string?)i["Name"] ?? "_")
+            .Where(i => i.Key is not "_")
+            .Select(i =>
+            {
+                var first = i.First();
+                foreach (var jObject in i.Skip(1))
+                {
+                    first.Merge(jObject, new JsonMergeSettings
+                    {
+                        MergeNullValueHandling = MergeNullValueHandling.Merge,
+                        MergeArrayHandling = MergeArrayHandling.Replace
+                    });
+                }
+                return first;
+            })
+            .Select(j => j.ToObject<Quantity>(serializer)).ToArray();
 
         var deltaEntities = quantities.Where(i => i.IsAffine).Select(i => i.AffineOffsetType).ToArray();
 
-        return _quantities = quantities.Where(q => !deltaEntities.Contains(q.Name)).ToArray();
+        return  quantities.Where(q => !deltaEntities.Contains(q.Name)).ToArray();
     }
 
-    public static Task<Quantity[]> Quantities => GetQuantities();
 
     public bool IsNoDimensions => BaseDimensions == default;
     public BaseDimensions BaseDimensions { get; set; } = new(); // Default to empty

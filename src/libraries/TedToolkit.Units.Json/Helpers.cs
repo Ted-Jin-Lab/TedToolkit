@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace TedToolkit.Units.Generator;
+namespace TedToolkit.Units.Json;
 
 internal static class Helpers
 {
@@ -26,7 +26,7 @@ internal static class Helpers
         var sb = new StringBuilder(s.Length);
         foreach (var c in s)
         {
-            sb.Append(Superscripts.GetValueOrDefault(c, c));
+            sb.Append(Superscripts.TryGetValue(c, out var i) ? i : c);
         }
         return sb.ToString();
     }

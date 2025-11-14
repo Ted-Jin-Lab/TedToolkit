@@ -38,16 +38,22 @@ public class UnitsGenerator : IIncrementalGenerator
 
         try
         {
-            var unit = new UnitSystem(amount, current, length, luminousIntensity, mass, temperature, time);
+            var quantities = Quantity.GetQuantitiesAsync().Result;
+            var unit = new UnitSystem(amount, current, length, luminousIntensity, mass, temperature, time, quantities);
 
-            foreach (var quantity in Quantity.Quantities.Result)
+            foreach (var quantity in quantities)
             {
                 new UnitStructGenerator(quantity, tDataType, unit, 
                         (flag & 1 << 0) is 0)
                     .GenerateCode(context);
+                
+                var type = compilations.GetTypeByMetadataName($"TedToolkit.Units.{quantity.UnitName}");
+                if (type != null) continue;
+                var enumGenerator = new UnitEnumGenerator(quantity);
+                context.AddSource(enumGenerator.FileName, enumGenerator.GenerateCode());
             }
             
-            new ToleranceGenerator(unit, [..Quantity.Quantities.Result.Where(q => q.IsNoDimensions)])
+            new ToleranceGenerator(unit, [..quantities.Where(q => q.IsNoDimensions)])
                 .Generate(context);
         }
         catch (Exception e)
