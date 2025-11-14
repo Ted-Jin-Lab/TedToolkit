@@ -7,7 +7,7 @@ public struct PrefixInfo
     private const string Russian = "ru-RU";
     private const string Chinese = "zh-CN";
 
-    internal static readonly IReadOnlyDictionary<Prefix, PrefixInfo> Entries = new[]
+    public static readonly IReadOnlyDictionary<Prefix, PrefixInfo> Entries = new[]
     {
         // SI prefixes
         new PrefixInfo(Prefix.Yocto, -24, PrefixType.SI, "y", (Chinese, "夭")),
@@ -66,7 +66,7 @@ public struct PrefixInfo
     /// <summary>
     ///     The unit prefix abbreviation, such as "k" for kilo or "m" for milli.
     /// </summary>
-    private string SiPrefix { get; }
+    public string SiPrefix { get; }
 
     public string BaseToUnit
     {
@@ -113,7 +113,7 @@ public struct PrefixInfo
     /// <summary>
     ///     Mapping from culture name to localized prefix abbreviation.
     /// </summary>
-    private Dictionary<string, string> CultureToPrefix { get; }
+    public Dictionary<string, string> CultureToPrefix { get; }
 }
 
 public enum PrefixType : byte

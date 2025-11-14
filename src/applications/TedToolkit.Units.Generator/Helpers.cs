@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace TedToolkit.Units.Json;
+namespace TedToolkit.Units.Generator;
 
 internal static class Helpers
 {

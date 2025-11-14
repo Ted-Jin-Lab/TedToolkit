@@ -51,6 +51,7 @@ public class UnitsGenerator : IIncrementalGenerator
         catch (Exception e)
         {
             var msg = e.GetType().Name + ": " + e.Message + "\n" + e.StackTrace;
+            context.AddSource("_ERROR", msg);
             context.ReportDiagnostic(Diagnostic.Create(
                 new DiagnosticDescriptor("ERR", msg, msg, "Error", DiagnosticSeverity.Error, true), Location.None));
         }

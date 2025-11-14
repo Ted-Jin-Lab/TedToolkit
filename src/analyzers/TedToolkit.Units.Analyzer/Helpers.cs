@@ -40,7 +40,6 @@ internal static class Helpers
         {
             var num = m.Value;
 
-            // 如果是小数 → double
             if (!num.Contains('.'))
             {
                 if (int.TryParse(num, out _))
@@ -95,5 +94,49 @@ internal static class Helpers
                 expression = str.SetExpressionValue(expression);
             }
         }
+    }
+    
+    public static List<string> GetAllCommonSubstrings(string a, string b)
+    {
+        var dp = new int[a.Length + 1, b.Length + 1];
+        var candidates = new List<(int len, int end)>();
+
+        for (var i = 1; i <= a.Length; i++)
+        {
+            for (var j = 1; j <= b.Length; j++)
+            {
+                if (a[i - 1] != b[j - 1]) continue;
+                dp[i, j] = dp[i - 1, j - 1] + 1;
+                candidates.Add((dp[i, j], i));
+            }
+        }
+        
+        candidates = candidates
+            .Where(c => c.len > 0)
+            .OrderByDescending(c => c.len)
+            .ToList();
+
+        var result = new List<(int start, int end)>();
+        var used = new List<(int start, int end)>();
+        
+        foreach (var (len, end) in candidates)
+        {
+            var start = end - len;
+
+            if (used.Any(u => !(end <= u.start || start >= u.end)))
+                continue;
+
+            used.Add((start, end: end));
+        }
+
+        used.Sort((x, y) => x.start.CompareTo(y.start));
+
+        return used.Select(u => a.Substring(u.start, u.end - u.start)).ToList();
+    }
+
+    public static int GetCommonCharactersCount(string a, string b)
+    {
+        var list = GetAllCommonSubstrings(a, b);
+        return list.Sum(s => s.Length);
     }
 }
