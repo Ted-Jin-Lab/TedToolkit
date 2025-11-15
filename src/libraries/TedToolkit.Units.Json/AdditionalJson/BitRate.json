@@ -1,0 +1,8 @@
+{
+  "Name": "BitRate",
+  "BaseDimensions": {
+    "AdditionDimensions": {
+      "Information": 1
+    }
+  }
+}

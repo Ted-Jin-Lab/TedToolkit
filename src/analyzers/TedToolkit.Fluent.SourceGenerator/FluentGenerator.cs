@@ -407,6 +407,15 @@ public class FluentGenerator : IIncrementalGenerator
     private static bool CanAccess(ISymbol? symbol, IAssemblySymbol? assembly)
     {
         if (symbol is null) return false;
+        if (symbol is IMethodSymbol methodSymbol)
+        {
+            if (!CanAccess(methodSymbol.ContainingType, assembly)) return false;
+        }
+        else if (symbol is ITypeSymbol { BaseType: { } baseType })
+        {
+            if (!CanAccess(baseType, assembly)) return false;
+        }
+
         var access = symbol.DeclaredAccessibility;
         if (access == Accessibility.Public) return true;
         if (assembly is not null && symbol.ContainingAssembly.Equals(assembly, SymbolEqualityComparer.Default))
