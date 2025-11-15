@@ -1,0 +1,8 @@
+{
+  "Name": "RotationalAcceleration",
+  "BaseDimensions": {
+    "AdditionDimensions": {
+      "Angle": 1
+    }
+  }
+}

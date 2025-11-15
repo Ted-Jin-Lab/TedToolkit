@@ -11,24 +11,13 @@ using TedToolkit.Console;
 using TedToolkit.Console.Wrapper;
 using TedToolkit.QuantExtensions;
 using TedToolkit.Units.Json;
-using TedToolkit.ValidResults;
+using TedToolkit.ValidResults;using UnitsNet;
+using UnitsNet.Units;
 
-Console.WriteLine(Thread.CurrentThread.CurrentCulture.Name);
+var ratio = new AmplitudeRatio(5, AmplitudeRatioUnit.DecibelVolt);
+var b = ratio.DecibelMicrovolts;
 return;
 
-foreach (var quantity in await Quantity.Quantities)
-{
-    var regex = new Regex(@"[-]?\d+(\.\d+)?[eE][+-]?\d+");
-
-    foreach (var quantityUnit in quantity.Units)
-    {
-        var formula = quantityUnit.BaseToUnit;
-
-        var origin = formula.SetExpressionValue("value");
-         var result = SymbolicExpression.Parse(origin);
-         Console.WriteLine(origin + "\n\t" + result.ToString());
-    }
-}
 
 
 // unsafe
