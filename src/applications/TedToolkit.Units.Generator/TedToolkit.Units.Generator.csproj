@@ -8,7 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj" />
+        <PackageReference Include="dotNetRdf"/>
+        <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
     </ItemGroup>
 
 </Project>
