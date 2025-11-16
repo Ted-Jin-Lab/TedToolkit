@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Units</Title>
+        <Description>Struct Units Conversions</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Numbers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <ProjectReference Include="..\TedToolkit.Scopes\TedToolkit.Scopes.csproj"/>
+    </ItemGroup>
+</Project>

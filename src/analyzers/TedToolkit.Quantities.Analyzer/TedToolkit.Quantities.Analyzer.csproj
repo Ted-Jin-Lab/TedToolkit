@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj"/>
+        <ProjectReference Include="..\..\libraries\TedToolkit.Quantities.Data\TedToolkit.Quantities.Data.csproj" />
+        <PackageReference Include="Newtonsoft.Json"/>
+        <PackageReference Include="PolySharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <EmbeddedResource Include="*.json"/>
+    </ItemGroup>
+
+</Project>
