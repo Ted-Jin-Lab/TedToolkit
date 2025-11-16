@@ -1,7 +1,12 @@
 ﻿using System.Collections.Immutable;
+using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TedToolkit.RoslynHelper.Extensions;
-using TedToolkit.Units.Json;
+using TedToolkit.RoslynHelper.Names;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
 namespace TedToolkit.Units.Analyzer;
 
@@ -20,53 +25,90 @@ public class UnitsGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(combined, Generate);
     }
 
-    private void Generate(SourceProductionContext context,
-        (Compilation Compilation, ImmutableArray<AdditionalText> Texts) arg)
+    private static (TypeName tDataType, byte flag, Dictionary<string, string> units)? ReadUnit(Compilation compilations)
     {
-        var (compilations, texts) = arg;
-        
         if (compilations.Assembly.GetAttributes()
                 .FirstOrDefault(a =>
                     a.AttributeClass is { IsGenericType: true } attributeClass &&
-                    attributeClass.ConstructUnboundGenericType().GetName().FullName is
-                        "global::TedToolkit.Units.UnitsAttribute<>") is not { } attrData) return;
+                    attributeClass.ConstructUnboundGenericType().ToString().Contains("Units")) is not
+            { } attrData) return null;
 
         var tDataType = attrData.AttributeClass?.TypeArguments.FirstOrDefault()?.GetName();
-        if (tDataType is null) return;
+        if (tDataType is null) return null;
 
-        var arguments = attrData.ConstructorArguments;
-        if (arguments.Length < 8) return;
+        if (attrData.ApplicationSyntaxReference?.GetSyntax() is not AttributeSyntax syntax) return null;
+        byte flag = 0;
+        Dictionary<string, string> quantityTypes = [];
+        if (syntax.ArgumentList?.Arguments is { } arguments)
+            foreach (var attributeArgumentSyntax in arguments)
+            {
+                var name = attributeArgumentSyntax.NameEquals?.Name.Identifier.ValueText;
+                if (name is null) continue;
+                var expr = attributeArgumentSyntax.Expression;
+                if (name == "Flag")
+                {
+                    var semanticModel = compilations.GetSemanticModel(expr.SyntaxTree);
+                    var constant = semanticModel.GetConstantValue(expr);
+                    if (constant is { HasValue: true, Value : byte v })
+                    {
+                        flag = v;
+                    }
+                }
+                else
+                {
+                    quantityTypes[name] = expr.ToString().Split('.').Last();
+                }
+            }
 
-        var length = (byte)attrData.ConstructorArguments[0].Value!;
-        var mass = (byte)attrData.ConstructorArguments[1].Value!;
-        var time = (byte)attrData.ConstructorArguments[2].Value!;
-        var current = (byte)attrData.ConstructorArguments[3].Value!;
-        var temperature = (byte)attrData.ConstructorArguments[4].Value!;
-        var amount = (byte)attrData.ConstructorArguments[5].Value!;
-        var luminousIntensity = (byte)attrData.ConstructorArguments[6].Value!;
-        var flag = (byte)attrData.ConstructorArguments[7].Value!;
+        return (tDataType, flag, quantityTypes);
+    }
+
+    private static void Generate(SourceProductionContext context,
+        (Compilation Compilation, ImmutableArray<AdditionalText> Texts) arg)
+    {
+        var (compilations, texts) = arg;
+        var unitAttribute = ReadUnit(compilations);
 
         try
         {
-            var quantities = Quantity
-                .GetQuantitiesAsync(texts.Select(file => file.GetText(context.CancellationToken)?.ToString())
-                    .OfType<string>()).Result;
-            var unit = new UnitSystem(amount, current, length, luminousIntensity, mass, temperature, time, quantities);
+            var data = Helpers.GetData(texts.Select(t => t.GetText(context.CancellationToken)!.ToString()));
 
-            foreach (var quantity in quantities)
             {
-                new UnitStructGenerator(quantity, tDataType, unit,
-                        (flag & 1 << 0) is 0)
-                    .GenerateCode(context);
+                // Default Enum And To Strings.
+                new UnitEnumGenerator([..data.Units.Values]).GenerateCode(context);
+                var toStringExtensions = ClassDeclaration("UnitToStringExtensions")
+                    .WithModifiers(
+                        TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitsGenerator))]);
+                foreach (var quantity in data.Quantities)
+                {
+                    var enumGenerator = new QuantityUnitEnumGenerator(data, quantity);
+                    enumGenerator.GenerateCode(context);
+                    toStringExtensions = toStringExtensions.AddMembers(enumGenerator.GenerateToString());
+                }
 
-                var type = compilations.GetTypeByMetadataName($"TedToolkit.Units.{quantity.UnitName}");
-                if (type != null) continue;
-                var enumGenerator = new UnitEnumGenerator(quantity);
-                context.AddSource(enumGenerator.FileName, enumGenerator.GenerateCode());
+                context.AddSource("_UnitToStringExtensions.g.cs", NamespaceDeclaration("TedToolkit.Units")
+                    .WithMembers([toStringExtensions]).NodeToString());
+                new UnitAttributeGenerator(data).Generate(context);
             }
 
-            new ToleranceGenerator(unit, [..quantities.Where(q => q.IsNoDimensions)])
-                .Generate(context);
+            if (unitAttribute is null) return;
+            
+            { // For the case with unit attribute
+                var (tDataType, flag, units) = unitAttribute.Value;
+                var unit = new UnitSystem(units, data);
+
+                foreach (var quantity in data.Quantities)
+                {
+                    new UnitStructGenerator(data, quantity, tDataType, unit,
+                            (flag & 1 << 0) is 0)
+                        .GenerateCode(context);
+                }
+
+                //
+                // new ToleranceGenerator(unit, [..quantities.Where(q => q.IsNoDimensions)])
+                //     .Generate(context);
+            }
         }
         catch (Exception e)
         {

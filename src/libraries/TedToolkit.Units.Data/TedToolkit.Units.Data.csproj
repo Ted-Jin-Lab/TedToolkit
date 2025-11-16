@@ -9,21 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="..\..\..\externals\UnitsNet\Common\UnitDefinitions\*.json" >
-            <Link>Json\%(RecursiveDir)%(Filename)%(Extension)</Link>
-        </EmbeddedResource>
-        <EmbeddedResource Include="AdditionalJson\*.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="Newtonsoft.Json" />
         <PackageReference Include="PolySharp">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" />
     </ItemGroup>
 </Project>

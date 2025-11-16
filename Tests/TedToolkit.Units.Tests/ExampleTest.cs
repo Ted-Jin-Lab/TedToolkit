@@ -10,7 +10,7 @@ public class ExampleTest
         var meter = Length.FromMeters(5);
 
         var a = meter.ToString();
-        var c = meter.As(LengthUnit.CentiMeter);
+        var c = meter.As(LengthUnit.Centimeter);
         var b = meter.ToString(LengthUnit.Meter);
         var res = meter.As(LengthUnit.Meter);
         await Assert.That(meter.As(LengthUnit.Meter)).IsEqualTo(5);
@@ -20,6 +20,6 @@ public class ExampleTest
     public async Task CenterMeterTest()
     {
         var meter = Length.FromMeters(5);
-        await Assert.That((int)meter.As(LengthUnit.CentiMeter)).IsEqualTo(500);
+        await Assert.That((int)meter.As(LengthUnit.Centimeter)).IsEqualTo(500);
     }
 }

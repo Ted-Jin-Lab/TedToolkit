@@ -1,8 +1,0 @@
-{
-  "Name": "RotationalStiffnessPerLength",
-  "BaseDimensions": {
-    "AdditionDimensions": {
-      "Angle": -1
-    }
-  }
-}

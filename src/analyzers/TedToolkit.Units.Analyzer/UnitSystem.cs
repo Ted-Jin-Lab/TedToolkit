@@ -1,44 +1,20 @@
-﻿using TedToolkit.Units.Json;
+﻿using TedToolkit.Units.Data;
 
 namespace TedToolkit.Units.Analyzer;
 
 /// <summary>
 /// 
 /// </summary>
-public readonly record struct UnitSystem
+public readonly struct UnitSystem(Dictionary<string, string> unitDictionary, DataCollection collection)
 {
-    public UnitInfo AmountOfSubstance { get; }
-    public UnitInfo ElectricCurrent { get; }
-    public UnitInfo Length { get; }
-    public UnitInfo LuminousIntensity { get; }
-    public UnitInfo Mass { get; }
-    public UnitInfo Temperature { get; }
-    public UnitInfo Time { get; }
+    public IReadOnlyList<string> Keys { get; } = unitDictionary.Keys.ToList();
+    
+    public Quantity GetQuantity(string key) => collection.Quantities.First(q => q.Name == key);
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="n">AmountOfSubstance</param>
-    /// <param name="i">ElectricCurrent</param>
-    /// <param name="l">Length</param>
-    /// <param name="j">LuminousIntensity</param>
-    /// <param name="m">Mass</param>
-    /// <param name="θ">Temperature</param>
-    /// <param name="t">Time</param>
-    /// <param name="quantities"></param>
-    public UnitSystem(byte n, byte i, byte l, byte j, byte m, byte θ, byte t, Quantity[] quantities)
+    private Unit GetUnit(string key)
     {
-        AmountOfSubstance = GetUnitInfo(quantities, "AmountOfSubstance", n);
-        ElectricCurrent = GetUnitInfo(quantities, "ElectricCurrent", i);
-        Length = GetUnitInfo(quantities, "Length", l);
-        LuminousIntensity = GetUnitInfo(quantities, "LuminousIntensity", j);
-        Mass = GetUnitInfo(quantities, "Mass", m);
-        Temperature = GetUnitInfo(quantities, "Temperature", θ);
-        Time = GetUnitInfo(quantities, "Duration", t);
-    }
-
-    private static UnitInfo GetUnitInfo(Quantity[] quantities, string unit, byte info)
-    {
-        return quantities.First(q => q.Name == unit).UnitsInfos.ElementAt(info - 1);
+        var units = collection.Units.Values.ToArray();
+        var unitKey = unitDictionary[key];
+        return units.First(q => q.GetUnitName(units) == unitKey);
     }
 }

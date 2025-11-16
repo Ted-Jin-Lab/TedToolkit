@@ -1,8 +1,0 @@
-﻿{
-  "Name": "RatioChangeRate",
-  "BaseDimensions": {
-    "AdditionDimensions": {
-      "Ratio": 1
-    }
-  }
-}

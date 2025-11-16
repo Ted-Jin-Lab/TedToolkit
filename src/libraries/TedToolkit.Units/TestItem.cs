@@ -2,8 +2,12 @@
 
 namespace TedToolkit.Units;
 
-// public struct TestItem
-// {
-//     private double _value;
-//
-//     public static implicit operator double(TestItem quantity) => quantity._value;
+internal sealed class UnitsAttribute<TData> : Attribute
+{
+    public TData What { get; init; } = default;
+};
+
+[Units<double>(What = default)]
+class MyClass
+{
+}

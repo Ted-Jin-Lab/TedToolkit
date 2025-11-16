@@ -36,55 +36,63 @@ public static class Internal
         return sb.ToString();
     }
 
-    public static string GetUnitString(
-        int index, IFormatProvider? formatProvider,
-        LengthUnit length, int lengthCount,
-        MassUnit mass, int massCount,
-        DurationUnit time, int timeCount,
-        ElectricCurrentUnit current, int currentCount,
-        TemperatureUnit temperature, int temperatureCount,
-        AmountOfSubstanceUnit amount, int amountCount,
-        LuminousIntensityUnit luminousIntensity, int luminousIntensityCount)
-    {
-        var names = new List<string>(7);
-        AddOne(lengthCount, length.ToString(index, formatProvider));
-        AddOne(massCount, mass.ToString(index, formatProvider));
-        AddOne(timeCount, time.ToString(index, formatProvider));
-        AddOne(currentCount, current.ToString(index, formatProvider));
-        AddOne(temperatureCount, temperature.ToString(index, formatProvider));
-        AddOne(amountCount, amount.ToString(index, formatProvider));
-        AddOne(luminousIntensityCount, luminousIntensity.ToString(index, formatProvider));
-        return string.Join("·", names);
+    // public static string GetUnitString(
+    //     int index, IFormatProvider? formatProvider,
+    //     LengthUnit length, int lengthCount,
+    //     MassUnit mass, int massCount,
+    //     DurationUnit time, int timeCount,
+    //     ElectricCurrentUnit current, int currentCount,
+    //     TemperatureUnit temperature, int temperatureCount,
+    //     AmountOfSubstanceUnit amount, int amountCount,
+    //     LuminousIntensityUnit luminousIntensity, int luminousIntensityCount)
+    // {
+    //     var names = new List<string>(7);
+    //     AddOne(lengthCount, length.ToString(index, formatProvider));
+    //     AddOne(massCount, mass.ToString(index, formatProvider));
+    //     AddOne(timeCount, time.ToString(index, formatProvider));
+    //     AddOne(currentCount, current.ToString(index, formatProvider));
+    //     AddOne(temperatureCount, temperature.ToString(index, formatProvider));
+    //     AddOne(amountCount, amount.ToString(index, formatProvider));
+    //     AddOne(luminousIntensityCount, luminousIntensity.ToString(index, formatProvider));
+    //     return string.Join("·", names);
+    //
+    //     void AddOne(int count, string name)
+    //     {
+    //         if (count is 0) return;
+    //         names.Add(name + count.ToSuperscript());
+    //     }
+    // }
 
-        void AddOne(int count, string name)
+    public static string GetUnitString(bool isSymbol, IFormatProvider? formatProvider,
+        string symbol,
+        string defaultLabel, params (string, string)[] labels)
+    {
+        if (isSymbol) return symbol;
+        var culture = GetCulture(formatProvider);
+        foreach (var (key, value) in labels)
         {
-            if (count is 0) return;
-            names.Add(name + count.ToSuperscript());
+            if (key == culture) return value;
         }
+        return defaultLabel;
     }
 
-    public static string GetString(int index, params string[] format)
-    {
-        return format[index % format.Length];
-    }
-
-    public static string? GetFormat(string? format, out int index)
+    public static string? GetFormat(string? format, out bool isSymbol)
     {
         if (string.IsNullOrEmpty(format))
         {
-            index = 0;
+            isSymbol = true;
             return null;
         }
 
         var splitFormat = format!.Split('|');
-        if (!int.TryParse(splitFormat[0], out index)) index = 0;
-        return splitFormat[^1];
+        isSymbol = splitFormat[0].Contains('s') || splitFormat[0].Contains('S'); //TODO: L for label?
+        return splitFormat.First();
     }
 
     public static string GetCulture(IFormatProvider? formatProvider)
     {
         return formatProvider is CultureInfo cultureInfo
-            ? cultureInfo.Name
-            : CultureInfo.CurrentCulture.Name;
+            ? cultureInfo.TwoLetterISOLanguageName
+            : CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
     }
 }
