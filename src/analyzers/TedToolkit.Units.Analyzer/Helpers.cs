@@ -1,14 +1,14 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using MathNet.Symbolics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json.Linq;
+using PeterO.Numbers;
 using TedToolkit.Units.Data;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using Unit = Microsoft.FSharp.Core.Unit;
+using Conversion = TedToolkit.Units.Data.Conversion;
 
 namespace TedToolkit.Units.Analyzer;
 
@@ -37,6 +37,7 @@ internal static class Helpers
         {
             sb.Append(Superscripts.TryGetValue(c, out var i) ? i : c);
         }
+
         return sb.ToString();
     }
 
@@ -49,7 +50,7 @@ internal static class Helpers
                 /// <remarks>{string.Join("\t", links.Select(l => l.Remarks))}</remarks>
                 """;
     }
-    
+
     public static DataCollection GetData(params IEnumerable<string> jsons)
     {
         JObject? jObject = null;
@@ -62,7 +63,7 @@ internal static class Helpers
             var obj = JObject.Parse(reader.ReadToEnd());
             AppendObject(obj);
         }
-        
+
         foreach (var json in jsons)
         {
             AppendObject(JObject.Parse(json));
@@ -86,7 +87,132 @@ internal static class Helpers
             }
         }
     }
-    
+
+    public static ExpressionSyntax GetSystemToUnit(this Unit unit, UnitSystem system, Dimension dimension,
+        ITypeSymbol dataType)
+    {
+        var conversion = ToSystemConversion(system, dimension)?.TransformTo(unit.Conversion);
+        return ToExpression(conversion, dataType);
+    }
+
+    public static ExpressionSyntax GetUnitToSystem(this Unit unit, UnitSystem system, Dimension dimension,
+        ITypeSymbol dataType)
+    {
+        var conversion = unit.Conversion.TransformTo(ToSystemConversion(system, dimension));
+        return ToExpression(conversion, dataType);
+    }
+
+    private static ExpressionSyntax ToExpression(Conversion? conversion, ITypeSymbol dataType)
+    {
+        if (conversion is null || !conversion.Value.IsValid)
+        {
+            return ThrowExpression(ObjectCreationExpression(IdentifierName("global::System.NotImplementedException"))
+                .WithArgumentList(
+                    ArgumentList()));
+        }
+
+        ExpressionSyntax multiple = conversion.Value.Multiplier.ToEDecimal().Equals(EDecimal.One)
+            ? IdentifierName("Value")
+            : BinaryExpression(
+                SyntaxKind.MultiplyExpression,
+                CreateNumber(conversion.Value.Multiplier, dataType),
+                IdentifierName("Value"));
+
+        if (conversion.Value.Offset.IsZero) return multiple;
+        return BinaryExpression(
+            SyntaxKind.AddExpression,
+            multiple,
+            CreateNumber(conversion.Value.Offset, dataType));
+    }
+
+    private static Conversion? ToSystemConversion(UnitSystem system, Dimension dimension)
+    {
+        Conversion? result = Conversion.Unit;
+        foreach (var systemKey in system.Keys)
+        {
+            var unitConversion = system.GetUnit(systemKey).Conversion;
+            var conversion = unitConversion.Pow(dimension.GetExponent(systemKey));
+            result = result?.Merge(conversion);
+        }
+
+        return result;
+    }
+
+    private static ExpressionSyntax CreateNumber(ERational data, ITypeSymbol dataType)
+    {
+        var dec = data.ToEDecimal();
+        if (!dec.IsNaN())
+        {
+            return CreateNumber(dec, dataType);
+        }
+
+        return BinaryExpression(
+            SyntaxKind.DivideExpression,
+            CreateNumber(data.Numerator, dataType),
+            CreateNumber(data.Denominator, dataType));
+    }
+
+    private static LiteralExpressionSyntax CreateNumber(EDecimal data, ITypeSymbol dataType)
+    {
+        var num = data.ToString();
+        
+        if (!IsFloatingPoint(dataType))
+        {
+            if (int.TryParse(num, out var i))
+            {
+                return LiteralExpression(
+                    SyntaxKind.NumericLiteralExpression,
+                    Literal(i));
+            }
+        
+            if (uint.TryParse(num, out var u))
+            {
+                return LiteralExpression(
+                    SyntaxKind.NumericLiteralExpression,
+                    Literal(u));
+            }
+        
+            if (long.TryParse(num, out var l))
+            {
+                return LiteralExpression(
+                    SyntaxKind.NumericLiteralExpression,
+                    Literal(l));
+            }
+        
+            if (ulong.TryParse(num, out var ul))
+            {
+                return LiteralExpression(
+                    SyntaxKind.NumericLiteralExpression,
+                    Literal(ul));
+            }
+        }
+
+        if (dataType.SpecialType is SpecialType.System_Decimal && decimal.TryParse(num, out var m))
+        {
+            return LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                Literal(num + "m",m));
+        }
+
+        if (double.TryParse(num, out var d))
+        {
+            return LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                Literal(num + "d", d));
+        }
+
+        return LiteralExpression(
+            SyntaxKind.NumericLiteralExpression,
+            Literal(num));
+    }
+
+    static bool IsFloatingPoint(ITypeSymbol type)
+    {
+        return type.SpecialType is SpecialType.System_Single
+            or SpecialType.System_Double
+            or SpecialType.System_Decimal;
+    }
+
     // public static ExpressionSyntax ToExpression(this string expression, string parameterName, ITypeSymbol dataType)
     // {
     //     try
@@ -108,39 +234,8 @@ internal static class Helpers
     //     }
     // }
     //
-    // private static string AddPostfix(this string formula, ITypeSymbol dataType)
-    // {
-    //     return Regex.Replace(formula, @"\d+(?:\.\d+)?", m =>
-    //     {
-    //         var num = m.Value;
     //
-    //         if (!IsFloatingPoint(dataType) && !num.Contains('.'))
-    //         {
-    //             if (int.TryParse(num, out _))
-    //             {
-    //                 return num;
-    //             }
-    //
-    //             if (long.TryParse(num, out _))
-    //             {
-    //                 return num + "l";
-    //             }
-    //         }
-    //
-    //         if (dataType.SpecialType is SpecialType.System_Decimal && decimal.TryParse(num, out _))
-    //         {
-    //             return num + "m";
-    //         }
-    //
-    //         return num + "d";
-    //     });
-    //
-    //     static bool IsFloatingPoint(ITypeSymbol type)
-    //     {
-    //         return type.SpecialType is SpecialType.System_Single
-    //             or SpecialType.System_Double
-    //             or SpecialType.System_Decimal;
-    //     }
+
     // }
     //
     // public static string GetUnitToSystem(this UnitInfo info, UnitSystem system, BaseDimensions dimensions)

@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="PeterO.Numbers" />
         <PackageReference Include="PolySharp">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

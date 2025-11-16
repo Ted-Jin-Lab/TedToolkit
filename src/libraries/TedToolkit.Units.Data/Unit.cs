@@ -1,4 +1,7 @@
-﻿namespace TedToolkit.Units.Data;
+﻿using Newtonsoft.Json;
+using PeterO.Numbers;
+
+namespace TedToolkit.Units.Data;
 
 public readonly record struct Unit(
     string Key,
@@ -29,4 +32,6 @@ public readonly record struct Unit(
                 .Replace("°", "");
         }
     }
+
+    [JsonIgnore] public Conversion Conversion => new(EDecimal.FromString(Multiplier), EDecimal.FromString(Offset));
 }

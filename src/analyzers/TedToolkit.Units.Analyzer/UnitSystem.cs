@@ -11,7 +11,7 @@ public readonly struct UnitSystem(Dictionary<string, string> unitDictionary, Dat
     
     public Quantity GetQuantity(string key) => collection.Quantities.First(q => q.Name == key);
 
-    private Unit GetUnit(string key)
+    public Unit GetUnit(string key)
     {
         var units = collection.Units.Values.ToArray();
         var unitKey = unitDictionary[key];
