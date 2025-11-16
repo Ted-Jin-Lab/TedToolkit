@@ -91,17 +91,17 @@ internal static class Helpers
         ITypeSymbol dataType)
     {
         var conversion = ToSystemConversion(system, dimension)?.TransformTo(unit.Conversion);
-        return ToExpression(conversion, dataType);
+        return ToExpression(conversion, dataType, "Value");
     }
 
     public static ExpressionSyntax GetUnitToSystem(this Unit unit, UnitSystem system, Dimension dimension,
         ITypeSymbol dataType)
     {
         var conversion = unit.Conversion.TransformTo(ToSystemConversion(system, dimension));
-        return ToExpression(conversion, dataType);
+        return ToExpression(conversion, dataType, "value");
     }
 
-    private static ExpressionSyntax ToExpression(Conversion? conversion, ITypeSymbol dataType)
+    private static ExpressionSyntax ToExpression(Conversion? conversion, ITypeSymbol dataType, string argument)
     {
         if (conversion is null || !conversion.Value.IsValid)
         {
@@ -111,11 +111,11 @@ internal static class Helpers
         }
 
         ExpressionSyntax multiple = conversion.Value.Multiplier.ToEDecimal().Equals(EDecimal.One)
-            ? IdentifierName("Value")
+            ? IdentifierName(argument)
             : BinaryExpression(
                 SyntaxKind.MultiplyExpression,
                 CreateNumber(conversion.Value.Multiplier, dataType),
-                IdentifierName("Value"));
+                IdentifierName(argument));
 
         if (conversion.Value.Offset.IsZero) return multiple;
         return BinaryExpression(

@@ -11,7 +11,12 @@ using TedToolkit.Console;
 using TedToolkit.Console.Wrapper;
 using TedToolkit.QuantExtensions;
 using TedToolkit.ValidResults;using UnitsNet;
+using TedToolkit.Quantities;
+
 using UnitsNet.Units;
+
+var ac = 10.0.Metre_Length;
+var e = ac.Centimetre;
 
 var ratio = new AmplitudeRatio(5, AmplitudeRatioUnit.DecibelVolt);
 var b = ratio.DecibelMicrovolts;

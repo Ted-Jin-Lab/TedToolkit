@@ -17,6 +17,7 @@
         <ProjectReference Include="..\..\src\libraries\TedToolkit.CppInteropGen\TedToolkit.CppInteropGen.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.Fluent\TedToolkit.Fluent.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.PureConst\TedToolkit.PureConst.csproj" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Quantities.ISQ\TedToolkit.Quantities.ISQ.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.Logging\TedToolkit.Assertions.Logging.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.InterpolatedParser\TedToolkit.InterpolatedParser.csproj" />

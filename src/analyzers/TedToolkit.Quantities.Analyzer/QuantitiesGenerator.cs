@@ -110,6 +110,15 @@ public class QuantitiesGenerator : IIncrementalGenerator
                 
                 new ToleranceGenerator(unit, data.Quantities, isPublic, tDataType)
                     .Generate(context);
+
+                if (generateProperties)
+                {
+                    new UnitPropertyExtensionGenerator(isPublic, tDataType, data).Generate(context);
+                }
+                else if (generateMethods)
+                {
+                    new UnitMethodExtensionGenerator(isPublic, tDataType, data).Generate(context);
+                }
             }
         }
         catch (Exception e)
