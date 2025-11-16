@@ -2,9 +2,7 @@
     <ItemGroup>
         <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit*.dll" />
         <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll" />
-        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\MathNet.*.dll" />
-        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\FSharp.Core.dll" />
-        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\FParsec*.dll" />
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Units.Analyzer\bin\$(Configuration)\netstandard2.0\Numbers.dll" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.Units\TedToolkit.Units.csproj" />
     
     </ItemGroup>

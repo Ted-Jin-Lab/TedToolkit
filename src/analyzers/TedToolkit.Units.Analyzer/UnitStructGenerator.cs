@@ -127,14 +127,14 @@ internal class UnitStructGenerator(
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
-                                // ExpressionStatement(
-                                //     AssignmentExpression(
-                                //         SyntaxKind.SimpleAssignmentExpression,
-                                //         IdentifierName("Value"), CastExpression(
-                                //             IdentifierName(typeName.FullName), ParenthesizedExpression(
-                                //                 CreateSwitchStatement(info =>
-                                //                     info.GetUnitToSystem(unitSystem, quantity.BaseDimensions)
-                                //                         .ToExpression("value", typeName.Symbol))))))
+                                ExpressionStatement(
+                                    AssignmentExpression(
+                                        SyntaxKind.SimpleAssignmentExpression,
+                                        IdentifierName("Value"), CastExpression(
+                                            IdentifierName(typeName.FullName), ParenthesizedExpression(
+                                                CreateSwitchStatement(info =>
+                                                    info.GetUnitToSystem(unitSystem, quantity.Dimension,
+                                                        typeName.Symbol))))))
                             )),
 
                         MethodDeclaration(IdentifierName(typeName.FullName),
@@ -148,12 +148,11 @@ internal class UnitStructGenerator(
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
-                                // ReturnStatement(
-                                //     CastExpression(
-                                //         IdentifierName(typeName.FullName), ParenthesizedExpression(
-                                //             CreateSwitchStatement(info =>
-                                //                 info.GetSystemToUnit(unitSystem, quantity.BaseDimensions)
-                                //                     .ToExpression("Value", typeName.Symbol)))))
+                                ReturnStatement(CastExpression(
+                                        IdentifierName(typeName.FullName), ParenthesizedExpression(
+                                            CreateSwitchStatement(info =>
+                                                info.GetSystemToUnit(unitSystem, quantity.Dimension,
+                                                    typeName.Symbol)))))
                             )),
 
                         #endregion
@@ -219,7 +218,7 @@ internal class UnitStructGenerator(
                                         LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(" "))),
                                     LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(" "))
                                     //GetSystemUnitName(quantity, unitSystem)
-                                    )))),
+                                )))),
 
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)),
                                 Identifier("ToString"))
@@ -620,31 +619,34 @@ internal class UnitStructGenerator(
     //     return unit;
     // }
     //
-    // private SwitchExpressionSyntax CreateSwitchStatement(
-    //     Func<UnitInfo, ExpressionSyntax> getStatements)
-    // {
-    //     return SwitchExpression(IdentifierName("unit"))
-    //         .WithArms(
-    //         [
-    //             ..quantity.UnitsInfos.Select(info =>
-    //                 SwitchExpressionArm(
-    //                     ConstantPattern(
-    //                         MemberAccessExpression(
-    //                             SyntaxKind.SimpleMemberAccessExpression,
-    //                             IdentifierName(quantity.UnitName),
-    //                             IdentifierName(info.Name))),
-    //                     getStatements(info))),
-    //             SwitchExpressionArm(
-    //                 DiscardPattern(),
-    //                 ThrowExpression(ObjectCreationExpression(
-    //                         IdentifierName("global::System.ArgumentOutOfRangeException"))
-    //                     .WithArgumentList(
-    //                         ArgumentList(
-    //                         [
-    //                             Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal("unit"))),
-    //                             Argument(IdentifierName("unit")),
-    //                             Argument(LiteralExpression(SyntaxKind.NullLiteralExpression))
-    //                         ]))))
-    //         ]);
-    // }
+    private SwitchExpressionSyntax CreateSwitchStatement(
+        Func<Unit, ExpressionSyntax> getStatements)
+    {
+        return SwitchExpression(IdentifierName("unit"))
+            .WithArms(
+            [
+                ..quantity.Units.Select(u =>
+                {
+                    var unit = data.Units[u];
+                    return SwitchExpressionArm(
+                        ConstantPattern(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName(quantity.UnitName),
+                                IdentifierName(unit.GetUnitName(data.Units.Values)))),
+                        getStatements(unit));
+                }),
+                SwitchExpressionArm(
+                    DiscardPattern(),
+                    ThrowExpression(ObjectCreationExpression(
+                            IdentifierName("global::System.ArgumentOutOfRangeException"))
+                        .WithArgumentList(
+                            ArgumentList(
+                            [
+                                Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal("unit"))),
+                                Argument(IdentifierName("unit")),
+                                Argument(LiteralExpression(SyntaxKind.NullLiteralExpression))
+                            ]))))
+            ]);
+    }
 }

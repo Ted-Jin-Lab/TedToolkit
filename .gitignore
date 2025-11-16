@@ -367,3 +367,4 @@ FodyWeavers.xsd
 temp
 
 *.g.cs
+/src/analyzers/TedToolkit.Units.Analyzer/*.json
