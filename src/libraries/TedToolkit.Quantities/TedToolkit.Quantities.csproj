@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <Title>Units</Title>
-        <Description>Struct Units Conversions</Description>
+        <Title>Quantities</Title>
+        <Description>Struct Quantities Conversions</Description>
     </PropertyGroup>
 
     <ItemGroup>

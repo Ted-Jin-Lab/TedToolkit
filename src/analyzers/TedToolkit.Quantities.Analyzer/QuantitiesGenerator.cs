@@ -10,12 +10,12 @@ using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 namespace TedToolkit.Quantities.Analyzer;
 
 [Generator(LanguageNames.CSharp)]
-public class UnitsGenerator : IIncrementalGenerator
+public class QuantitiesGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var additionalJsonFiles = context.AdditionalTextsProvider
-            .Where(file => Path.GetFileName(file.Path).StartsWith("Unit", StringComparison.OrdinalIgnoreCase)
+            .Where(file => Path.GetFileName(file.Path).StartsWith("Quantity", StringComparison.OrdinalIgnoreCase)
                            && Path.GetExtension(file.Path).Equals(".json", StringComparison.OrdinalIgnoreCase));
         var compilationProvider = context.CompilationProvider;
 
@@ -29,7 +29,7 @@ public class UnitsGenerator : IIncrementalGenerator
         if (compilations.Assembly.GetAttributes()
                 .FirstOrDefault(a =>
                     a.AttributeClass is { IsGenericType: true } attributeClass &&
-                    attributeClass.ConstructUnboundGenericType().ToString().Contains("Units")) is not
+                    attributeClass.ConstructUnboundGenericType().ToString().Contains("Quantities")) is not
             { } attrData) return null;
 
         var tDataType = attrData.AttributeClass?.TypeArguments.FirstOrDefault()?.GetName();
@@ -78,7 +78,7 @@ public class UnitsGenerator : IIncrementalGenerator
                 var toStringExtensions = ClassDeclaration("UnitToStringExtensions")
                     .WithModifiers(
                         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitsGenerator))]);
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantitiesGenerator))]);
                 foreach (var quantity in data.Quantities)
                 {
                     var enumGenerator = new QuantityUnitEnumGenerator(data, quantity);
@@ -88,7 +88,7 @@ public class UnitsGenerator : IIncrementalGenerator
 
                 context.AddSource("_UnitToStringExtensions.g.cs", NamespaceDeclaration("TedToolkit.Quantities")
                     .WithMembers([toStringExtensions]).NodeToString());
-                new UnitAttributeGenerator(data).Generate(context);
+                new QuantitiesAttributeGenerator(data).Generate(context);
             }
 
             if (unitAttribute is null) return;
@@ -103,7 +103,7 @@ public class UnitsGenerator : IIncrementalGenerator
 
                 foreach (var quantity in data.Quantities)
                 {
-                    new UnitStructGenerator(data, quantity, tDataType, unit,
+                    new QuantityStructGenerator(data, quantity, tDataType, unit,
                         isPublic) 
                         .GenerateCode(context);
                 }

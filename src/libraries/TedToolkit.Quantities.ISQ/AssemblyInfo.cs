@@ -1,3 +1,3 @@
 ﻿using TedToolkit.Quantities;
 
-[assembly: Units<double>]
+[assembly: Quantities<double>]

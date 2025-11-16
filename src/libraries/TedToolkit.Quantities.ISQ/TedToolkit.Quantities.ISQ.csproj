@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>ISO Quantity</Title>
+        <Description>ISO System of Quantity Kinds (ISQ)</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Analyzer Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit*.dll" />
+        <Analyzer Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll" />
+        <Analyzer Include="..\..\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Numbers.dll" />
+        <ProjectReference Include="..\TedToolkit.Quantities\TedToolkit.Quantities.csproj" />
+    </ItemGroup>
+</Project>

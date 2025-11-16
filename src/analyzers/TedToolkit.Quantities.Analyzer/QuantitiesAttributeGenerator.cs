@@ -7,7 +7,7 @@ using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
 namespace TedToolkit.Quantities.Analyzer;
 
-public sealed class UnitAttributeGenerator(DataCollection data)
+public sealed class QuantitiesAttributeGenerator(DataCollection data)
 {
     public readonly record struct QuantityUnit(Quantity Quantity, string Unit)
     {
@@ -26,10 +26,10 @@ public sealed class UnitAttributeGenerator(DataCollection data)
     
     public void Generate(SourceProductionContext context)
     {
-        var c = ClassDeclaration("UnitsAttribute")
+        var c = ClassDeclaration("QuantitiesAttribute")
             .WithAttributeLists(
             [
-                GeneratedCodeAttribute(typeof(UnitAttributeGenerator)).AddAttributes(Attribute(
+                GeneratedCodeAttribute(typeof(QuantitiesAttributeGenerator)).AddAttributes(Attribute(
                         IdentifierName("global::System.AttributeUsage"))
                     .WithArgumentList(AttributeArgumentList(
                     [
@@ -47,7 +47,7 @@ public sealed class UnitAttributeGenerator(DataCollection data)
                     PropertyDeclaration(IdentifierName(q.UnitName),
                             Identifier(q.Name))
                         .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                        .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitAttributeGenerator))])
+                        .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantitiesAttributeGenerator))])
                         .WithAccessorList(AccessorList(
                         [
                             AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
@@ -66,7 +66,7 @@ public sealed class UnitAttributeGenerator(DataCollection data)
                 PropertyDeclaration(IdentifierName("global::TedToolkit.Quantities.UnitFlag"),
                         Identifier("Flag"))
                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitAttributeGenerator))])
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantitiesAttributeGenerator))])
                     .WithAccessorList(AccessorList(
                     [
                         AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
@@ -92,7 +92,7 @@ public sealed class UnitAttributeGenerator(DataCollection data)
             ])
             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
 
-        context.AddSource("_UnitsAttribute.g.cs",
+        context.AddSource("_QuantitiesAttribute.g.cs",
             NamespaceDeclaration("TedToolkit.Quantities").WithMembers([c]).NodeToString());
     }
 }
