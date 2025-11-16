@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Text;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TedToolkit.RoslynHelper.Extensions;
@@ -216,8 +217,7 @@ internal class UnitStructGenerator(
                                                 Argument(IdentifierName("formatProvider"))
                                             ])),
                                         LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(" "))),
-                                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(" "))
-                                    //GetSystemUnitName(quantity, unitSystem)
+                                    GetSystemUnitName()
                                 )))),
 
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)),
@@ -308,7 +308,8 @@ internal class UnitStructGenerator(
                                                         IdentifierName(unitName)))
                                             ]))))),
 
-                                PropertyDeclaration(IdentifierName(typeName.FullName), Identifier(unitName))
+                                PropertyDeclaration(IdentifierName(typeName.FullName),
+                                        Identifier(unitName == quantity.Name ? unitName + "_" : unitName))
                                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                                     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
                                     .WithXmlCommentInheritDoc($"{quantity.UnitName}.{unitName}")
@@ -449,150 +450,105 @@ internal class UnitStructGenerator(
         context.AddSource(quantity.Name + ".g.cs", nameSpace.NodeToString());
     }
 
-    // private static ExpressionSyntax GetSystemUnitName(Quantity quantity, UnitSystem unitSystem)
-    // {
-    //     if (quantity.IsNoDimensions)
-    //     {
-    //         return FromMember(quantity.UnitsInfos.FirstOrDefault(i =>
-    //             StringEquals(i.Name, quantity.BaseUnit)).Name);
-    //     }
-    //
-    //     var factor = 0;
-    //     var amountOfSubstanceName = GetMetaUnitName(unitSystem.AmountOfSubstance.Name, out var relay);
-    //     factor += quantity.BaseDimensions.N * relay;
-    //     var electricCurrentName = GetMetaUnitName(unitSystem.ElectricCurrent.Name, out relay);
-    //     factor += quantity.BaseDimensions.I * relay;
-    //     var lengthName = GetMetaUnitName(unitSystem.Length.Name, out relay);
-    //     factor += quantity.BaseDimensions.L * relay;
-    //     var luminousIntensityName = GetMetaUnitName(unitSystem.LuminousIntensity.Name, out relay);
-    //     factor += quantity.BaseDimensions.J * relay;
-    //     var massName = GetMetaUnitName(unitSystem.Mass.Name, out relay);
-    //     factor += quantity.BaseDimensions.M * relay;
-    //     var temperatureName = GetMetaUnitName(unitSystem.Temperature.Name, out relay);
-    //     factor += quantity.BaseDimensions.Θ * relay;
-    //     var timeName = GetMetaUnitName(unitSystem.Time.Name, out relay);
-    //     factor += quantity.BaseDimensions.T * relay;
-    //
-    //     var matchedUnits = quantity.UnitsInfos.Where(u =>
-    //     {
-    //         var baseUnits = u.Unit.BaseUnits;
-    //
-    //         var thisFactor = u.Prefix is Prefix.None ? 0 : u.PrefixInfo.Factor;
-    //         if (!ShouldContinue(quantity.BaseDimensions.N, baseUnits.N, amountOfSubstanceName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.I, baseUnits.I, electricCurrentName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.L, baseUnits.L, lengthName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.J, baseUnits.J, luminousIntensityName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.M, baseUnits.M, massName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.Θ, baseUnits.Θ, temperatureName, ref thisFactor))
-    //             return false;
-    //         if (!ShouldContinue(quantity.BaseDimensions.T, baseUnits.T, timeName, ref thisFactor))
-    //             return false;
-    //
-    //         return factor == thisFactor;
-    //
-    //         static bool ShouldContinue(int count, string baseUnitName, string systemUnitBasicName, ref int factor)
-    //         {
-    //             if (count is 0) return true;
-    //             if (string.IsNullOrEmpty(baseUnitName)) return false;
-    //             var basicName = GetMetaUnitName(baseUnitName, out var relay);
-    //             if (!StringEquals(systemUnitBasicName, basicName)) return false;
-    //             factor += count * relay;
-    //             return true;
-    //         }
-    //     }).ToArray();
-    //
-    //     if (matchedUnits.Any())
-    //     {
-    //         return FromMember(matchedUnits
-    //             .OrderBy(i => !StringEquals(i.Name, quantity.BaseUnit))
-    //             .ThenByDescending(i => Helpers.GetCommonCharactersCount(i.Name, quantity.BaseUnit))
-    //             .First().Name);
-    //     }
-    //
-    //     return InvocationExpression(MemberAccessExpression(
-    //             SyntaxKind.SimpleMemberAccessExpression,
-    //             IdentifierName("global::TedToolkit.Units.Internal"),
-    //             IdentifierName("GetUnitString")))
-    //         .WithArgumentList(ArgumentList(
-    //         [
-    //             Argument(IdentifierName("index")),
-    //             Argument(IdentifierName("formatProvider")),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("LengthUnit"), IdentifierName(unitSystem.Length.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.L))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("MassUnit"), IdentifierName(unitSystem.Mass.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.M))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("DurationUnit"), IdentifierName(unitSystem.Time.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.T))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("ElectricCurrentUnit"), IdentifierName(unitSystem.ElectricCurrent.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.I))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("TemperatureUnit"), IdentifierName(unitSystem.Temperature.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.Θ))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("AmountOfSubstanceUnit"), IdentifierName(unitSystem.AmountOfSubstance.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.N))),
-    //
-    //             Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-    //                 IdentifierName("LuminousIntensityUnit"), IdentifierName(unitSystem.LuminousIntensity.Name))),
-    //             Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression,
-    //                 Literal(quantity.BaseDimensions.J))),
-    //         ]));
-    //
-    //     static bool StringEquals(string a, string b) =>
-    //         string.Equals(a, b, StringComparison.InvariantCultureIgnoreCase);
-    //
-    //     InvocationExpressionSyntax FromMember(string memberName)
-    //     {
-    //         return InvocationExpression(MemberAccessExpression(
-    //                 SyntaxKind.SimpleMemberAccessExpression,
-    //                 MemberAccessExpression(
-    //                     SyntaxKind.SimpleMemberAccessExpression,
-    //                     IdentifierName(quantity.UnitName),
-    //                     IdentifierName(memberName)),
-    //                 IdentifierName("ToString")))
-    //             .WithArgumentList(ArgumentList(
-    //             [
-    //                 Argument(IdentifierName("index")),
-    //                 Argument(IdentifierName("formatProvider"))
-    //             ]));
-    //     }
-    // }
-    //
-    // private static string GetMetaUnitName(string unit, out int factor)
-    // {
-    //     factor = 0;
-    //     foreach (var prefixInfo in PrefixInfo.Entries.Values.Where(i => i.Type is PrefixType.SI))
-    //     {
-    //         var prefixName = prefixInfo.Prefix.ToString();
-    //         if (!unit.StartsWith(prefixName, StringComparison.InvariantCultureIgnoreCase)) continue;
-    //         factor += prefixInfo.Factor;
-    //         unit = unit[prefixName.Length..];
-    //     }
-    //
-    //     return unit;
-    // }
-    //
+    private ExpressionSyntax GetSystemUnitName()
+    {
+        var allUnits = quantity.Units
+            .Select(u => data.Units[u])
+            .ToArray();
+
+        if (allUnits.Length == 0)
+        {
+            return LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                Literal(quantity.Name));
+        }
+
+        if (quantity.IsNoDimensions)
+        {
+            var memberName = allUnits
+                .OrderBy(u => u.DistanceToDefault)
+                .First().GetUnitName(data.Units.Values);
+            return FromMember(quantity.UnitName, memberName);
+        }
+
+        var systemConversion = Helpers.ToSystemConversion(unitSystem, quantity.Dimension);
+        if (systemConversion is not null)
+        {
+            var conversion = systemConversion.Value;
+            var multiplier = Helpers.ToDecimal(conversion.Multiplier);
+            var offset = Helpers.ToDecimal(conversion.Offset);
+            var choiceUnit = allUnits
+                .Where(u =>
+                {
+                    if (Math.Abs(Helpers.ToDecimal(u.Conversion.Multiplier) - multiplier) > 1e-9m)
+                        return false;
+                    if (Math.Abs(Helpers.ToDecimal(u.Conversion.Offset) - offset) > 1e-9m)
+                        return false;
+                    return true;
+                })
+                .OrderBy(u => u.DistanceToDefault)
+                .FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(choiceUnit.Name))
+            {
+                return FromMember(quantity.UnitName, choiceUnit.GetUnitName(data.Units.Values));
+            }
+        }
+
+        ExpressionSyntax? result = null;
+        AddOne(quantity.Dimension.AmountOfSubstance, nameof(Dimension.AmountOfSubstance));
+        AddOne(quantity.Dimension.ElectricCurrent, nameof(Dimension.ElectricCurrent));
+        AddOne(quantity.Dimension.Length, nameof(Dimension.Length));
+        AddOne(quantity.Dimension.LuminousIntensity, nameof(Dimension.LuminousIntensity));
+        AddOne(quantity.Dimension.Mass, nameof(Dimension.Mass));
+        AddOne(quantity.Dimension.ThermodynamicTemperature, nameof(Dimension.ThermodynamicTemperature));
+        AddOne(quantity.Dimension.Time, nameof(Dimension.Time));
+        return result ?? LiteralExpression(
+            SyntaxKind.StringLiteralExpression,
+            Literal(quantity.Name));
+
+        void AddOne(int count, string key)
+        {
+            if (count is 0) return;
+            var unit = unitSystem.GetUnit(key);
+
+            var member = BinaryExpression(
+                SyntaxKind.AddExpression,
+                FromMember(key + "Unit", unit.GetUnitName(data.Units.Values)),
+                LiteralExpression(
+                    SyntaxKind.StringLiteralExpression,
+                    Literal(count.ToSuperscript())));
+            if (result is null)
+            {
+                result = member;
+            }
+            else
+            {
+                result = BinaryExpression(SyntaxKind.AddExpression,
+                    BinaryExpression(SyntaxKind.AddExpression,
+                        result, LiteralExpression(
+                            SyntaxKind.StringLiteralExpression,
+                            Literal("·"))), member);
+            }
+        }
+
+        InvocationExpressionSyntax FromMember(string quantityName, string memberName)
+        {
+            return InvocationExpression(MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName(quantityName),
+                        IdentifierName(memberName)),
+                    IdentifierName("ToString")))
+                .WithArgumentList(ArgumentList(
+                [
+                    Argument(IdentifierName("index")),
+                    Argument(IdentifierName("formatProvider"))
+                ]));
+        }
+    }
+
     private SwitchExpressionSyntax CreateSwitchStatement(
         Func<Unit, ExpressionSyntax> getStatements)
     {

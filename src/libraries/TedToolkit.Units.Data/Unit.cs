@@ -12,7 +12,8 @@ public readonly record struct Unit(
     Dictionary<string, string> Labels,
     string Multiplier,
     string Offset,
-    IReadOnlyList<FactorUnit> FactorUnits)
+    IReadOnlyList<FactorUnit> FactorUnits,
+    int ApplicableSystem)
 {
     public string GetUnitName(IEnumerable<Unit> allUnits)
     {
@@ -34,4 +35,37 @@ public readonly record struct Unit(
     }
 
     [JsonIgnore] public Conversion Conversion => new(EDecimal.FromString(Multiplier), EDecimal.FromString(Offset));
+    [JsonIgnore]
+    public double DistanceToDefault
+    {
+        get
+        {
+            var result = 0.0;
+            if (!string.IsNullOrEmpty(Multiplier))
+            {
+                if (double.TryParse(Multiplier, out var value))
+                {
+                    result += Math.Abs(value - 1);
+                }
+                else
+                {
+                    return double.MaxValue;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(Offset))
+            {
+                if (double.TryParse(Offset, out var value))
+                {
+                    result += Math.Abs(value);
+                }
+                else
+                {
+                    return double.MaxValue;
+                }
+            }
+
+            return result - ApplicableSystem;
+        }
+    }
 }

@@ -10,7 +10,6 @@ using TedToolkit.Assertions.FluentValidation;
 using TedToolkit.Console;
 using TedToolkit.Console.Wrapper;
 using TedToolkit.QuantExtensions;
-using TedToolkit.Units.Data;
 using TedToolkit.ValidResults;using UnitsNet;
 using UnitsNet.Units;
 

@@ -19,8 +19,5 @@ var g = new Graph();
 var parser = new TurtleParser();
 parser.Load(g, path);
 var data = new QudtAnalyzer(g).Analyze();
-foreach (var unitsValue in data.Units.Values)
-{
-    Console.WriteLine(unitsValue.Conversion);
-}
 await File.WriteAllTextAsync(Path.Combine(unitFolder.FullName, "qudt.json"), JsonConvert.SerializeObject(data));
+Console.WriteLine("Done!");
