@@ -9,7 +9,7 @@ using static TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
 namespace TedToolkit.Quantities.Analyzer;
 
-internal class UnitStructGenerator(
+internal class QuantityStructGenerator(
     DataCollection data,
     Quantity quantity,
     TypeName typeName,
@@ -33,7 +33,7 @@ internal class UnitStructGenerator(
                                 IdentifierName(typeName.FullName)
                             ]))),
                     ]))
-                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                     .WithXmlComment($"/// <inheritdoc cref=\"{quantity.UnitName}\"/>")
                     .WithMembers(
                     [
@@ -45,7 +45,7 @@ internal class UnitStructGenerator(
                                     ]))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.ReadOnlyKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))]),
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))]),
 
                         ConstructorDeclaration(Identifier(quantity.Name))
                             .WithModifiers(TokenList(Token(quantity.IsNoDimensions
@@ -56,7 +56,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("value"))
                                     .WithType(IdentifierName(typeName.FullName)),
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
                                 ExpressionStatement(
@@ -76,7 +76,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("unit"))
                                     .WithType(IdentifierName(quantity.UnitName))
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
                                 ExpressionStatement(
@@ -97,7 +97,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("unit"))
                                     .WithType(IdentifierName(quantity.UnitName))
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithBody(Block(
                                 ReturnStatement(CastExpression(
@@ -114,7 +114,7 @@ internal class UnitStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)), Identifier("ToString"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlCommentInheritDoc((string?)null)
                             .WithExpressionBody(ArrowExpressionClause(
                                 InvocationExpression(IdentifierName("ToString"))
@@ -130,7 +130,7 @@ internal class UnitStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)),
                                 Identifier("ToString"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
@@ -174,7 +174,7 @@ internal class UnitStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.StringKeyword)),
                                 Identifier("ToString"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlCommentInheritDoc((string?)null)
                             .WithParameterList(ParameterList(
                             [
@@ -239,7 +239,7 @@ internal class UnitStructGenerator(
                                         Identifier("From" + unitName))
                                     .WithModifiers(
                                         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                                     .WithXmlComment(
                                         $"/// <summary> From <see cref=\"{quantity.UnitName}.{unitName}\"/> </summary>")
                                     .WithParameterList(ParameterList(
@@ -262,7 +262,7 @@ internal class UnitStructGenerator(
                                 PropertyDeclaration(IdentifierName(typeName.FullName),
                                         Identifier(unitName == quantity.Name ? unitName + "_" : unitName))
                                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                                     .WithXmlCommentInheritDoc($"{quantity.UnitName}.{unitName}")
                                     .WithExpressionBody(ArrowExpressionClause(
                                         InvocationExpression(IdentifierName("As"))
@@ -291,7 +291,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("quantity"))
                                     .WithType(IdentifierName(quantity.Name))
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression, IdentifierName("quantity"),
@@ -307,7 +307,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("value"))
                                     .WithType(IdentifierName(typeName.FullName))
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithExpressionBody(ArrowExpressionClause(
                                 ImplicitObjectCreationExpression()
@@ -323,7 +323,7 @@ internal class UnitStructGenerator(
 
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
@@ -342,7 +342,7 @@ internal class UnitStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
@@ -364,7 +364,7 @@ internal class UnitStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithExpressionBody(
                                 ArrowExpressionClause(
@@ -382,7 +382,7 @@ internal class UnitStructGenerator(
                                 Parameter(Identifier("other"))
                                     .WithType(IdentifierName(quantity.Name))
                             ]))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithXmlComment()
                             .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
                                     IdentifierName("Tolerance.CurrentDefault.Compare"))

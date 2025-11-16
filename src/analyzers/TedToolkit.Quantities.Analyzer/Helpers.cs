@@ -53,7 +53,7 @@ internal static class Helpers
     public static DataCollection GetData(params IEnumerable<string> jsons)
     {
         JObject? jObject = null;
-        var asm = typeof(UnitsGenerator).Assembly;
+        var asm = typeof(QuantitiesGenerator).Assembly;
         foreach (var se in asm.GetManifestResourceNames()
                      .Where(n => n.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
         {

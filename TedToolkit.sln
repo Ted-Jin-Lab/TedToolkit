@@ -128,6 +128,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.Data"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.Analyzer", "src\analyzers\TedToolkit.Quantities.Analyzer\TedToolkit.Quantities.Analyzer.csproj", "{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.ISQ", "src\libraries\TedToolkit.Quantities.ISQ\TedToolkit.Quantities.ISQ.csproj", "{5F97FE7C-205C-42B7-B18B-97363FBACDE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -261,6 +263,10 @@ Global
 		{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F97FE7C-205C-42B7-B18B-97363FBACDE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F97FE7C-205C-42B7-B18B-97363FBACDE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F97FE7C-205C-42B7-B18B-97363FBACDE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F97FE7C-205C-42B7-B18B-97363FBACDE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,5 +314,6 @@ Global
 		{EE91776E-9DE9-4CF1-8CF2-618893029825} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 		{8D597C86-3C37-4E27-B197-403FB689BF33} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 		{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
+		{5F97FE7C-205C-42B7-B18B-97363FBACDE0} = {BF802F5C-A96C-464C-B337-6225DAFE1AC9}
 	EndGlobalSection
 EndGlobal
