@@ -149,10 +149,10 @@ internal class UnitStructGenerator(
                             .WithXmlComment()
                             .WithBody(Block(
                                 ReturnStatement(CastExpression(
-                                        IdentifierName(typeName.FullName), ParenthesizedExpression(
-                                            CreateSwitchStatement(info =>
-                                                info.GetSystemToUnit(unitSystem, quantity.Dimension,
-                                                    typeName.Symbol)))))
+                                    IdentifierName(typeName.FullName), ParenthesizedExpression(
+                                        CreateSwitchStatement(info =>
+                                            info.GetSystemToUnit(unitSystem, quantity.Dimension,
+                                                typeName.Symbol)))))
                             )),
 
                         #endregion
@@ -367,107 +367,81 @@ internal class UnitStructGenerator(
 
                         #endregion
 
-                        // #region Comparisons
-                        //
-                        // PropertyDeclaration(IdentifierName(typeName.FullName), Identifier("Tolerance"))
-                        //     .WithModifiers(
-                        //         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                        //     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                        //     .WithExpressionBody(ArrowExpressionClause(CastExpression(
-                        //         IdentifierName(typeName.FullName),
-                        //         ParenthesizedExpression(CreateTolerance(quantity.BaseDimensions, quantity.Name, typeName.FullName)))))
-                        //     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        //
-                        // MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
-                        //     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                        //     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                        //     .WithXmlComment()
-                        //     .WithParameterList(ParameterList(
-                        //     [
-                        //         Parameter(Identifier("other"))
-                        //             .WithType(IdentifierName(quantity.Name))
-                        //     ]))
-                        //     .WithExpressionBody(ArrowExpressionClause(BinaryExpression(
-                        //         SyntaxKind.LessThanOrEqualExpression, CastExpression(
-                        //             IdentifierName(typeName.FullName),
-                        //             InvocationExpression(MemberAccessExpression(
-                        //                     SyntaxKind.SimpleMemberAccessExpression,
-                        //                     IdentifierName("global::System.Math"),
-                        //                     IdentifierName("Abs")))
-                        //                 .WithArgumentList(ArgumentList(
-                        //                 [
-                        //                     Argument(
-                        //                         BinaryExpression(SyntaxKind.SubtractExpression, IdentifierName("Value"),
-                        //                             MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                        //                                 IdentifierName("other"), IdentifierName("Value"))))
-                        //                 ]))),
-                        //         IdentifierName("Tolerance"))))
-                        //     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        //
-                        // MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
-                        //     .WithModifiers(
-                        //         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
-                        //     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                        //     .WithXmlComment()
-                        //     .WithParameterList(ParameterList(
-                        //     [
-                        //         Parameter(Identifier("obj"))
-                        //             .WithType(NullableType(PredefinedType(Token(SyntaxKind.ObjectKeyword))))
-                        //     ]))
-                        //     .WithExpressionBody(ArrowExpressionClause(
-                        //         BinaryExpression(SyntaxKind.LogicalAndExpression, IsPatternExpression(
-                        //                 IdentifierName("obj"),
-                        //                 DeclarationPattern(IdentifierName(quantity.Name),
-                        //                     SingleVariableDesignation(Identifier("other")))),
-                        //             InvocationExpression(IdentifierName("Equals"))
-                        //                 .WithArgumentList(ArgumentList(
-                        //                 [
-                        //                     Argument(IdentifierName("other"))
-                        //                 ])))))
-                        //     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        //
-                        // MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
-                        //     .WithModifiers(
-                        //         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
-                        //     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                        //     .WithXmlComment()
-                        //     .WithExpressionBody(
-                        //         ArrowExpressionClause(
-                        //             InvocationExpression(
-                        //                 MemberAccessExpression(
-                        //                     SyntaxKind.SimpleMemberAccessExpression,
-                        //                     IdentifierName("Value"),
-                        //                     IdentifierName("GetHashCode")))))
-                        //     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        //
-                        // MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
-                        //     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
-                        //     .WithParameterList(ParameterList(
-                        //     [
-                        //         Parameter(Identifier("other"))
-                        //             .WithType(IdentifierName(quantity.Name))
-                        //     ]))
-                        //     .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
-                        //     .WithXmlComment()
-                        //     .WithExpressionBody(ArrowExpressionClause(ConditionalExpression(
-                        //         InvocationExpression(IdentifierName("Equals"))
-                        //             .WithArgumentList(ArgumentList(
-                        //             [
-                        //                 Argument(IdentifierName("other"))
-                        //             ])),
-                        //         LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)),
-                        //         InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                        //                 IdentifierName("Value"), IdentifierName("CompareTo")))
-                        //             .WithArgumentList(ArgumentList(
-                        //             [
-                        //                 Argument(MemberAccessExpression(
-                        //                     SyntaxKind.SimpleMemberAccessExpression,
-                        //                     IdentifierName("other"),
-                        //                     IdentifierName("Value")))
-                        //             ])))))
-                        //     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        //
-                        // #endregion
+                        #region Comparisons
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("other"))
+                                    .WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
+                                    IdentifierName("Tolerance.CurrentDefault.Equals"))
+                                .WithArgumentList(ArgumentList(
+                                [
+                                    Argument(ThisExpression()),
+                                    Argument(IdentifierName("other"))
+                                ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("obj"))
+                                    .WithType(NullableType(PredefinedType(Token(SyntaxKind.ObjectKeyword))))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.LogicalAndExpression, IsPatternExpression(
+                                        IdentifierName("obj"),
+                                        DeclarationPattern(IdentifierName(quantity.Name),
+                                            SingleVariableDesignation(Identifier("other")))),
+                                    InvocationExpression(IdentifierName("Equals"))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("other"))
+                                        ])))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(
+                                ArrowExpressionClause(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("Value"),
+                                            IdentifierName("GetHashCode")))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("other"))
+                                    .WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitStructGenerator))])
+                            .WithXmlComment()
+                            .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
+                                    IdentifierName("Tolerance.CurrentDefault.Compare"))
+                                .WithArgumentList(ArgumentList(
+                                [
+                                    Argument(ThisExpression()),
+                                    Argument(IdentifierName("other"))
+                                ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        #endregion
 
                         ..members
                     ])
