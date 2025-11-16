@@ -97,6 +97,9 @@ public class UnitsGenerator : IIncrementalGenerator
             { // For the case with unit attribute
                 var (tDataType, flag, units) = unitAttribute.Value;
                 var isPublic = (flag & 1 << 0) is 0;
+                var generateMethods= (flag & 1 << 1) is not 0;
+                var generateProperties= (flag & 1 << 2) is not 0;
+                
                 var unit = new UnitSystem(units, data);
 
                 foreach (var quantity in data.Quantities)
