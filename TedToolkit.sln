@@ -126,7 +126,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Tests", "t
 		{8D597C86-3C37-4E27-B197-403FB689BF33} = {8D597C86-3C37-4E27-B197-403FB689BF33}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Json", "src\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj", "{8D597C86-3C37-4E27-B197-403FB689BF33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Units.Data", "src\libraries\TedToolkit.Units.Data\TedToolkit.Units.Data.csproj", "{8D597C86-3C37-4E27-B197-403FB689BF33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

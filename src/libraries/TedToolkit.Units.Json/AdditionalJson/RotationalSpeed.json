@@ -1,8 +1,0 @@
-{
-  "Name": "RotationalSpeed",
-  "BaseDimensions": {
-    "AdditionDimensions": {
-      "Angle": 1
-    }
-  }
-}

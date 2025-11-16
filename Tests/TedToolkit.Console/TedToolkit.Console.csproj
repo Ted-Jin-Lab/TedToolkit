@@ -20,7 +20,6 @@
         <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.Logging\TedToolkit.Assertions.Logging.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.InterpolatedParser\TedToolkit.InterpolatedParser.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.ValidResults\TedToolkit.ValidResults.csproj" />
         <ProjectReference Include="..\..\src\libraries\TedToolkit.QuantExtensions\TedToolkit.QuantExtensions.csproj" />
     </ItemGroup>

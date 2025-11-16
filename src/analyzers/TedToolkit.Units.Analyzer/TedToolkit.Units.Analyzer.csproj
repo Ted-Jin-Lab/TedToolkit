@@ -6,14 +6,14 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj"/>
-        <ProjectReference Include="..\..\libraries\TedToolkit.Units.Json\TedToolkit.Units.Json.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
+        <ProjectReference Include="..\..\libraries\TedToolkit.Units.Data\TedToolkit.Units.Data.csproj"/>
+        <PackageReference Include="Newtonsoft.Json"/>
         <PackageReference Include="MathNet.Symbolics"/>
         <PackageReference Include="PolySharp">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <EmbeddedResource Include="*.json"/>
     </ItemGroup>
 
 </Project>
