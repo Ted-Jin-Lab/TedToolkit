@@ -96,18 +96,18 @@ public class UnitsGenerator : IIncrementalGenerator
             
             { // For the case with unit attribute
                 var (tDataType, flag, units) = unitAttribute.Value;
+                var isPublic = (flag & 1 << 0) is 0;
                 var unit = new UnitSystem(units, data);
 
                 foreach (var quantity in data.Quantities)
                 {
                     new UnitStructGenerator(data, quantity, tDataType, unit,
-                            (flag & 1 << 0) is 0)
+                        isPublic) 
                         .GenerateCode(context);
                 }
-
-                //
-                // new ToleranceGenerator(unit, [..quantities.Where(q => q.IsNoDimensions)])
-                //     .Generate(context);
+                
+                new ToleranceGenerator(unit, data.Quantities, isPublic, tDataType)
+                    .Generate(context);
             }
         }
         catch (Exception e)

@@ -8,14 +8,6 @@ using VDS.RDF.Parsing;
 
 Console.WriteLine("Hello, World!");
 
-Console.WriteLine(ERational.One);
-// var i =ERational.FromEDecimal( EDecimal.FromInt64(14959787069160));
-// var re = ERational.One / i;
-// Console.WriteLine(re.ToInt64Unchecked() );
-// Console.WriteLine(re.Denominator);
-// Console.WriteLine(re.Numerator);
-return;
-
 var srcFolder = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Parent?.Parent?.Parent?.Parent;
 var solutionFolder = srcFolder?.Parent;
 var unitFolder = srcFolder?.CreateSubdirectory("analyzers").CreateSubdirectory("TedToolkit.Units.Analyzer");
