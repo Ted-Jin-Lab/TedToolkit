@@ -125,7 +125,7 @@ internal static class Helpers
             CreateNumber(conversion.Value.Offset, dataType));
     }
 
-    private static Conversion? ToSystemConversion(UnitSystem system, Dimension dimension)
+    public static Conversion? ToSystemConversion(UnitSystem system, Dimension dimension)
     {
         Conversion? result = Conversion.Unit;
         foreach (var systemKey in system.Keys)
@@ -136,6 +136,24 @@ internal static class Helpers
         }
 
         return result;
+    }
+
+    public static decimal ToDecimal(ERational data)
+    {
+        try
+        {
+            var dec = data.ToEDecimal();
+            if (!dec.IsNaN())
+            {
+                return dec.ToDecimal();
+            }
+        }
+        catch (OverflowException)
+        {
+            
+        }
+        
+        return (decimal)data.Numerator.ToInt64Unchecked() / data.Denominator.ToInt64Unchecked();
     }
 
     private static ExpressionSyntax CreateNumber(ERational data, ITypeSymbol dataType)

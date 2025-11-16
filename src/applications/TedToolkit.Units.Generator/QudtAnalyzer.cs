@@ -48,9 +48,14 @@ internal sealed class QudtAnalyzer(Graph g, string quantitySystem = "ISQ")
             .Where(i => !string.IsNullOrEmpty(i.Language))
             .ToDictionary(i => i.Language, i => i.Value);
 
-        var label = labels
-            .OrderBy(n => n.Key.Length)
-            .FirstOrDefault().Value?.LabelToName() ?? node.GetUrlName();
+        if (!labels.TryGetValue("", out var label))
+        {
+            if (!labels.TryGetValue("en", out label))
+            {
+                label = null!;
+            }
+        }
+        label = label?.LabelToName() ?? node.GetUrlName();
 
         var multiplier = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:conversionMultiplier"))
             .Select(t => t.Object)
@@ -68,8 +73,11 @@ internal sealed class QudtAnalyzer(Graph g, string quantitySystem = "ISQ")
             .Select(FactorUnitParse)
             .ToArray();
 
+        var count = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:applicableSystem"))
+            .Count();
+
         return new Unit(node.GetUrlName(), label, node.GetDescription(g), node.GetLinks(g), GetSymbol(node), labels, multiplier, offset,
-            factors);
+            factors, count);
     }
 
     private IEnumerable<ILiteralNode> GetLabels(IUriNode node)

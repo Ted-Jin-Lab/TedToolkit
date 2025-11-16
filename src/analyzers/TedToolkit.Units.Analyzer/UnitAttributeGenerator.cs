@@ -20,35 +20,7 @@ public sealed class UnitAttributeGenerator(DataCollection data)
     {
         var unit = q.Units
             .Select(u => data.Units[u])
-            .OrderBy(u =>
-            {
-                var result = 0.0;
-                if (!string.IsNullOrEmpty(u.Multiplier))
-                {
-                    if (double.TryParse(u.Multiplier, out var value))
-                    {
-                        result += Math.Abs(value - 1);
-                    }
-                    else
-                    {
-                        return double.MaxValue;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(u.Offset))
-                {
-                    if (double.TryParse(u.Offset, out var value))
-                    {
-                        result += Math.Abs(value);
-                    }
-                    else
-                    {
-                        return double.MaxValue;
-                    }
-                }
-
-                return result;
-            })
+            .OrderBy(u => u.DistanceToDefault)
             .First().GetUnitName(data.Units.Values);
         return new QuantityUnit(q, unit);
     });
