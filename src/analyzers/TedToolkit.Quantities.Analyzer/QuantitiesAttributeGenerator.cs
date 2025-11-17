@@ -23,7 +23,7 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
             .First().GetUnitName(data.Units.Values);
         return new QuantityUnit(q, unit);
     });
-    
+
     public void Generate(SourceProductionContext context)
     {
         var c = ClassDeclaration("QuantitiesAttribute")
@@ -41,6 +41,11 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
             ])
             .WithModifiers(TokenList(Token(SyntaxKind.InternalKeyword), Token(SyntaxKind.SealedKeyword)))
             .WithTypeParameterList(TypeParameterList([TypeParameter(Identifier("TData"))]))
+            .WithParameterList(ParameterList(
+            [
+                Parameter(Identifier("quantitySystem"))
+                    .WithType(PredefinedType(Token(SyntaxKind.StringKeyword)))
+            ]))
             .WithMembers(
             [
                 ..QuantityUnits.Select(q =>
@@ -62,7 +67,7 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
                                     IdentifierName(q.UnitName),
                                     IdentifierName(q.Unit))))
                         .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))),
-                
+
                 PropertyDeclaration(IdentifierName("global::TedToolkit.Quantities.UnitFlag"),
                         Identifier("Flag"))
                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
@@ -74,7 +79,8 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
                         AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                     ]))
-                    .WithInitializer(EqualsValueClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))
+                    .WithInitializer(
+                        EqualsValueClause(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))
                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
             ])
             .WithBaseList(BaseList(

@@ -136,7 +136,7 @@ public sealed class ToleranceGenerator(
     }
 
     //TODO: Quantity Default Tolerance by units.
-    private static PropertyDeclarationSyntax CreateToleranceProperty(string name)
+    private PropertyDeclarationSyntax CreateToleranceProperty(string name)
     {
         return PropertyDeclaration(IdentifierName(name), Identifier(name))
             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
@@ -150,7 +150,7 @@ public sealed class ToleranceGenerator(
             ]))
             .WithInitializer(EqualsValueClause(CastExpression(
                 IdentifierName(name),
-                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1E-6)))))
+                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(typeName.Symbol.IsFloatingPoint() ? 1E-6 : 1)))))
             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
     }
 }

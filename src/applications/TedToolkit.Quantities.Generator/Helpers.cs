@@ -47,4 +47,11 @@ public static class Helpers
     {
         return string.Join(null, label.Split(' ').Select(i => char.ToUpperInvariant(i[0]) + i[1..]));
     }
+    
+    public static IEnumerable<ILiteralNode> GetLabels(this IUriNode node, Graph g)
+    {
+        return g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("rdfs:label"))
+            .Select(t => t.Object)
+            .OfType<ILiteralNode>();
+    }
 }

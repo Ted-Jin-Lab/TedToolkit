@@ -70,7 +70,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetRun(s => s
-                .SetProjectFile(Solution.src.Units.TedToolkit_Units_Generator)
+                .SetProjectFile(Solution.src.Quantities.TedToolkit_Quantities_Generator)
                 .SetConfiguration(Configuration.Release));
             
             DotNetTasks.DotNetBuild(s => s
