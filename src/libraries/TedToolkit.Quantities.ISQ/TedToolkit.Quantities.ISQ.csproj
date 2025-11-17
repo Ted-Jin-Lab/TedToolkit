@@ -3,6 +3,7 @@
     <PropertyGroup>
         <Title>ISO Quantity</Title>
         <Description>ISO System of Quantity Kinds (ISQ)</Description>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
