@@ -23,7 +23,7 @@ public abstract class UnitExtensionGenerator(bool isPublic, DataCollection data)
 
     private IEnumerable<(string quantity, string unit)> CreateUnits()
     {
-        return data.Quantities.SelectMany(q =>
+        return data.Quantities.Values.SelectMany(q =>
             q.Units.Select(u => (q.Name, data.Units[u].GetUnitName(data.Units.Values))));
     }
     

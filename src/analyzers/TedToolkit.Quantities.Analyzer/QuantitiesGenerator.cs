@@ -84,9 +84,9 @@ public class QuantitiesGenerator : IIncrementalGenerator
         {
             var (compilations, texts) = arg;
             var unitAttribute = ReadUnit(compilations);
-            var tDataType = unitAttribute?.tDataType;
-            var flag = unitAttribute?.flag;
-            var units = unitAttribute?.units;
+            var tDataType = unitAttribute?.tDataType!;
+            var flag = unitAttribute?.flag!;
+            var units = unitAttribute?.units!;
             var quantitySystem= unitAttribute?.quantitySystem;
 
             var data = Helpers.GetData(quantitySystem, texts.Select(t => t.GetText(context.CancellationToken)!.ToString()));
@@ -99,7 +99,7 @@ public class QuantitiesGenerator : IIncrementalGenerator
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantitiesGenerator))]);
                 foreach (var quantity in data.Quantities)
                 {
-                    var enumGenerator = new QuantityUnitEnumGenerator(data, quantity);
+                    var enumGenerator = new QuantityUnitEnumGenerator(data, quantity.Value);
                     enumGenerator.GenerateCode(context);
                     toStringExtensions = toStringExtensions.AddMembers(enumGenerator.GenerateToString());
                 }
@@ -112,7 +112,6 @@ public class QuantitiesGenerator : IIncrementalGenerator
             if (unitAttribute is null) return;
 
             {
-
                 var isPublic = (flag & 1 << 0) is 0;
                 var generateMethods = (flag & 1 << 1) is not 0;
                 var generateProperties = (flag & 1 << 2) is not 0;
@@ -121,12 +120,12 @@ public class QuantitiesGenerator : IIncrementalGenerator
 
                 foreach (var quantity in data.Quantities)
                 {
-                    new QuantityStructGenerator(data, quantity, tDataType, unit,
+                    new QuantityStructGenerator(data, quantity.Value, tDataType, unit,
                             isPublic)
                         .GenerateCode(context);
                 }
 
-                new ToleranceGenerator(unit, data.Quantities, isPublic, tDataType)
+                new ToleranceGenerator(unit, data.Quantities.Values.ToArray(), isPublic, tDataType)
                     .Generate(context);
 
                 if (generateProperties)

@@ -25,7 +25,7 @@ public sealed class UnitEnumGenerator(IReadOnlyList<Unit> units)
                     [
                         ..units.Select((u, i) => EnumMemberDeclaration(Identifier(u.GetUnitName(units)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(UnitEnumGenerator))])
-                            .WithXmlComment(Helpers.CreateSummary(u.Description, u.Links))
+                            .WithXmlComment(Helpers.CreateSummary(u.Description, u.Links, ""))
                             .WithEqualsValue(EqualsValueClause(
                                 LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i + 1)))))
                     ])

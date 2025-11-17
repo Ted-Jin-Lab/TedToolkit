@@ -78,7 +78,7 @@ public sealed class QuantityUnitEnumGenerator(DataCollection data, Quantity quan
                         SimpleBaseType(PredefinedType(Token(SyntaxKind.UShortKeyword)))
                     ]))
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityUnitEnumGenerator))])
-                    .WithXmlComment(Helpers.CreateSummary(quantity.Description, quantity.Links))
+                    .WithXmlComment(Helpers.CreateSummary(quantity.Description, quantity.Links, quantity.Dimension))
                     .WithMembers(
                     [
                         ..quantity.Units.Select(u =>

@@ -25,7 +25,7 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
                 .Select(t => t.Subject)
                 .OfType<IUriNode>();
         }
-        
+
         return g.GetTriplesWithSubjectPredicate(
                 quantitySystem,
                 g.CreateUriNode("qudt:hasQuantityKind"))
@@ -45,7 +45,7 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
             .Where(q => q.HasValue)
             .Select(q => q!.Value)
             .ToArray();
-        return new DataCollection(quantities, _units);
+        return new DataCollection(quantities.ToDictionary(i => i.Name), _units, _dimensions);
     }
 
     #region Unit
@@ -63,31 +63,26 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
                 label = null!;
             }
         }
+
         label = label?.LabelToName() ?? node.GetUrlName();
 
-        var multiplier = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:conversionMultiplier"))
-            .Select(t => t.Object)
-            .OfType<ILiteralNode>()
+        var multiplier = node.GetProperty<ILiteralNode>(g, "qudt:conversionMultiplier")
             .FirstOrDefault()?.Value ?? "1";
 
-        var offset = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:conversionOffset"))
-            .Select(t => t.Object)
-            .OfType<ILiteralNode>()
+        var offset = node.GetProperty<ILiteralNode>(g, "qudt:conversionOffset")
             .FirstOrDefault()?.Value ?? "0";
 
-        var factors = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:hasFactorUnit"))
-            .Select(t => t.Object)
-            .OfType<IBlankNode>()
+        var factors = node.GetProperty<IBlankNode>(g, "qudt:hasFactorUnit")
             .Select(FactorUnitParse)
             .ToArray();
 
         var count = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:applicableSystem"))
             .Count();
 
-        return new Unit(node.GetUrlName(), label, node.GetDescription(g), node.GetLinks(g), GetSymbol(node), labels, multiplier, offset,
+        return new Unit(node.GetUrlName(), label, node.GetDescription(g), node.GetLinks(g), GetSymbol(node), labels,
+            multiplier, offset,
             factors, count);
     }
-
 
 
     private string GetSymbol(IUriNode node)
@@ -110,24 +105,36 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
     #endregion
 
     private readonly Dictionary<string, Unit> _units = [];
+    private readonly Dictionary<string, Dimension> _dimensions = [];
 
     #region Quantity
 
     public Quantity? QuantityParse(IUriNode node, bool isBasic)
     {
-        var dimension = GetDimensionVector(node, out var isDefaultQuantity);
-        if (!dimension.HasValue) return null;
+        var dimensionNode = node.GetProperty<IUriNode>(g, "qudt:hasDimensionVector").First();
+        var quantityKind = node.GetProperty<IUriNode>(g, "qudt:hasReferenceQuantityKind").FirstOrDefault();
+
+        var isDefaultQuantity = quantityKind?.ToString() == node.ToString();
+        if (DimensionParse(dimensionNode) is not { } dimension) return null;
+
+        var denominator = DimensionParse(node.GetProperty<IUriNode>(g, "qudt:qkdvDenominator").FirstOrDefault());
+        var numerator = DimensionParse(node.GetProperty<IUriNode>(g, "qudt:qkdvNumerator").FirstOrDefault());
+        var matchName = node.GetProperty<IUriNode>(g, "qudt:exactMatch").FirstOrDefault()?.GetUrlName();
+
         return new Quantity(node.GetUrlName(), node.GetDescription(g), node.GetLinks(g), isBasic,
-            dimension.Value, isDefaultQuantity,
-            GetUnits(node));
+            dimension, isDefaultQuantity,
+            GetUnits(node))
+        {
+            Numerator = numerator ?? string.Empty,
+            Denominator = denominator ?? string.Empty,
+            ExactMatch = matchName ?? string.Empty,
+        };
     }
 
     private IReadOnlyList<string> GetUnits(IUriNode node)
     {
         List<string> result = [];
-        foreach (var uriNode in g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:applicableUnit"))
-                     .Select(t => t.Object)
-                     .OfType<IUriNode>())
+        foreach (var uriNode in node.GetProperty<IUriNode>(g, "qudt:applicableUnit"))
         {
             var name = uriNode.GetUrlName();
             result.Add(name);
@@ -138,24 +145,6 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
 
         return result;
     }
-    
-    private Dimension? GetDimensionVector(IUriNode quantity, out bool isDefaultQuantity)
-    {
-        var dimension = g.GetTriplesWithSubjectPredicate(quantity,
-                g.CreateUriNode("qudt:hasDimensionVector"))
-            .Select(n => n.Object)
-            .OfType<IUriNode>()
-            .First();
-
-        var quantityKind = g.GetTriplesWithSubjectPredicate(dimension,
-                g.CreateUriNode("qudt:hasReferenceQuantityKind"))
-            .Select(n => n.Object)
-            .FirstOrDefault();
-
-        isDefaultQuantity = quantityKind?.ToString() == quantity.ToString();
-
-        return DimensionParse(dimension);
-    }
 
     #endregion
 
@@ -163,33 +152,27 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
 
     public FactorUnit FactorUnitParse(IBlankNode node)
     {
-        var exponent = int.Parse(g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:exponent"))
-            .Select(t => t.Object)
-            .OfType<ILiteralNode>()
-            .First().Value);
+        var exponent = int.Parse(node.GetProperty<ILiteralNode>(g, "qudt:exponent").First().Value);
+        var unit = node.GetProperty<IUriNode>(g, "qudt:hasUnit").First();
+        var dimension = unit.GetProperty<IUriNode>(g, "qudt:hasDimensionVector").First();
+        ;
 
-        var unit = g.GetTriplesWithSubjectPredicate(node, g.CreateUriNode("qudt:hasUnit"))
-            .Select(t => t.Object)
-            .OfType<IUriNode>()
-            .First();
-
-        var dimension = g.GetTriplesWithSubjectPredicate(unit, g.CreateUriNode("qudt:hasDimensionVector"))
-            .Select(t => t.Object)
-            .OfType<IUriNode>()
-            .First();
-
-        return new FactorUnit(exponent, DimensionParse(dimension)!.Value);
+        return new FactorUnit(exponent, DimensionParse(dimension)!);
     }
 
     #endregion
 
     #region Dimensions
 
-    public Dimension? DimensionParse(IUriNode node)
+    public string? DimensionParse(IUriNode? node)
     {
+        if (node is null) return null;
         try
         {
-            return new Dimension(
+            var key = node.GetUrlName();
+            if (_dimensions.ContainsKey(key)) return key;
+
+            var dimension = new Dimension(
                 GetExponent("qudt:dimensionExponentForAmountOfSubstance"),
                 GetExponent("qudt:dimensionExponentForElectricCurrent"),
                 GetExponent("qudt:dimensionExponentForLength"),
@@ -198,12 +181,15 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
                 GetExponent("qudt:dimensionExponentForThermodynamicTemperature"),
                 GetExponent("qudt:dimensionExponentForTime"),
                 GetExponent("qudt:dimensionlessExponent"));
+
+            _dimensions.Add(key, dimension);
+            return key;
         }
         catch
         {
             return null;
         }
-        
+
         int GetExponent(string name)
         {
             var value = g.GetTriplesWithSubjectPredicate(node,
@@ -212,7 +198,7 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
                 .OfType<LiteralNode>()
                 .First()
                 .Value;
-            
+
             return int.Parse(value);
         }
     }

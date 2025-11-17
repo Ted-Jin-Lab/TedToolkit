@@ -15,7 +15,7 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
         public string Name => Quantity.Name;
     }
 
-    public IEnumerable<QuantityUnit> QuantityUnits => data.Quantities.Where(q => q.IsBasic).Select(q =>
+    public IEnumerable<QuantityUnit> QuantityUnits => data.Quantities.Values.Where(q => q.IsBasic).Select(q =>
     {
         var unit = q.Units
             .Select(u => data.Units[u])

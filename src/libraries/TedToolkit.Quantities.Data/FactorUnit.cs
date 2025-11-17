@@ -1,3 +1,3 @@
 ﻿namespace TedToolkit.Quantities.Data;
 
-public readonly record struct FactorUnit(int Exponent, Dimension Dimension);
+public readonly record struct FactorUnit(int Exponent, string Dimension);
