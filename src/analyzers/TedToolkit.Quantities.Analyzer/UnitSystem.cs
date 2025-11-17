@@ -9,7 +9,7 @@ public readonly struct UnitSystem(Dictionary<string, string> unitDictionary, Dat
 {
     public IReadOnlyList<string> Keys { get; } = unitDictionary.Keys.ToList();
 
-    public Quantity GetQuantity(string key) => collection.Quantities.First(q => q.Name == key);
+    public Quantity GetQuantity(string key) => collection.Quantities.Values.First(q => q.Name == key);
 
     public Unit GetUnit(string key)
     {

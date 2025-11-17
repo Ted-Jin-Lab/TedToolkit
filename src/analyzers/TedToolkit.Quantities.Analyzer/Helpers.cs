@@ -40,13 +40,14 @@ internal static class Helpers
         return sb.ToString();
     }
 
-    public static string CreateSummary(string description, IEnumerable<Link> links)
+    public static string CreateSummary(string description, IEnumerable<Link> links, string dimension)
     {
+        dimension = string.IsNullOrEmpty(dimension) ? dimension : $"<b>{dimension}</b>";
         return $"""
                 /// <summary>
                 /// {description.Replace("\n", "\n///")}
                 /// </summary>
-                /// <remarks>{string.Join("\t", links.Select(l => l.Remarks))}</remarks>
+                /// <remarks>{dimension}{string.Join("\t", links.Select(l => l.Remarks))}</remarks>
                 """;
     }
 

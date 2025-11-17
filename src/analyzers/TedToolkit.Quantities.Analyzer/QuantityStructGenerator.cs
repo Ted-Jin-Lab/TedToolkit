@@ -85,7 +85,7 @@ internal class QuantityStructGenerator(
                                         IdentifierName("Value"), CastExpression(
                                             IdentifierName(typeName.FullName), ParenthesizedExpression(
                                                 CreateSwitchStatement(info =>
-                                                    info.GetUnitToSystem(unitSystem, quantity.Dimension,
+                                                    info.GetUnitToSystem(unitSystem,data.Dimensions[quantity.Dimension],
                                                         typeName.Symbol))))))
                             )),
 
@@ -103,7 +103,7 @@ internal class QuantityStructGenerator(
                                 ReturnStatement(CastExpression(
                                     IdentifierName(typeName.FullName), ParenthesizedExpression(
                                         CreateSwitchStatement(info =>
-                                            info.GetSystemToUnit(unitSystem, quantity.Dimension,
+                                            info.GetSystemToUnit(unitSystem, data.Dimensions[quantity.Dimension],
                                                 typeName.Symbol)))))
                             )),
 
@@ -422,7 +422,8 @@ internal class QuantityStructGenerator(
             return FromMember(quantity.UnitName, memberName);
         }
 
-        var systemConversion = Helpers.ToSystemConversion(unitSystem, quantity.Dimension);
+        var dimension = data.Dimensions[quantity.Dimension];
+        var systemConversion = Helpers.ToSystemConversion(unitSystem, dimension);
         if (systemConversion is not null)
         {
             var conversion = systemConversion.Value;
@@ -447,13 +448,13 @@ internal class QuantityStructGenerator(
         }
 
         ExpressionSyntax? result = null;
-        AddOne(quantity.Dimension.AmountOfSubstance, nameof(Dimension.AmountOfSubstance));
-        AddOne(quantity.Dimension.ElectricCurrent, nameof(Dimension.ElectricCurrent));
-        AddOne(quantity.Dimension.Length, nameof(Dimension.Length));
-        AddOne(quantity.Dimension.LuminousIntensity, nameof(Dimension.LuminousIntensity));
-        AddOne(quantity.Dimension.Mass, nameof(Dimension.Mass));
-        AddOne(quantity.Dimension.ThermodynamicTemperature, nameof(Dimension.ThermodynamicTemperature));
-        AddOne(quantity.Dimension.Time, nameof(Dimension.Time));
+        AddOne(dimension.AmountOfSubstance, nameof(Dimension.AmountOfSubstance));
+        AddOne(dimension.ElectricCurrent, nameof(Dimension.ElectricCurrent));
+        AddOne(dimension.Length, nameof(Dimension.Length));
+        AddOne(dimension.LuminousIntensity, nameof(Dimension.LuminousIntensity));
+        AddOne(dimension.Mass, nameof(Dimension.Mass));
+        AddOne(dimension.ThermodynamicTemperature, nameof(Dimension.ThermodynamicTemperature));
+        AddOne(dimension.Time, nameof(Dimension.Time));
         return result ?? LiteralExpression(
             SyntaxKind.StringLiteralExpression,
             Literal(quantity.Name));

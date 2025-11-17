@@ -7,12 +7,16 @@ public readonly record struct Quantity(
     string Description,
     IReadOnlyList<Link> Links,
     bool IsBasic,
-    Dimension Dimension,
+    string Dimension,
     bool IsDimensionDefault,
     IReadOnlyList<string> Units)
 {
+    public string Denominator { get; init; }
+    public string Numerator { get; init; }
+    public string ExactMatch { get; init; }
+    
     [JsonIgnore]
     public string UnitName => Name + "Unit";
 
-    public bool IsNoDimensions => Dimension.Dimensionless is not 0;
+    [JsonIgnore] public bool IsNoDimensions => Dimension.Contains("A0E0L0I0M0H0T0");
 }

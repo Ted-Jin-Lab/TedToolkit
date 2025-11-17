@@ -10,10 +10,16 @@ public static class Internal
         string defaultLabel, params (string, string)[] labels)
     {
         if (isSymbol) return symbol;
-        var culture = GetCulture(formatProvider);
+        var culture = formatProvider is CultureInfo cultureInfo ? cultureInfo : CultureInfo.CurrentCulture;
+        var letter = culture.Name.ToLower();
         foreach (var (key, value) in labels)
         {
-            if (key == culture) return value;
+            if (key == letter) return value;
+        }
+        letter = culture.TwoLetterISOLanguageName.ToLower();
+        foreach (var (key, value) in labels)
+        {
+            if (key == letter) return value;
         }
         return defaultLabel;
     }
@@ -29,12 +35,5 @@ public static class Internal
         var splitFormat = format!.Split('|');
         isSymbol = splitFormat[0].Contains('s') || splitFormat[0].Contains('S'); //TODO: L for label?
         return splitFormat.First();
-    }
-
-    public static string GetCulture(IFormatProvider? formatProvider)
-    {
-        return formatProvider is CultureInfo cultureInfo
-            ? cultureInfo.TwoLetterISOLanguageName
-            : CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
     }
 }
