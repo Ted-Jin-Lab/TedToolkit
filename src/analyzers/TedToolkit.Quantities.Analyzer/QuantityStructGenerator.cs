@@ -81,7 +81,26 @@ internal class QuantityStructGenerator(
                     ]))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
         ];
-
+        
+        if (!quantity.IsNoDimensions)
+        {
+            mathsExtensions.Add(                        
+                OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
+                    .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                        Token(SyntaxKind.StaticKeyword)))
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                    .WithParameterList(ParameterList(
+                    [
+                        Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
+                        Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name)),
+                    ]))
+                    .WithExpressionBody(ArrowExpressionClause(
+                        BinaryExpression(SyntaxKind.MultiplyExpression,
+                            IdentifierName("right"),
+                            IdentifierName("left"))))
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
+        }
+        
         if (typeName.Symbol.IsFloatingPoint())
         {
             mathsExtensions.AddRange([
@@ -516,37 +535,6 @@ internal class QuantityStructGenerator(
                                         IdentifierName("right"),
                                         IdentifierName("Value")))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-
-                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
-                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
-                                Token(SyntaxKind.StaticKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator)).AddAttributes(OverloadResolutionPriorityAttribute(1))])
-                            .WithParameterList(ParameterList(
-                            [
-                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
-                                Parameter(Identifier("right")).WithType(IdentifierName(typeName.FullName)),
-                            ]))
-                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
-                                ParenthesizedExpression(BinaryExpression(SyntaxKind.MultiplyExpression,
-                                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("left"), IdentifierName("Value")),
-                                    IdentifierName("right"))))))
-                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
-                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
-                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
-                                Token(SyntaxKind.StaticKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithParameterList(ParameterList(
-                            [
-                                Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
-                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name)),
-                            ]))
-                            .WithExpressionBody(ArrowExpressionClause(
-                                BinaryExpression(SyntaxKind.MultiplyExpression,
-                                    IdentifierName("right"),
-                                    IdentifierName("left"))))
-                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                         
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.SlashToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
@@ -563,6 +551,22 @@ internal class QuantityStructGenerator(
                                         SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("left"),
                                         IdentifierName("Value")),
+                                    IdentifierName("right"))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
+                                                OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator)).AddAttributes(OverloadResolutionPriorityAttribute(1))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(typeName.FullName)),
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                ParenthesizedExpression(BinaryExpression(SyntaxKind.MultiplyExpression,
+                                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"), IdentifierName("Value")),
                                     IdentifierName("right"))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
