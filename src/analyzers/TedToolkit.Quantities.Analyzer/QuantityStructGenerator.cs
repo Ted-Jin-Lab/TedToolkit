@@ -18,8 +18,6 @@ internal class QuantityStructGenerator(
 {
     public void GenerateCode(SourceProductionContext context)
     {
-        List<MemberDeclarationSyntax> members = [];
-
         var nameSpace = NamespaceDeclaration("TedToolkit.Quantities")
             .WithMembers([
                 StructDeclaration(quantity.Name)
@@ -85,7 +83,8 @@ internal class QuantityStructGenerator(
                                         IdentifierName("Value"), CastExpression(
                                             IdentifierName(typeName.FullName), ParenthesizedExpression(
                                                 CreateSwitchStatement(info =>
-                                                    info.GetUnitToSystem(unitSystem,data.Dimensions[quantity.Dimension],
+                                                    info.GetUnitToSystem(unitSystem,
+                                                        data.Dimensions[quantity.Dimension],
                                                         typeName.Symbol))))))
                             )),
 
@@ -255,7 +254,7 @@ internal class QuantityStructGenerator(
                                                 Argument(
                                                     MemberAccessExpression(
                                                         SyntaxKind.SimpleMemberAccessExpression,
-                                                        IdentifierName(quantity.UnitName),
+                                                        IdentifierName("global::TedToolkit.Quantities." + quantity.UnitName),
                                                         IdentifierName(unitName)))
                                             ]))))),
 
@@ -270,7 +269,7 @@ internal class QuantityStructGenerator(
                                             [
                                                 Argument(MemberAccessExpression(
                                                     SyntaxKind.SimpleMemberAccessExpression,
-                                                    IdentifierName(quantity.UnitName),
+                                                    IdentifierName("global::TedToolkit.Quantities." + quantity.UnitName),
                                                     IdentifierName(unitName)))
                                             ]))))
                                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
@@ -317,6 +316,21 @@ internal class QuantityStructGenerator(
                                     ]))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
+                        ..quantity.ExactMatch.Where(data.Quantities.ContainsKey).Select(m =>
+                            ConversionOperatorDeclaration(Token(SyntaxKind.ImplicitKeyword),
+                                    IdentifierName(quantity.Name))
+                                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                    Token(SyntaxKind.StaticKeyword)))
+                                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                                .WithParameterList(ParameterList([
+                                    Parameter(Identifier("data")).WithType(IdentifierName(m))
+                                ])).WithExpressionBody(
+                                    ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression, IdentifierName("data"),
+                                            IdentifierName("Value")))))
+                                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))),
+
                         #endregion
 
                         #region Comparisons
@@ -338,7 +352,6 @@ internal class QuantityStructGenerator(
                                     Argument(IdentifierName("other"))
                                 ]))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
@@ -360,7 +373,6 @@ internal class QuantityStructGenerator(
                                             Argument(IdentifierName("other"))
                                         ])))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
@@ -374,7 +386,6 @@ internal class QuantityStructGenerator(
                                             IdentifierName("Value"),
                                             IdentifierName("GetHashCode")))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                             .WithParameterList(ParameterList(
@@ -395,7 +406,56 @@ internal class QuantityStructGenerator(
 
                         #endregion
 
-                        ..members
+                        #region Operators
+
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(typeName.FullName)),
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                ParenthesizedExpression(BinaryExpression(SyntaxKind.MultiplyExpression,
+                                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"), IdentifierName("Value")),
+                                    IdentifierName("right"))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name)),
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.MultiplyExpression,
+                                    IdentifierName("right"),
+                                    IdentifierName("left"))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.SlashToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(typeName.FullName)),
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                ParenthesizedExpression(BinaryExpression(SyntaxKind.DivideExpression,
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"),
+                                        IdentifierName("Value")),
+                                    IdentifierName("right"))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+
+                        #endregion
                     ])
             ]);
         context.AddSource(quantity.Name + ".g.cs", nameSpace.NodeToString());
@@ -490,7 +550,7 @@ internal class QuantityStructGenerator(
                     SyntaxKind.SimpleMemberAccessExpression,
                     MemberAccessExpression(
                         SyntaxKind.SimpleMemberAccessExpression,
-                        IdentifierName(quantityName),
+                        IdentifierName("global::TedToolkit.Quantities." + quantityName),
                         IdentifierName(memberName)),
                     IdentifierName("ToString")))
                 .WithArgumentList(ArgumentList(
@@ -514,7 +574,7 @@ internal class QuantityStructGenerator(
                         ConstantPattern(
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName(quantity.UnitName),
+                                IdentifierName("global::TedToolkit.Quantities." + quantity.UnitName),
                                 IdentifierName(unit.GetUnitName(data.Units.Values)))),
                         getStatements(unit));
                 }),

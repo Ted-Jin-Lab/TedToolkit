@@ -13,7 +13,7 @@ public readonly record struct Quantity(
 {
     public string Denominator { get; init; }
     public string Numerator { get; init; }
-    public string ExactMatch { get; init; }
+    public string[] ExactMatch { get; init; }
     
     [JsonIgnore]
     public string UnitName => Name + "Unit";
