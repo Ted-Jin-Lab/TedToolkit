@@ -2,7 +2,6 @@
 
 using System.Globalization;
 using System.Text.RegularExpressions;
-using MathNet.Symbolics;
 using TedToolkit.Assertions;
 using TedToolkit.Assertions.Assertions.Extensions;
 using TedToolkit.Assertions.Execution;
