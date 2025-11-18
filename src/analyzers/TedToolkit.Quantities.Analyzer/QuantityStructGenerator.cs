@@ -67,7 +67,6 @@ internal class QuantityStructGenerator(
                             Token(SyntaxKind.StaticKeyword)))
                         .WithAttributeLists([
                             GeneratedCodeAttribute(typeof(QuantityStructGenerator))
-                                .AddAttributes(OverloadResolutionPriorityAttribute(1))
                         ])
                         .WithParameterList(ParameterList(
                         [
@@ -615,7 +614,6 @@ internal class QuantityStructGenerator(
                                 Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([
                                 GeneratedCodeAttribute(typeof(QuantityStructGenerator))
-                                    .AddAttributes(OverloadResolutionPriorityAttribute(1))
                             ])
                             .WithParameterList(ParameterList(
                             [
