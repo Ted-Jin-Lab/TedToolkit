@@ -89,12 +89,12 @@ internal class QuantityStructGenerator(
                 CreateMathMethod(nameof(Math.Ceiling)),
                 CreateMathMethod(nameof(Math.Round)),
                 CreateEnumerableMethod(nameof(Enumerable.Sum), $"""
-                                                               /// <summary>
-                                                               /// Computes the sum of a sequence of <see cref="{quantity.Name}"/> values
-                                                               /// </summary>
-                                                               /// <param name="values"></param>
-                                                               /// <returns>The sum of the projected values</returns>
-                                                               """),
+                                                                /// <summary>
+                                                                /// Computes the sum of a sequence of <see cref="{quantity.Name}"/> values
+                                                                /// </summary>
+                                                                /// <param name="values"></param>
+                                                                /// <returns>The sum of the projected values</returns>
+                                                                """),
                 CreateEnumerableMethod(nameof(Enumerable.Average), $"""
                                                                     /// <summary>
                                                                     /// Computes the average of a sequence of <see cref="{quantity.Name}"/> values that are obtained by invoking a transform function on each element of the input sequence
@@ -496,6 +496,26 @@ internal class QuantityStructGenerator(
                         #endregion
 
                         #region Operators
+
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PlusToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                ParenthesizedExpression(BinaryExpression(SyntaxKind.AddExpression,
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"),
+                                        IdentifierName("Value")),
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("right"),
+                                        IdentifierName("Value")))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
