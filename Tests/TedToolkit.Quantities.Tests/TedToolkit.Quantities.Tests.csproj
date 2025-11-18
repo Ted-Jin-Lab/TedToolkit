@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Quantities.ISQ\TedToolkit.Quantities.ISQ.csproj" />
-    </ItemGroup>
-</Project>
