@@ -51,7 +51,7 @@ internal static class Helpers
                 """;
     }
 
-    public static DataCollection GetData(string? fileName, params IEnumerable<string> jsons)
+    public static DataCollection GetData(string? fileName, IEnumerable<string> jsons, string[] quantities)
     {
         var asm = typeof(QuantitiesGenerator).Assembly;
 
@@ -64,7 +64,7 @@ internal static class Helpers
 
         resourceName ??= asm.GetManifestResourceNames()
             .FirstOrDefault(n => n.EndsWith("ISQ.json", StringComparison.OrdinalIgnoreCase));
-        
+
         JObject jObject;
         {
             using var stream = asm.GetManifestResourceStream(resourceName)!;
@@ -79,11 +79,15 @@ internal static class Helpers
 
         var result = jObject?.ToObject<DataCollection>() ?? throw new NullReferenceException();
 
-        return result;
-        return result with
-        {
-            Quantities = result.Quantities.Where(p => p.Key == "AtomicMass").ToDictionary(i => i.Key, i => i.Value)
-        };
+        return quantities.Length is 0
+            ? result
+            : result with
+            {
+                Quantities = result.Quantities
+                    .Where(p => p.Value.IsBasic || quantities.Contains(p.Key))
+                    .ToDictionary(i => i.Key, i => i.Value)
+            };
+
         void AppendObject(JObject obj)
         {
             jObject.Merge(obj, new JsonMergeSettings

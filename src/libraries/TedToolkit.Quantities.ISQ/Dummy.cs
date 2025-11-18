@@ -2,4 +2,7 @@
 
 public partial struct Angle
 {
+    public Angle()
+    {
+    }
 }
