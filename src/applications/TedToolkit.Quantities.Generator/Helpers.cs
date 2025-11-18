@@ -45,7 +45,12 @@ public static class Helpers
 
     public static string LabelToName(this string label)
     {
-        return string.Join(null, label.Split(' ').Select(i => char.ToUpperInvariant(i[0]) + i[1..]));
+        return string.Join(null, label.Split(' ')
+            .Select(i => char.ToUpperInvariant(i[0]) + i[1..])
+            .Select(s => s
+                .Replace("\'", "")
+                .Replace("?", "")
+            ));
     }
 
     public static IEnumerable<ILiteralNode> GetLabels(this IUriNode node, Graph g)

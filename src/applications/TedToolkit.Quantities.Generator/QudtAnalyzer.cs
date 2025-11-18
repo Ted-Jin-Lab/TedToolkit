@@ -119,15 +119,15 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
 
         var denominator = DimensionParse(node.GetProperty<IUriNode>(g, "qudt:qkdvDenominator").FirstOrDefault());
         var numerator = DimensionParse(node.GetProperty<IUriNode>(g, "qudt:qkdvNumerator").FirstOrDefault());
-        var matchName = node.GetProperty<IUriNode>(g, "qudt:exactMatch").FirstOrDefault()?.GetUrlName();
+        var matchName = node.GetProperty<IUriNode>(g, "qudt:exactMatch").Select(r => r.GetUrlName()).ToArray();
 
-        return new Quantity(node.GetUrlName(), node.GetDescription(g), node.GetLinks(g), isBasic,
+        return new Quantity(node.GetUrlName().Replace('-','_'), node.GetDescription(g), node.GetLinks(g), isBasic,
             dimension, isDefaultQuantity,
             GetUnits(node))
         {
             Numerator = numerator ?? string.Empty,
             Denominator = denominator ?? string.Empty,
-            ExactMatch = matchName ?? string.Empty,
+            ExactMatch = matchName,
         };
     }
 
@@ -155,7 +155,6 @@ internal sealed class QudtAnalyzer(Graph g, INode? quantitySystem)
         var exponent = int.Parse(node.GetProperty<ILiteralNode>(g, "qudt:exponent").First().Value);
         var unit = node.GetProperty<IUriNode>(g, "qudt:hasUnit").First();
         var dimension = unit.GetProperty<IUriNode>(g, "qudt:hasDimensionVector").First();
-        ;
 
         return new FactorUnit(exponent, DimensionParse(dimension)!);
     }

@@ -1,8 +1,5 @@
 ﻿namespace TedToolkit.Quantities;
 
-class Dummy
+public partial struct Angle
 {
-    public Dummy()
-    {
-    }
 }

@@ -77,8 +77,13 @@ internal static class Helpers
             AppendObject(JObject.Parse(json));
         }
 
-        return jObject?.ToObject<DataCollection>() ?? throw new NullReferenceException();
+        var result = jObject?.ToObject<DataCollection>() ?? throw new NullReferenceException();
 
+        return result;
+        return result with
+        {
+            Quantities = result.Quantities.Where(p => p.Key == "AtomicMass").ToDictionary(i => i.Key, i => i.Value)
+        };
         void AppendObject(JObject obj)
         {
             jObject.Merge(obj, new JsonMergeSettings

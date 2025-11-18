@@ -1,3 +1,3 @@
 ﻿using TedToolkit.Quantities;
 
-[assembly: Quantities<double>(QuantitySystems.ISQ, Flag = UnitFlag.GenerateExtensionProperties)]
+[assembly: Quantities<double>(QuantitySystems.ALL, Flag = UnitFlag.GenerateExtensionProperties)]
