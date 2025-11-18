@@ -7,28 +7,33 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.CppInteropGen.SourceGenerator\TedToolkit.CppInteropGen.SourceGenerator.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.Fluent.SourceGenerator\TedToolkit.Fluent.SourceGenerator.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.InterpolatedParser.SourceGenerator\TedToolkit.InterpolatedParser.SourceGenerator.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.PureConst.Analyzer\TedToolkit.PureConst.Analyzer.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.ValidResults.SourceGenerator\TedToolkit.ValidResults.SourceGenerator.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\analyzers\TedToolkit.QuantExtensions.SourceGenerator\TedToolkit.QuantExtensions.SourceGenerator.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.FluentValidation\TedToolkit.Assertions.FluentValidation.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.CppInteropGen\TedToolkit.CppInteropGen.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Fluent\TedToolkit.Fluent.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.PureConst\TedToolkit.PureConst.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.Logging\TedToolkit.Assertions.Logging.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.InterpolatedParser\TedToolkit.InterpolatedParser.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.ValidResults\TedToolkit.ValidResults.csproj" />
-        <ProjectReference Include="..\..\src\libraries\TedToolkit.QuantExtensions\TedToolkit.QuantExtensions.csproj" />
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.CppInteropGen.SourceGenerator\TedToolkit.CppInteropGen.SourceGenerator.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.Fluent.SourceGenerator\TedToolkit.Fluent.SourceGenerator.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.InterpolatedParser.SourceGenerator\TedToolkit.InterpolatedParser.SourceGenerator.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.PureConst.Analyzer\TedToolkit.PureConst.Analyzer.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.Quantities.Analyzer\TedToolkit.Quantities.Analyzer.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.ValidResults.SourceGenerator\TedToolkit.ValidResults.SourceGenerator.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\analyzers\TedToolkit.QuantExtensions.SourceGenerator\TedToolkit.QuantExtensions.SourceGenerator.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.FluentValidation\TedToolkit.Assertions.FluentValidation.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.CppInteropGen\TedToolkit.CppInteropGen.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Fluent\TedToolkit.Fluent.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.PureConst\TedToolkit.PureConst.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Quantities\TedToolkit.Quantities.csproj" />
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.RoslynHelper\TedToolkit.RoslynHelper.csproj" OutputItemType="analyzer"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.Assertions.Logging\TedToolkit.Assertions.Logging.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.InterpolatedParser\TedToolkit.InterpolatedParser.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.ValidResults\TedToolkit.ValidResults.csproj"/>
+        <ProjectReference Include="..\..\src\libraries\TedToolkit.QuantExtensions\TedToolkit.QuantExtensions.csproj"/>
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\TedToolkit.Quantities.Data.dll"/>
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Newtonsoft.Json.dll"/>
+        <Analyzer Include="..\..\src\analyzers\TedToolkit.Quantities.Analyzer\bin\$(Configuration)\netstandard2.0\Numbers.dll"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Console"/>
         <PackageReference Include="Seq.Extensions.Logging"/>
-        <AdditionalFiles Include="CppInteropGen.ini" />
+        <AdditionalFiles Include="CppInteropGen.ini"/>
         <AdditionalFiles Include="..\TedToolkit.CppInteropGen.Cpp\**\*_C.cpp" visible="false"/>
     </ItemGroup>
 </Project>
