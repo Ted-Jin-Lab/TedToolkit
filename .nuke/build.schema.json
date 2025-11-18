@@ -39,6 +39,7 @@
         "PushNugetPackages",
         "Release",
         "Restore",
+        "RunGenerator",
         "Test",
         "UploadGitHubReleasePackages"
       ]
