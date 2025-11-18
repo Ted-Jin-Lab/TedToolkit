@@ -426,6 +426,12 @@ public sealed class ObjectAssertion<TValue> : IAssertion
         }
     }
 
+    internal TResult AssertLast<TResult>(TResult result) where TResult : IAndConstraint
+    {
+        result.FailureReturnValues = _scope.GetLastItem();
+        return result;
+    }
+
     private IReadOnlyDictionary<IAssertionStrategy, object> AddAssertionItem(AssertionItemType type, AssertMessage message,
         object? tag)
     {

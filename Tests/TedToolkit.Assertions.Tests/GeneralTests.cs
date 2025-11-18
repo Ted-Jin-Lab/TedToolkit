@@ -23,6 +23,18 @@ public class GeneralTests
     }
 
     [Test]
+    public Task TestScopeRightNowAssertion()
+    {
+        Assert.Throws<AssertionException>(() =>
+        {
+            new Execution.AssertionScope("Checking");
+            List<int> a = [1, 2, 3];
+            a.Must().Not.Contain(2).RightNow();
+        });
+        return Task.CompletedTask;
+    }
+
+    [Test]
     public Task TestMethodScopeHere()
     {
         using (new Execution.AssertionScope("Checking"))
