@@ -38,13 +38,43 @@ public sealed class ToleranceGenerator(
                     .WithMembers([
                         PropertyDeclaration(IdentifierName("Tolerance"), Identifier("CurrentDefault"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                            .WithExpressionBody(ArrowExpressionClause(BinaryExpression(
-                                SyntaxKind.CoalesceExpression, IdentifierName("Current"),
-                                ObjectCreationExpression(IdentifierName("Tolerance"))
-                                    .WithArgumentList(ArgumentList()))))
+                            .WithAccessorList(AccessorList(
+                            [
+                                AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                                    .WithBody(Block(
+                                        LocalDeclarationStatement(
+                                            VariableDeclaration(IdentifierName("var"))
+                                                .WithVariables(
+                                                [
+                                                    VariableDeclarator(Identifier("tolerance"))
+                                                        .WithInitializer(EqualsValueClause(IdentifierName("Current")))
+                                                ])),
+                                        ExpressionStatement(InvocationExpression(IdentifierName("CreateDefault"))
+                                            .WithArgumentList(ArgumentList(
+                                            [
+                                                Argument(IdentifierName("tolerance"))
+                                                    .WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword))
+                                            ]))),
+                                        ReturnStatement(BinaryExpression(
+                                            SyntaxKind.CoalesceExpression, IdentifierName("tolerance"),
+                                            ObjectCreationExpression(IdentifierName("Tolerance"))
+                                                .WithArgumentList(ArgumentList())))))
+                            ]))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(ToleranceGenerator))])
-                            .WithXmlComment()
+                            .WithXmlComment(),
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.VoidKeyword)), Identifier("CreateDefault"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.StaticKeyword), Token(SyntaxKind.PartialKeyword)))
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("tolerance"))
+                                    .WithModifiers(TokenList(Token(SyntaxKind.RefKeyword)))
+                                    .WithType(NullableType(IdentifierName("Tolerance")))
+                            ]))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        ConstructorDeclaration(Identifier("Tolerance"))
+                                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                                .WithAttributeLists([GeneratedCodeAttribute(typeof(ToleranceGenerator))])
+                                .WithBody(Block()),
                         ..quantities.Select(q => CreateToleranceProperty(q.Name)),
                         ..quantities.Select(q =>
                             MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
@@ -126,8 +156,9 @@ public sealed class ToleranceGenerator(
                                 Parameter(Identifier("tolerance"))
                                     .WithType(IdentifierName("Tolerance"))
                             ]))
-                            .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("tolerance"), IdentifierName(q.Name))))
+                            .WithExpressionBody(ArrowExpressionClause(MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("tolerance"), IdentifierName(q.Name))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))),
                     ])
             ]);
@@ -150,7 +181,8 @@ public sealed class ToleranceGenerator(
             ]))
             .WithInitializer(EqualsValueClause(CastExpression(
                 IdentifierName(name),
-                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(typeName.Symbol.IsFloatingPoint() ? 1E-6 : 1)))))
+                LiteralExpression(SyntaxKind.NumericLiteralExpression,
+                    Literal(typeName.Symbol.IsFloatingPoint() ? 1E-6 : 1)))))
             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
     }
 }
