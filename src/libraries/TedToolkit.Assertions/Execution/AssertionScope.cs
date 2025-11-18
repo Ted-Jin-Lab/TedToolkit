@@ -14,6 +14,9 @@ public class AssertionScope : ScopeBase<AssertionScope>
 
     private bool _handledFailure;
 
+    internal static AssertionScope CurrentDefault =>
+        Current ?? new AssertionScope(AssertionService.MergedStrategy, string.Empty, null, true);
+
     /// <summary>
     /// </summary>
     /// <param name="context"></param>
@@ -24,7 +27,7 @@ public class AssertionScope : ScopeBase<AssertionScope>
     {
     }
 
-    internal AssertionScope(MergedAssertionStrategy strategy, string context, object? tag, bool isPush)
+    private AssertionScope(MergedAssertionStrategy strategy, string context, object? tag, bool isPush)
     {
         _strategy = strategy;
         Context = context;

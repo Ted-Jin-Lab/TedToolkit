@@ -24,7 +24,7 @@ public sealed class ObjectAssertion<TValue> : IAssertion
     internal ObjectAssertion(TValue subject, string valueName, AssertionType type, CallerInfo callerInfo,
         bool isValid = true)
         : this(subject, valueName, type, DateTimeOffset.Now,
-            AssertionScope.Current ?? new AssertionScope(AssertionService.MergedStrategy, string.Empty, null, true), callerInfo, isValid)
+            AssertionScope.CurrentDefault, callerInfo, isValid)
     {
     }
 
