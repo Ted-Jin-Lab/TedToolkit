@@ -36,7 +36,7 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
                         AttributeArgument(MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
                             IdentifierName("global::System.AttributeTargets"),
-                            IdentifierName("Assembly")))
+                            IdentifierName("Assembly"))),
                     ])))
             ])
             .WithModifiers(TokenList(Token(SyntaxKind.InternalKeyword), Token(SyntaxKind.SealedKeyword)))
@@ -44,7 +44,11 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
             .WithParameterList(ParameterList(
             [
                 Parameter(Identifier("quantitySystem"))
-                    .WithType(PredefinedType(Token(SyntaxKind.StringKeyword)))
+                    .WithType(PredefinedType(Token(SyntaxKind.StringKeyword))),
+                Parameter(Identifier("quantities"))
+                    .WithModifiers(TokenList(Token(SyntaxKind.ParamsKeyword)))
+                    .WithType(ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
+                        .WithRankSpecifiers([ArrayRankSpecifier([OmittedArraySizeExpression()])]))
             ]))
             .WithMembers(
             [

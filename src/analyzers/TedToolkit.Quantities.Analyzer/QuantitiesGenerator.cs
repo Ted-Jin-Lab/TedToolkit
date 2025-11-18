@@ -25,7 +25,7 @@ public class QuantitiesGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(combined, Generate);
     }
 
-    private static (TypeName tDataType, byte flag, Dictionary<string, string> units, string quantitySystem)? ReadUnit(
+    private static (TypeName tDataType, byte flag, Dictionary<string, string> units, string quantitySystem, string[] quantities)? ReadUnit(
         Compilation compilations)
     {
         if (compilations.Assembly.GetAttributes()
@@ -40,8 +40,11 @@ public class QuantitiesGenerator : IIncrementalGenerator
         if (attrData.ApplicationSyntaxReference?.GetSyntax() is not AttributeSyntax syntax) return null;
         byte flag = 0;
         var quantitySystem = "";
+        List<string> quantities = [];
         Dictionary<string, string> quantityTypes = [];
         if (syntax.ArgumentList?.Arguments is { } arguments)
+        {
+            var isFirst = true;
             foreach (var attributeArgumentSyntax in arguments)
             {
                 var name = attributeArgumentSyntax.NameEquals?.Name.Identifier.ValueText;
@@ -53,7 +56,18 @@ public class QuantitiesGenerator : IIncrementalGenerator
                 }
                 else if (name is null)
                 {
-                    GetData<string>(v => quantitySystem = v);
+                    GetData<string>(v =>
+                    {
+                        if (isFirst)
+                        {
+                            quantitySystem = v;
+                            isFirst = false;
+                        }
+                        else
+                        {
+                            quantities.Add(v);
+                        }
+                    });
                 }
                 else
                 {
@@ -73,8 +87,9 @@ public class QuantitiesGenerator : IIncrementalGenerator
                     }
                 }
             }
+        }
 
-        return (tDataType, flag, quantityTypes, quantitySystem);
+        return (tDataType, flag, quantityTypes, quantitySystem, quantities.ToArray());
     }
 
     private static void Generate(SourceProductionContext context,
@@ -88,8 +103,10 @@ public class QuantitiesGenerator : IIncrementalGenerator
             var flag = unitAttribute?.flag!;
             var units = unitAttribute?.units!;
             var quantitySystem= unitAttribute?.quantitySystem;
+            var quantities = unitAttribute?.quantities;
 
-            var data = Helpers.GetData(quantitySystem, texts.Select(t => t.GetText(context.CancellationToken)!.ToString()));
+            var data = Helpers.GetData(quantitySystem, 
+                texts.Select(t => t.GetText(context.CancellationToken)!.ToString()), quantities ?? []);
             {
                 // Default Enum And To Strings.
                 new UnitEnumGenerator([..data.Units.Values]).GenerateCode(context);
