@@ -25,8 +25,9 @@ public class QuantitiesGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(combined, Generate);
     }
 
-    private static (TypeName tDataType, byte flag, Dictionary<string, string> units, string quantitySystem, string[] quantities)? ReadUnit(
-        Compilation compilations)
+    private static (TypeName tDataType, byte flag, Dictionary<string, string> units, string quantitySystem, string[]
+        quantities)? ReadUnit(
+            Compilation compilations)
     {
         if (compilations.Assembly.GetAttributes()
                 .FirstOrDefault(a =>
@@ -102,10 +103,10 @@ public class QuantitiesGenerator : IIncrementalGenerator
             var tDataType = unitAttribute?.tDataType!;
             var flag = unitAttribute?.flag!;
             var units = unitAttribute?.units!;
-            var quantitySystem= unitAttribute?.quantitySystem;
+            var quantitySystem = unitAttribute?.quantitySystem;
             var quantities = unitAttribute?.quantities;
 
-            var data = Helpers.GetData(quantitySystem, 
+            var data = Helpers.GetData(quantitySystem,
                 texts.Select(t => t.GetText(context.CancellationToken)!.ToString()), quantities ?? []);
             {
                 // Default Enum And To Strings.
@@ -137,8 +138,10 @@ public class QuantitiesGenerator : IIncrementalGenerator
 
                 foreach (var quantity in data.Quantities)
                 {
+                    var quantitySymbol =
+                        compilations.Assembly.GetTypeByMetadataName("TedToolkit.Quantities." + quantity.Value.Name);
                     new QuantityStructGenerator(data, quantity.Value, tDataType, unit,
-                            isPublic)
+                            isPublic, quantitySymbol)
                         .GenerateCode(context);
                 }
 
