@@ -10,6 +10,7 @@ public class AssertionScope : ScopeBase<AssertionScope>
 {
     private readonly List<IAssertion> _assertions = [];
     private readonly MergedAssertionStrategy _strategy;
+    private readonly bool _isPush;
 
     private bool _handledFailure;
 
@@ -17,16 +18,18 @@ public class AssertionScope : ScopeBase<AssertionScope>
     /// </summary>
     /// <param name="context"></param>
     /// <param name="tag"></param>
-    public AssertionScope(string context = "", object? tag = null)
-        : this(AssertionService.MergedScopeStrategy, context, tag)
+    /// <param name="isPush">Assert when push</param>
+    public AssertionScope(string context = "", object? tag = null, bool isPush = false)
+        : this(AssertionService.MergedStrategy, context, tag, isPush) //TODO: Type
     {
     }
 
-    internal AssertionScope(MergedAssertionStrategy strategy, string context = "", object? tag = null)
+    internal AssertionScope(MergedAssertionStrategy strategy, string context, object? tag, bool isPush)
     {
         _strategy = strategy;
         Context = context;
         Tag = tag;
+        _isPush = isPush;
     }
 
     /// <summary>
@@ -35,8 +38,9 @@ public class AssertionScope : ScopeBase<AssertionScope>
     /// <param name="strategy"></param>
     /// <param name="context"></param>
     /// <param name="tag"></param>
-    public AssertionScope(IAssertionStrategy strategy, string context = "", object? tag = null)
-        : this(new MergedAssertionStrategy(strategy), context, tag)
+    /// <param name="isPush">Assert when push</param>
+    public AssertionScope(IAssertionStrategy strategy, string context = "", object? tag = null, bool isPush = false)
+        : this(new MergedAssertionStrategy(strategy), context, tag, isPush)
     {
     }
 
@@ -50,6 +54,7 @@ public class AssertionScope : ScopeBase<AssertionScope>
     /// </summary>
     public object? Tag { get; }
 
+    /// <inheritdoc />
     protected override void OnDispose()
     {
         if (!_handledFailure) HandleFailure();
@@ -59,9 +64,10 @@ public class AssertionScope : ScopeBase<AssertionScope>
     ///     Manually handle failure
     /// </summary>
     /// <returns></returns>
-    public IDictionary<IAssertionStrategy, object> HandleFailure()
+    public IReadOnlyDictionary<IAssertionStrategy, object> HandleFailure()
     {
         _handledFailure = true;
+        if (_isPush) return new Dictionary<IAssertionStrategy, object>();
         return _strategy.HandleFailure(this, _assertions);
     }
 
@@ -70,9 +76,10 @@ public class AssertionScope : ScopeBase<AssertionScope>
         _assertions.Add(assertion);
     }
 
-    internal IDictionary<IAssertionStrategy, object> PushAssertionItem(AssertionItem assertionItem,
+    internal IReadOnlyDictionary<IAssertionStrategy, object> PushAssertionItem(AssertionItem assertionItem,
         AssertionType assertionType, object? tag, CallerInfo callerInfo)
     {
+        if (!_isPush) return new Dictionary<IAssertionStrategy, object>();
         return _strategy.HandleFailure(this, assertionType, assertionItem, tag, callerInfo);
     }
 }

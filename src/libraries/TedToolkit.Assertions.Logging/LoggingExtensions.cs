@@ -102,7 +102,7 @@ public static class LoggingExtensions
     {
         var defaultOptions = new AssertionLogOptions(true, true);
         var loggerStrategy = new LoggerStrategy(changeOptions?.Invoke(defaultOptions) ?? defaultOptions);
-        AssertionService.Add(new AssertionService(loggerStrategy, loggerStrategy));
+        AssertionService.Add(new AssertionService(loggerStrategy));
 
         //Exceptions.
         AssertionService.Add(new AssertionService(AssertionType.Must));
