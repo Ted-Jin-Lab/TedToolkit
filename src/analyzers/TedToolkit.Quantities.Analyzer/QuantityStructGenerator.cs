@@ -520,7 +520,7 @@ internal class QuantityStructGenerator(
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.StaticKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator)).AddAttributes(OverloadResolutionPriorityAttribute(1))])
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
@@ -532,6 +532,7 @@ internal class QuantityStructGenerator(
                                         IdentifierName("left"), IdentifierName("Value")),
                                     IdentifierName("right"))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.StaticKeyword)))
@@ -546,6 +547,7 @@ internal class QuantityStructGenerator(
                                     IdentifierName("right"),
                                     IdentifierName("left"))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.SlashToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.StaticKeyword)))
