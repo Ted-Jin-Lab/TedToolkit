@@ -76,10 +76,22 @@ public class AssertionScope : ScopeBase<AssertionScope>
         _assertions.Add(assertion);
     }
 
+    private Func<IReadOnlyDictionary<IAssertionStrategy, object>>? _lastAssertion;
+
+    internal IReadOnlyDictionary<IAssertionStrategy, object> GetLastItem()
+    {
+        return _lastAssertion?.Invoke() ?? throw new InvalidOperationException();
+    }
+
     internal IReadOnlyDictionary<IAssertionStrategy, object> PushAssertionItem(AssertionItem assertionItem,
         AssertionType assertionType, object? tag, CallerInfo callerInfo)
     {
-        if (!_isPush) return new Dictionary<IAssertionStrategy, object>();
+        if (!_isPush)
+        {
+            _lastAssertion = () => _strategy.HandleFailure(this, assertionType, assertionItem, tag, callerInfo);
+            return new Dictionary<IAssertionStrategy, object>();
+        }
+
         return _strategy.HandleFailure(this, assertionType, assertionItem, tag, callerInfo);
     }
 }

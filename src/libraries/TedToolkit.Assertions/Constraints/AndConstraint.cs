@@ -28,6 +28,11 @@ public class AndConstraint<TValue> : IAndConstraint
     public IReadOnlyDictionary<IAssertionStrategy, object>? FailureReturnValues { get; set; }
 
     /// <summary>
+    /// Do the assertion right now!
+    /// </summary>
+    public AndConstraint<TValue> RightNow() => And.AssertLast(this);
+
+    /// <summary>
     /// Get the Value
     /// </summary>
     public TValue Value => And.Subject;
