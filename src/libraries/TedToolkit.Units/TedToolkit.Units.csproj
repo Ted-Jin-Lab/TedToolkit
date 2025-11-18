@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Title>Units</Title>
+        <Description>Struct Units Conversions</Description>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    </PropertyGroup>
+</Project>

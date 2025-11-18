@@ -26,7 +26,6 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation"/>
-        <PackageReference Include="MathNet.Symbolics" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console"/>
         <PackageReference Include="Seq.Extensions.Logging"/>
         <AdditionalFiles Include="CppInteropGen.ini" />
