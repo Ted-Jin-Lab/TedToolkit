@@ -107,7 +107,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities", "src\libraries\TedToolkit.Quantities\TedToolkit.Quantities.csproj", "{63532A50-0C47-46B5-B262-7F34AA1447CE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8D597C86-3C37-4E27-B197-403FB689BF33} = {8D597C86-3C37-4E27-B197-403FB689BF33}
-		{005715D8-219D-494A-9222-834C40C8B034} = {005715D8-219D-494A-9222-834C40C8B034}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Fluent.Tests", "tests\TedToolkit.Fluent.Tests\TedToolkit.Fluent.Tests.csproj", "{4A9BE35C-C82F-4A4F-839C-14E6ED10591A}"
@@ -120,7 +119,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Scopes", "src\li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.Tests", "tests\TedToolkit.Quantities.Tests\TedToolkit.Quantities.Tests.csproj", "{EE91776E-9DE9-4CF1-8CF2-618893029825}"
 	ProjectSection(ProjectDependencies) = postProject
-		{005715D8-219D-494A-9222-834C40C8B034} = {005715D8-219D-494A-9222-834C40C8B034}
 		{8D597C86-3C37-4E27-B197-403FB689BF33} = {8D597C86-3C37-4E27-B197-403FB689BF33}
 	EndProjectSection
 EndProject
@@ -129,6 +127,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.Analyzer", "src\analyzers\TedToolkit.Quantities.Analyzer\TedToolkit.Quantities.Analyzer.csproj", "{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TedToolkit.Quantities.ISQ", "src\libraries\TedToolkit.Quantities.ISQ\TedToolkit.Quantities.ISQ.csproj", "{5F97FE7C-205C-42B7-B18B-97363FBACDE0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC} = {CAC27CEA-2C1B-4B3C-A497-9B788AF56ABC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

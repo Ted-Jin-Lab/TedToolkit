@@ -15,6 +15,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.GitHub;
@@ -65,17 +66,23 @@ class Build : NukeBuild
                 .SetProjectFile(Solution));
         });
 
-    Target Compile => d => d
+    Target RunGenerator => d => d
         .DependsOn(Restore)
         .Executes(() =>
         {
             DotNetTasks.DotNetRun(s => s
                 .SetProjectFile(Solution.src.Quantities.TedToolkit_Quantities_Generator)
                 .SetConfiguration(Configuration.Release));
-            
+        });
+
+    Target Compile => d => d
+        .DependsOn(RunGenerator)
+        .Executes(() =>
+        {
             DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(Solution)
-                .SetConfiguration(Configuration.Release));
+                .SetConfiguration(Configuration.Release)
+                .SetProcessWorkingDirectory(RootDirectory));
         });
 
     Target Test => d => d
