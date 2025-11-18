@@ -5,7 +5,7 @@ namespace TedToolkit.Assertions.Execution;
 
 internal class MergedAssertionStrategy(params IAssertionStrategy[] strategies)
 {
-    public IDictionary<IAssertionStrategy, object> HandleFailure(AssertionScope scope,
+    public IReadOnlyDictionary<IAssertionStrategy, object> HandleFailure(AssertionScope scope,
         IReadOnlyList<IAssertion> assertions)
     {
         return strategies.Select(strategy => (strategy, strategy.HandleFailure(scope, assertions)))
@@ -13,7 +13,7 @@ internal class MergedAssertionStrategy(params IAssertionStrategy[] strategies)
             .ToDictionary(pair => pair.strategy, pair => pair.Item2!);
     }
 
-    public IDictionary<IAssertionStrategy, object> HandleFailure(AssertionScope scope, AssertionType assertionType,
+    public IReadOnlyDictionary<IAssertionStrategy, object> HandleFailure(AssertionScope scope, AssertionType assertionType,
         AssertionItem assertion,
         object? tag, CallerInfo callerInfo)
     {

@@ -10,27 +10,7 @@ using TedToolkit.Assertions.Execution;
 namespace TedToolkit.Assertions;
 
 [DebuggerNonUserCode]
-file class DefaultPushStrategy(
-    AssertionType minRaisingExceptionType,
-    [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
-    string timeFormat) : IAssertionStrategy
-{
-    public object? HandleFailure(AssertionScope scope, AssertionType assertionType, AssertionItem assertion,
-        object? tag, CallerInfo callerInfo)
-    {
-        if (assertionType < minRaisingExceptionType) return null;
-        var message = $"{assertion.Message}\nwhen [{assertion.Time.ToString(timeFormat)}]{scope.Context}";
-        throw new AssertionException(message);
-    }
-
-    public object? HandleFailure(AssertionScope scope, IReadOnlyList<IAssertion> assertions)
-    {
-        return null;
-    }
-}
-
-[DebuggerNonUserCode]
-file class DefaultScopeStrategy(
+file class DefaultStrategy(
     AssertionType minRaisingExceptionType,
     [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
     string timeFormat,
@@ -61,24 +41,22 @@ file class DefaultScopeStrategy(
     public object? HandleFailure(AssertionScope scope, AssertionType assertionType, AssertionItem assertion,
         object? tag, CallerInfo callerInfo)
     {
-        return null;
+        if (assertionType < minRaisingExceptionType) return null;
+        var message = $"{assertion.Message}\nwhen [{assertion.Time.ToString(timeFormat)}]{scope.Context}";
+        throw new AssertionException(message);
     }
 }
 
 /// <summary>
 ///     The service of the assertions.
 /// </summary>
-public readonly struct AssertionService(IAssertionStrategy pushStrategy, IAssertionStrategy scopeStrategy)
+public readonly struct AssertionService(IAssertionStrategy strategy)
 {
     private static readonly ConcurrentBag<AssertionService> CurrentServices = [];
-    private static readonly AsyncLocal<MergedAssertionStrategy> MergedPushStrategyAsyncLocal = new();
-    private static readonly AsyncLocal<MergedAssertionStrategy> MergedScopeStrategyAsyncLocal = new();
+    private static readonly AsyncLocal<MergedAssertionStrategy> StrategyAsyncLocal = new();
 
-    internal static MergedAssertionStrategy MergedPushStrategy =>
-        MergedPushStrategyAsyncLocal.Value ??= CalculateMergedPushStrategy();
-
-    internal static MergedAssertionStrategy MergedScopeStrategy =>
-        MergedScopeStrategyAsyncLocal.Value ??= CalculateMergedScopeStrategy();
+    internal static MergedAssertionStrategy MergedStrategy =>
+        StrategyAsyncLocal.Value ??= CalculateMergedStrategy();
 
 
     private static void CheckCurrentServices()
@@ -87,17 +65,12 @@ public readonly struct AssertionService(IAssertionStrategy pushStrategy, IAssert
         CurrentServices.Add(new AssertionService(AssertionType.Must));
     }
 
-    private static MergedAssertionStrategy CalculateMergedPushStrategy()
+    private static MergedAssertionStrategy CalculateMergedStrategy()
     {
         CheckCurrentServices();
-        return new MergedAssertionStrategy([..CurrentServices.Select(s => s.PushStrategy)]);
+        return new MergedAssertionStrategy([..CurrentServices.Select(s => s.Strategy)]);
     }
-
-    private static MergedAssertionStrategy CalculateMergedScopeStrategy()
-    {
-        CheckCurrentServices();
-        return new MergedAssertionStrategy([..CurrentServices.Select(s => s.ScopeStrategy)]);
-    }
+    
 
     /// <summary>
     ///     Create the service by the min raising exception type
@@ -107,8 +80,7 @@ public readonly struct AssertionService(IAssertionStrategy pushStrategy, IAssert
     /// <param name="callerInfoFormat"></param>
     public AssertionService(AssertionType minRaisingExceptionType, string timeFormat = "yyyy-MM-dd HH:mm:ss.fff zzz",
         Func<CallerInfo, string>? callerInfoFormat = null)
-        : this(new DefaultPushStrategy(minRaisingExceptionType, timeFormat),
-            new DefaultScopeStrategy(minRaisingExceptionType, timeFormat, callerInfoFormat))
+        : this(new DefaultStrategy(minRaisingExceptionType, timeFormat, callerInfoFormat))
     {
     }
 
@@ -119,8 +91,7 @@ public readonly struct AssertionService(IAssertionStrategy pushStrategy, IAssert
     public static void Add(AssertionService service)
     {
         CurrentServices.Add(service);
-        MergedPushStrategyAsyncLocal.Value = CalculateMergedPushStrategy();
-        MergedScopeStrategyAsyncLocal.Value = CalculateMergedScopeStrategy();
+        StrategyAsyncLocal.Value = CalculateMergedStrategy();
     }
 
     /// <summary>
@@ -132,17 +103,11 @@ public readonly struct AssertionService(IAssertionStrategy pushStrategy, IAssert
         {
         }
 
-        MergedPushStrategyAsyncLocal.Value = CalculateMergedPushStrategy();
-        MergedScopeStrategyAsyncLocal.Value = CalculateMergedScopeStrategy();
+        StrategyAsyncLocal.Value = CalculateMergedStrategy();
     }
 
     /// <summary>
-    ///     The default push strategy.
+    ///     The default push / scope strategy.
     /// </summary>
-    public IAssertionStrategy PushStrategy { get; } = pushStrategy;
-
-    /// <summary>
-    ///     The default scope strategy
-    /// </summary>
-    public IAssertionStrategy ScopeStrategy { get; } = scopeStrategy;
+    public IAssertionStrategy Strategy { get; } = strategy;
 }

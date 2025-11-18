@@ -15,5 +15,5 @@ public interface IAndConstraint : IConstraint
     /// <summary>
     ///     The failure return Value
     /// </summary>
-    IDictionary<IAssertionStrategy, object>? FailureReturnValues { get; set; }
+    IReadOnlyDictionary<IAssertionStrategy, object>? FailureReturnValues { get; set; }
 }

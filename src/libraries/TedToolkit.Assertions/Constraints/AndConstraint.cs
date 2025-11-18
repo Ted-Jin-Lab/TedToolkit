@@ -25,7 +25,7 @@ public class AndConstraint<TValue> : IAndConstraint
     public PronounConstraint<TValue> AndIt => new(And);
 
     /// <inheritdoc />
-    public IDictionary<IAssertionStrategy, object>? FailureReturnValues { get; set; }
+    public IReadOnlyDictionary<IAssertionStrategy, object>? FailureReturnValues { get; set; }
 
     /// <summary>
     /// Get the Value

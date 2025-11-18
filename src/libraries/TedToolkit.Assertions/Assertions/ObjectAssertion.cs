@@ -23,7 +23,8 @@ public sealed class ObjectAssertion<TValue> : IAssertion
 
     internal ObjectAssertion(TValue subject, string valueName, AssertionType type, CallerInfo callerInfo,
         bool isValid = true)
-        : this(subject, valueName, type, DateTimeOffset.Now, AssertionScope.Current ?? new AssertionScope(AssertionService.MergedPushStrategy), callerInfo, isValid)
+        : this(subject, valueName, type, DateTimeOffset.Now,
+            AssertionScope.Current ?? new AssertionScope(AssertionService.MergedStrategy, string.Empty, null, true), callerInfo, isValid)
     {
     }
 
@@ -69,6 +70,7 @@ public sealed class ObjectAssertion<TValue> : IAssertion
     /// <inheritdoc />
     AssertionType IAssertion.Type => _type;
 
+    /// <inheritdoc />
     public CallerInfo CallerInfo { get; }
 
     /// <inheritdoc />
@@ -81,7 +83,6 @@ public sealed class ObjectAssertion<TValue> : IAssertion
             : new ObjectAssertion<TValue>(Subject, SubjectName, type, _createTime, _scope, CallerInfo, _isValid);
     }
 
-
     #region Match
 
     /// <summary>
@@ -89,13 +90,15 @@ public sealed class ObjectAssertion<TValue> : IAssertion
     /// </summary>
     /// <param name="predicate"></param>
     /// <param name="assertionParams"></param>
+    /// <param name="predicateName"></param>
     /// <returns></returns>
-    public AndConstraint<TValue> Match(Expression<Func<TValue, bool>> predicate,
-        AssertionParams? assertionParams = null)
+    public AndConstraint<TValue> Match(Func<TValue, bool> predicate,
+        AssertionParams? assertionParams = null,
+        [CallerArgumentExpression(nameof(predicate))] string predicateName = "")
     {
-        return AssertCheck(predicate.Compile()(Subject),
+        return AssertCheck(predicate(Subject),
             AssertionItemType.Match,
-            new AssertMessage(AssertionLocalization.MatchAssertion, new Argument("Expression", predicate.Body)),
+            new AssertMessage(AssertionLocalization.MatchAssertion, new Argument("Expression", predicateName)),
             assertionParams);
     }
 
@@ -423,7 +426,7 @@ public sealed class ObjectAssertion<TValue> : IAssertion
         }
     }
 
-    private IDictionary<IAssertionStrategy, object> AddAssertionItem(AssertionItemType type, AssertMessage message,
+    private IReadOnlyDictionary<IAssertionStrategy, object> AddAssertionItem(AssertionItemType type, AssertMessage message,
         object? tag)
     {
         var item = new AssertionItem(type, message, DateTimeOffset.Now, tag);
