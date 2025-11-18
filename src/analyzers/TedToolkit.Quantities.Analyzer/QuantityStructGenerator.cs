@@ -18,6 +18,93 @@ internal class QuantityStructGenerator(
 {
     public void GenerateCode(SourceProductionContext context)
     {
+        List<MemberDeclarationSyntax> mathsExtensions =
+        [
+            CreateMathMethod(nameof(Math.Abs)),
+
+            MethodDeclaration(IdentifierName(quantity.Name), Identifier("Min"))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc(
+                    $"global::System.Math.Min({typeName.FullName}, {typeName.FullName})")
+                .WithParameterList(ParameterList([
+                    Parameter(Identifier("val2")).WithType(IdentifierName(quantity.Name))
+                ]))
+                .WithExpressionBody(ArrowExpressionClause(CastExpression(
+                    IdentifierName(quantity.Name),
+                    InvocationExpression(MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("global::System.Math"),
+                            IdentifierName("Min")))
+                        .WithArgumentList(ArgumentList(
+                        [
+                            Argument(IdentifierName("Value")),
+                            Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("val2"), IdentifierName("Value")))
+                        ])))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+            MethodDeclaration(IdentifierName(quantity.Name), Identifier("Max"))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc(
+                    $"global::System.Math.Max({typeName.FullName}, {typeName.FullName})")
+                .WithParameterList(ParameterList([
+                    Parameter(Identifier("val2")).WithType(IdentifierName(quantity.Name))
+                ]))
+                .WithExpressionBody(ArrowExpressionClause(CastExpression(
+                    IdentifierName(quantity.Name),
+                    InvocationExpression(MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("global::System.Math"),
+                            IdentifierName("Max")))
+                        .WithArgumentList(ArgumentList(
+                        [
+                            Argument(IdentifierName("Value")),
+                            Argument(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("val2"), IdentifierName("Value")))
+                        ])))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+            PropertyDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("Sign"))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc($"global::System.Math.Sign({typeName.FullName})")
+                .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName($"Tolerance.CurrentDefault.{quantity.Name}"),
+                            IdentifierName("CompareTo")))
+                    .WithArgumentList(ArgumentList(
+                    [
+                        Argument(CastExpression(IdentifierName(quantity.Name),
+                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))))
+                    ]))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+        ];
+
+        if (typeName.Symbol.IsFloatingPoint())
+        {
+            mathsExtensions.AddRange([
+                CreateMathMethod(nameof(Math.Floor)),
+                CreateMathMethod(nameof(Math.Ceiling)),
+                CreateMathMethod(nameof(Math.Round)),
+                CreateEnumerableMethod(nameof(Enumerable.Sum), $"""
+                                                               /// <summary>
+                                                               /// Computes the sum of a sequence of <see cref="{quantity.Name}"/> values
+                                                               /// </summary>
+                                                               /// <param name="values"></param>
+                                                               /// <returns>The sum of the projected values</returns>
+                                                               """),
+                CreateEnumerableMethod(nameof(Enumerable.Average), $"""
+                                                                    /// <summary>
+                                                                    /// Computes the average of a sequence of <see cref="{quantity.Name}"/> values that are obtained by invoking a transform function on each element of the input sequence
+                                                                    /// </summary>
+                                                                    /// <param name="values"></param>
+                                                                    /// <returns>The average of the sequence of values</returns>
+                                                                    """)
+            ]);
+        }
+
         var nameSpace = NamespaceDeclaration("TedToolkit.Quantities")
             .WithMembers([
                 StructDeclaration(quantity.Name)
@@ -254,7 +341,8 @@ internal class QuantityStructGenerator(
                                                 Argument(
                                                     MemberAccessExpression(
                                                         SyntaxKind.SimpleMemberAccessExpression,
-                                                        IdentifierName("global::TedToolkit.Quantities." + quantity.UnitName),
+                                                        IdentifierName("global::TedToolkit.Quantities." +
+                                                                       quantity.UnitName),
                                                         IdentifierName(unitName)))
                                             ]))))),
 
@@ -269,7 +357,8 @@ internal class QuantityStructGenerator(
                                             [
                                                 Argument(MemberAccessExpression(
                                                     SyntaxKind.SimpleMemberAccessExpression,
-                                                    IdentifierName("global::TedToolkit.Quantities." + quantity.UnitName),
+                                                    IdentifierName("global::TedToolkit.Quantities." +
+                                                                   quantity.UnitName),
                                                     IdentifierName(unitName)))
                                             ]))))
                                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
@@ -453,12 +542,58 @@ internal class QuantityStructGenerator(
                                         IdentifierName("left"),
                                         IdentifierName("Value")),
                                     IdentifierName("right"))))))
-                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         #endregion
+
+                        ..mathsExtensions
                     ])
             ]);
         context.AddSource(quantity.Name + ".g.cs", nameSpace.NodeToString());
+        return;
+
+        MethodDeclarationSyntax CreateMathMethod(string methodName)
+        {
+            return MethodDeclaration(IdentifierName(quantity.Name), Identifier(methodName))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc($"global::System.Math.{methodName}({typeName.FullName})")
+                .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                    InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("global::System.Math"), IdentifierName(methodName)))
+                        .WithArgumentList(ArgumentList([Argument(IdentifierName("Value"))])))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        MemberDeclarationSyntax CreateEnumerableMethod(string methodName, string xml)
+        {
+            return MethodDeclaration(IdentifierName(quantity.Name), Identifier(methodName))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlComment(xml)
+                .WithParameterList(ParameterList(
+                [
+                    Parameter(Identifier("values"))
+                        .WithType(GenericName(Identifier("global::System.Collections.Generic.IEnumerable"))
+                            .WithTypeArgumentList(TypeArgumentList([IdentifierName(quantity.Name)])))
+                ]))
+                .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                    InvocationExpression(MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("global::System.Linq.Enumerable"),
+                            IdentifierName(methodName)))
+                        .WithArgumentList(ArgumentList(
+                        [
+                            Argument(IdentifierName("values")),
+                            Argument(SimpleLambdaExpression(Parameter(Identifier("i")))
+                                .WithExpressionBody(MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("i"), IdentifierName("Value"))))
+                        ])))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
     }
 
     private ExpressionSyntax GetSystemUnitName()
