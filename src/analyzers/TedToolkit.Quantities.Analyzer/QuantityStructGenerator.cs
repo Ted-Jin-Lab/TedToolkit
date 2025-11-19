@@ -606,6 +606,26 @@ internal class QuantityStructGenerator(
                                         IdentifierName("right"),
                                         IdentifierName("Value")))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PercentToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                ParenthesizedExpression(BinaryExpression(SyntaxKind.ModuloExpression,
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"),
+                                        IdentifierName("Value")),
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("right"),
+                                        IdentifierName("Value")))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.SlashToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
