@@ -328,7 +328,7 @@ internal class QuantityStructGenerator(
                                     InvocationExpression(MemberAccessExpression(
                                             SyntaxKind.SimpleMemberAccessExpression,
                                             IdentifierName("global::TedToolkit.Quantities.Internal"),
-                                            IdentifierName("GetFormat")))
+                                            IdentifierName("ParseFormat")))
                                         .WithArgumentList(ArgumentList(
                                         [
                                             Argument(IdentifierName("format")),
@@ -374,7 +374,7 @@ internal class QuantityStructGenerator(
                                     InvocationExpression(MemberAccessExpression(
                                             SyntaxKind.SimpleMemberAccessExpression,
                                             IdentifierName("global::TedToolkit.Quantities.Internal"),
-                                            IdentifierName("GetFormat")))
+                                            IdentifierName("ParseFormat")))
                                         .WithArgumentList(ArgumentList(
                                         [
                                             Argument(IdentifierName("format")),
@@ -520,7 +520,7 @@ internal class QuantityStructGenerator(
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("other"))
@@ -534,11 +534,12 @@ internal class QuantityStructGenerator(
                                     Argument(IdentifierName("other"))
                                 ]))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)), Identifier("Equals"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("obj"))
@@ -555,11 +556,12 @@ internal class QuantityStructGenerator(
                                             Argument(IdentifierName("other"))
                                         ])))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("GetHashCode"))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.OverrideKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithExpressionBody(
                                 ArrowExpressionClause(
                                     InvocationExpression(
@@ -568,6 +570,7 @@ internal class QuantityStructGenerator(
                                             IdentifierName("Value"),
                                             IdentifierName("GetHashCode")))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
                         MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                             .WithParameterList(ParameterList(
@@ -576,7 +579,7 @@ internal class QuantityStructGenerator(
                                     .WithType(IdentifierName(quantity.Name))
                             ]))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
                                     IdentifierName("Tolerance.CurrentDefault.Compare"))
                                 .WithArgumentList(ArgumentList(
@@ -586,6 +589,153 @@ internal class QuantityStructGenerator(
                                 ]))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
+                        MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("CompareTo"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlCommentInheritDoc((string?)null)
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("obj"))
+                                    .WithType(NullableType(PredefinedType(Token(SyntaxKind.ObjectKeyword))))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                InvocationExpression(MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("global::TedToolkit.Quantities.Internal"),
+                                        IdentifierName("CompareTo")))
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(ThisExpression()),
+                                        Argument(IdentifierName("obj"))
+                                    ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.EqualsEqualsToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                InvocationExpression(MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"), IdentifierName("Equals")))
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(IdentifierName("right"))
+                                    ]))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.ExclamationEqualsToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                PrefixUnaryExpression(
+                                    SyntaxKind.LogicalNotExpression,
+                                    ParenthesizedExpression(
+                                        BinaryExpression(
+                                            SyntaxKind.EqualsExpression,
+                                            IdentifierName("left"),
+                                            IdentifierName("right"))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.GreaterThanToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.GreaterThanExpression,
+                                    InvocationExpression(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("left"), IdentifierName("CompareTo")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("right"))
+                                        ])),
+                                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.LessThanToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.LessThanExpression,
+                                    InvocationExpression(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("left"), IdentifierName("CompareTo")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("right"))
+                                        ])),
+                                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.GreaterThanEqualsToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.GreaterThanOrEqualExpression,
+                                    InvocationExpression(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("left"), IdentifierName("CompareTo")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("right"))
+                                        ])),
+                                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
+                        OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
+                                Token(SyntaxKind.LessThanEqualsToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.LessThanOrEqualExpression,
+                                    InvocationExpression(MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("left"), IdentifierName("CompareTo")))
+                                        .WithArgumentList(ArgumentList(
+                                        [
+                                            Argument(IdentifierName("right"))
+                                        ])),
+                                    LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                         #endregion
 
                         #region Operators
@@ -598,9 +748,9 @@ internal class QuantityStructGenerator(
                                 Parameter(Identifier("value")).WithType(IdentifierName(quantity.Name))
                             ]))
                             .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
-                                        ParenthesizedExpression(PrefixUnaryExpression(SyntaxKind.UnaryMinusExpression,
-                                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                                                    IdentifierName("value"), IdentifierName("Value")))))))
+                                ParenthesizedExpression(PrefixUnaryExpression(SyntaxKind.UnaryMinusExpression,
+                                    MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("value"), IdentifierName("Value")))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PlusToken))
