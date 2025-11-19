@@ -196,6 +196,22 @@ internal class QuantityStructGenerator(
                     .WithXmlComment($"/// <inheritdoc cref=\"{quantity.UnitName}\"/>")
                     .WithMembers(
                     [
+                        PropertyDeclaration(IdentifierName(quantity.Name), Identifier("Zero"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(
+                                        IdentifierName(quantity.Name),
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
+                        PropertyDeclaration(IdentifierName(quantity.Name), Identifier("One"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(
+                                IdentifierName(quantity.Name),
+                                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                        
                         FieldDeclaration(
                                 VariableDeclaration(IdentifierName(typeName.FullName))
                                     .WithVariables(
