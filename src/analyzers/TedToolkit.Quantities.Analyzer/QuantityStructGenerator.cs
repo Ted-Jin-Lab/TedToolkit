@@ -590,6 +590,19 @@ internal class QuantityStructGenerator(
 
                         #region Operators
 
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.MinusToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("value")).WithType(IdentifierName(quantity.Name))
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(quantity.Name),
+                                        ParenthesizedExpression(PrefixUnaryExpression(SyntaxKind.UnaryMinusExpression,
+                                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                                    IdentifierName("value"), IdentifierName("Value")))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PlusToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
