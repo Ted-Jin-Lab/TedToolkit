@@ -1,5 +1,6 @@
 ﻿namespace TedToolkit.Quantities;
 
+[QuantityImplicitToValueType]
 [QuantityOperator<AbsorbedDose, AbsorbedDose, double>(Operator.Divide)]
 partial struct AbsorbedDose
 {
@@ -8,5 +9,6 @@ partial struct AbsorbedDose
         var a = new AbsorbedDose(10, AbsorbedDoseUnit.Centigray);
         var b = new AbsorbedDose(10, AbsorbedDoseUnit.Centigray);
         var c = a / b;
+        double d = a;
     }
 }

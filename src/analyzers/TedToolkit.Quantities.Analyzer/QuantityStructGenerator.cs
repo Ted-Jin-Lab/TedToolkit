@@ -21,25 +21,6 @@ internal class QuantityStructGenerator(
     {
         List<MemberDeclarationSyntax> operators = [];
 
-        if (!quantity.IsNoDimensions)
-        {
-            operators.Add(
-                OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
-                    .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
-                        Token(SyntaxKind.StaticKeyword)))
-                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                    .WithParameterList(ParameterList(
-                    [
-                        Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
-                        Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name)),
-                    ]))
-                    .WithExpressionBody(ArrowExpressionClause(
-                        BinaryExpression(SyntaxKind.MultiplyExpression,
-                            IdentifierName("right"),
-                            IdentifierName("left"))))
-                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
-        }
-
         if (quantitySymbol is not null)
         {
             foreach (var attributeData in quantitySymbol.GetAttributes()
@@ -461,7 +442,8 @@ internal class QuantityStructGenerator(
                         #region Conversions
 
                         ConversionOperatorDeclaration(
-                                Token(quantity.IsNoDimensions
+                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName 
+                                    is "global::TedToolkit.Quantities.QuantityImplicitToValueTypeAttribute") ?? false
                                     ? SyntaxKind.ImplicitKeyword
                                     : SyntaxKind.ExplicitKeyword),
                                 IdentifierName(typeName.FullName)).WithModifiers(TokenList(
@@ -670,7 +652,7 @@ internal class QuantityStructGenerator(
                                         ])),
                                     LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
+
                         OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
                                 Token(SyntaxKind.LessThanToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
@@ -714,7 +696,7 @@ internal class QuantityStructGenerator(
                                         ])),
                                     LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
+
                         OperatorDeclaration(PredefinedType(Token(SyntaxKind.BoolKeyword)),
                                 Token(SyntaxKind.LessThanEqualsToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
@@ -736,6 +718,7 @@ internal class QuantityStructGenerator(
                                         ])),
                                     LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
                         #endregion
 
                         #region Operators
@@ -827,6 +810,21 @@ internal class QuantityStructGenerator(
                                     MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("left"), IdentifierName("Value")),
                                     IdentifierName("right"))))))
+                            .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
+                        OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.AsteriskToken))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
+                                Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
+                                Parameter(Identifier("right")).WithType(IdentifierName(quantity.Name)),
+                            ]))
+                            .WithExpressionBody(ArrowExpressionClause(
+                                BinaryExpression(SyntaxKind.MultiplyExpression,
+                                    IdentifierName("right"),
+                                    IdentifierName("left"))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         ..operators,
