@@ -11,10 +11,12 @@ namespace TedToolkit.Quantities;
 /// <param name="operator"></param>
 /// <typeparam name="TRight"></typeparam>
 /// <typeparam name="TResult"></typeparam>
+/// <typeparam name="TLeft"></typeparam>
 [Conditional("CODE_ANALYSIS")]
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = true)]
 [SuppressMessage("ReSharper", "UnusedTypeParameter")]
-public class QuantityOperatorAttribute<TRight, TResult>(Operator @operator) : Attribute
+public class QuantityOperatorAttribute<TLeft, TRight, TResult>(Operator @operator) : Attribute
+    where TLeft : struct
     where TRight : struct
     where TResult : struct;
 
