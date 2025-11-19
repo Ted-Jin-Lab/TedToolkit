@@ -99,6 +99,11 @@ public class QuantitiesGenerator : IIncrementalGenerator
         try
         {
             var (compilations, texts) = arg;
+
+            if (compilations.GetTypeByMetadataName("TedToolkit.Quantities.QuantitiesAttribute`1")?.BaseType?.GetName()
+                    ?.FullName
+                is "global::System.Attribute") return;
+
             var unitAttribute = ReadUnit(compilations);
             var tDataType = unitAttribute?.tDataType!;
             var flag = unitAttribute?.flag!;
