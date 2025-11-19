@@ -45,11 +45,11 @@ internal class QuantityStructGenerator(
             foreach (var attributeData in quantitySymbol.GetAttributes()
                          .Where(a => a.AttributeClass is { IsGenericType: true } attributeClass
                                      && attributeClass.ConstructUnboundGenericType().GetName().FullName is
-                                         "global::TedToolkit.Quantities.QuantityOperatorAttribute<,>"))
+                                         "global::TedToolkit.Quantities.QuantityOperatorAttribute<,,>"))
             {
                 if (attributeData.ConstructorArguments.FirstOrDefault().Value is not byte value) continue;
 
-                if (attributeData.AttributeClass is not { TypeArguments.Length: > 1 } attributeClass) continue;
+                if (attributeData.AttributeClass is not { TypeArguments.Length: > 2 } attributeClass) continue;
 
                 var leftType = attributeClass.TypeArguments[0].GetName();
                 var rightType = attributeClass.TypeArguments[1].GetName();
