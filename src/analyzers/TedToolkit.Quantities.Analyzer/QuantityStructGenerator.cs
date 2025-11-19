@@ -51,8 +51,9 @@ internal class QuantityStructGenerator(
 
                 if (attributeData.AttributeClass is not { TypeArguments.Length: > 1 } attributeClass) continue;
 
-                var otherType = attributeClass.TypeArguments[0].GetName();
-                var resultType = attributeClass.TypeArguments[1].GetName();
+                var leftType = attributeClass.TypeArguments[0].GetName();
+                var rightType = attributeClass.TypeArguments[1].GetName();
+                var resultType = attributeClass.TypeArguments[2].GetName();
 
                 operators.Add(
                     OperatorDeclaration(IdentifierName(resultType.FullName), Token(value switch
@@ -70,8 +71,8 @@ internal class QuantityStructGenerator(
                         ])
                         .WithParameterList(ParameterList(
                         [
-                            Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
-                            Parameter(Identifier("right")).WithType(IdentifierName(otherType.FullName)),
+                            Parameter(Identifier("left")).WithType(IdentifierName(leftType.Name)),
+                            Parameter(Identifier("right")).WithType(IdentifierName(rightType.FullName)),
                         ]))
                         .WithExpressionBody(ArrowExpressionClause(CastExpression(IdentifierName(resultType.FullName),
                             ParenthesizedExpression(BinaryExpression(value switch
@@ -82,9 +83,11 @@ internal class QuantityStructGenerator(
                                     3 => SyntaxKind.DivideExpression,
                                     _ => SyntaxKind.None,
                                 },
-                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("left"), IdentifierName("Value")),
-                                otherType.FullName.Contains("TedToolkit.Quantities")
+                                leftType.FullName.Contains("TedToolkit.Quantities")
+                                    ? MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("left"), IdentifierName("Value"))
+                                    : IdentifierName("left"),
+                                rightType.FullName.Contains("TedToolkit.Quantities")
                                     ? MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
                                         IdentifierName("right"), IdentifierName("Value"))
                                     : IdentifierName("right"))))))
@@ -200,10 +203,10 @@ internal class QuantityStructGenerator(
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
                             .WithExpressionBody(ArrowExpressionClause(CastExpression(
-                                        IdentifierName(quantity.Name),
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
+                                IdentifierName(quantity.Name),
+                                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
+
                         PropertyDeclaration(IdentifierName(quantity.Name), Identifier("One"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
@@ -211,7 +214,7 @@ internal class QuantityStructGenerator(
                                 IdentifierName(quantity.Name),
                                 LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
+
                         FieldDeclaration(
                                 VariableDeclaration(IdentifierName(typeName.FullName))
                                     .WithVariables(
@@ -606,7 +609,7 @@ internal class QuantityStructGenerator(
                                         IdentifierName("right"),
                                         IdentifierName("Value")))))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        
+
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PercentToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
