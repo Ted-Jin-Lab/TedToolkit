@@ -124,6 +124,25 @@ internal class QuantityStructGenerator(
                         ])))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
+            MethodDeclaration(IdentifierName(quantity.Name), Identifier("Clamp"))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc(
+                    $"global::System.Math.Clamp({typeName.FullName}, {typeName.FullName}, {typeName.FullName})")
+                .WithParameterList(ParameterList(
+                [
+                    Parameter(Identifier("min")).WithType(IdentifierName(quantity.Name)),
+                    Parameter(Identifier("max")).WithType(IdentifierName(quantity.Name))
+                ]))
+                .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            InvocationExpression(IdentifierName("Max"))
+                                .WithArgumentList(ArgumentList(
+                                    [Argument(IdentifierName("min"))])),
+                            IdentifierName("Min")))
+                    .WithArgumentList(ArgumentList([Argument(IdentifierName("max"))]))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
             PropertyDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("Sign"))
                 .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                 .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
@@ -173,7 +192,8 @@ internal class QuantityStructGenerator(
                         SimpleBaseType(GenericName(Identifier("global::TedToolkit.Quantities.IQuantity"))
                             .WithTypeArgumentList(TypeArgumentList([
                                 IdentifierName(quantity.Name),
-                                IdentifierName(typeName.FullName)
+                                IdentifierName(typeName.FullName),
+                                IdentifierName(quantity.UnitName),
                             ]))),
                     ]))
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
@@ -258,7 +278,7 @@ internal class QuantityStructGenerator(
                                     .WithType(IdentifierName(quantity.UnitName))
                             ]))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithBody(Block(
                                 ReturnStatement(CastExpression(
                                     IdentifierName(typeName.FullName), ParenthesizedExpression(
@@ -387,6 +407,28 @@ internal class QuantityStructGenerator(
 
                         #endregion
 
+                        #region Units
+
+                        MethodDeclaration(IdentifierName(quantity.Name), Identifier("From"))
+                            .WithModifiers(
+                                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
+                            .WithParameterList(ParameterList(
+                            [
+                                Parameter(Identifier("value"))
+                                    .WithType(IdentifierName(typeName.FullName)),
+                                Parameter(Identifier("unit"))
+                                    .WithType(IdentifierName(quantity.UnitName))
+                            ]))
+                            .WithBody(Block(
+                                ReturnStatement(ObjectCreationExpression(IdentifierName(quantity.Name))
+                                    .WithArgumentList(ArgumentList(
+                                    [
+                                        Argument(IdentifierName("value")),
+                                        Argument(IdentifierName("unit")),
+                                    ]))))),
+
                         ..quantity.Units.SelectMany(u =>
                         {
                             var info = data.Units[u];
@@ -394,9 +436,7 @@ internal class QuantityStructGenerator(
                             var parameterName = "@" + char.ToLowerInvariant(unitName[0]) + unitName[1..];
                             return (IEnumerable<MemberDeclarationSyntax>)
                             [
-                                MethodDeclaration(
-                                        IdentifierName(quantity.Name),
-                                        Identifier("From" + unitName))
+                                MethodDeclaration(IdentifierName(quantity.Name), Identifier("From" + unitName))
                                     .WithModifiers(
                                         TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                                     .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
@@ -438,6 +478,9 @@ internal class QuantityStructGenerator(
                                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                             ];
                         }),
+
+                        #endregion
+
 
                         #region Conversions
 
