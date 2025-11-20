@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace TedToolkit.Quantities;
 
-namespace TedToolkit.Quantities;
+/// <summary>
+/// Implicit convert to the value type
+/// </summary>
 [AttributeUsage(AttributeTargets.Struct)]
-[SuppressMessage("ReSharper", "UnusedTypeParameter")]
-public sealed class QuantityImplicitToValueTypeAttribute: Attribute;
+public sealed class QuantityImplicitToValueTypeAttribute : Attribute;
