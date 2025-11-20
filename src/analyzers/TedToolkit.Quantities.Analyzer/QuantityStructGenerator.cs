@@ -442,7 +442,7 @@ internal class QuantityStructGenerator(
                         #region Conversions
 
                         ConversionOperatorDeclaration(
-                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName 
+                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName
                                     is "global::TedToolkit.Quantities.QuantityImplicitToValueTypeAttribute") ?? false
                                     ? SyntaxKind.ImplicitKeyword
                                     : SyntaxKind.ExplicitKeyword),
@@ -461,7 +461,11 @@ internal class QuantityStructGenerator(
                                 IdentifierName("Value"))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
-                        ConversionOperatorDeclaration(Token(SyntaxKind.ExplicitKeyword),
+                        ConversionOperatorDeclaration(
+                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName 
+                                    is "global::TedToolkit.Quantities.QuantityImplicitFromValueTypeAttribute") ?? false
+                                    ? SyntaxKind.ImplicitKeyword
+                                    : SyntaxKind.ExplicitKeyword),
                                 IdentifierName(quantity.Name))
                             .WithModifiers(
                                 TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
