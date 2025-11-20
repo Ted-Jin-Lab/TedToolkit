@@ -5,9 +5,15 @@
 /// </summary>
 /// <typeparam name="TQuantity"></typeparam>
 /// <typeparam name="TValue"></typeparam>
-public interface IQuantity<TQuantity, TValue> : IQuantity<TQuantity>
+public interface IQuantity<TQuantity, out TValue> : IQuantity<TQuantity>
     where TValue : struct, IConvertible
-    where TQuantity : IQuantity<TQuantity, TValue>;
+    where TQuantity : IQuantity<TQuantity, TValue>
+{
+    /// <summary>
+    /// The Value. In the most case, you don't need it.
+    /// </summary>
+    TValue Value { get; }
+}
 
 /// <summary>
 /// Quantity
