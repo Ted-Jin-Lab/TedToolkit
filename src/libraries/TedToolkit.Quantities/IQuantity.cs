@@ -17,7 +17,7 @@ public interface IQuantity<TQuantity, TValue, in TUnit> :
 #endif
     IConvertible
     where TQuantity : struct, IQuantity<TQuantity, TValue, TUnit>
-    where TUnit : Enum
+    where TUnit : struct, Enum
 {
 #if NET7_0_OR_GREATER
     /// <summary/>

@@ -50,6 +50,7 @@ internal class QuantityStructGenerator(
                         .WithAttributeLists([
                             GeneratedCodeAttribute(typeof(QuantityStructGenerator))
                         ])
+                        .WithXmlComment()
                         .WithParameterList(ParameterList(
                         [
                             Parameter(Identifier("left")).WithType(IdentifierName(leftType.Name)),
@@ -203,6 +204,7 @@ internal class QuantityStructGenerator(
                         PropertyDeclaration(IdentifierName(quantity.Name), Identifier("Zero"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithExpressionBody(ArrowExpressionClause(CastExpression(
                                 IdentifierName(quantity.Name),
                                 LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))
@@ -211,6 +213,7 @@ internal class QuantityStructGenerator(
                         PropertyDeclaration(IdentifierName(quantity.Name), Identifier("One"))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithExpressionBody(ArrowExpressionClause(CastExpression(
                                 IdentifierName(quantity.Name),
                                 LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))))
@@ -773,6 +776,7 @@ internal class QuantityStructGenerator(
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.MinusToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("value")).WithType(IdentifierName(quantity.Name))
@@ -786,6 +790,7 @@ internal class QuantityStructGenerator(
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PlusToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
@@ -806,6 +811,7 @@ internal class QuantityStructGenerator(
                         OperatorDeclaration(IdentifierName(quantity.Name), Token(SyntaxKind.PercentToken))
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
@@ -827,6 +833,7 @@ internal class QuantityStructGenerator(
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
@@ -847,6 +854,7 @@ internal class QuantityStructGenerator(
                             .WithAttributeLists([
                                 GeneratedCodeAttribute(typeof(QuantityStructGenerator))
                             ])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(quantity.Name)),
@@ -863,6 +871,7 @@ internal class QuantityStructGenerator(
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
                                 Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlComment()
                             .WithParameterList(ParameterList(
                             [
                                 Parameter(Identifier("left")).WithType(IdentifierName(typeName.FullName)),
@@ -939,6 +948,28 @@ internal class QuantityStructGenerator(
             return LiteralExpression(
                 SyntaxKind.StringLiteralExpression,
                 Literal(quantity.Name));
+        }
+
+        if (quantitySymbol?.GetAttributes().FirstOrDefault(a =>
+                a.AttributeClass is { IsGenericType: true } attributeClass
+                && attributeClass.ConstructUnboundGenericType().GetName().FullName is
+                    "global::TedToolkit.Quantities.QuantityDisplayUnitAttribute<>") is { } displayUnitAttribute)
+        {
+            var syntax = displayUnitAttribute.ApplicationSyntaxReference?.GetSyntax()
+                as AttributeSyntax;
+            var argSyntax = syntax?.ArgumentList?.Arguments[0].Expression;
+            var argText = argSyntax?.ToString();
+            if (argText is not null)
+                return InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName(argText),
+                            IdentifierName("ToString")))
+                    .WithArgumentList(ArgumentList(
+                    [
+                        Argument(IdentifierName("index")),
+                        Argument(IdentifierName("formatProvider"))
+                    ]));
         }
 
         if (quantity.IsNoDimensions)
