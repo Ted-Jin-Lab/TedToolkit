@@ -13,4 +13,5 @@ partial struct AbsorbedDose
         double d = a;
         AbsorbedDose e = 10.0;
     }
+    
 }

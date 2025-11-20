@@ -124,6 +124,25 @@ internal class QuantityStructGenerator(
                         ])))))
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
+            MethodDeclaration(IdentifierName(quantity.Name), Identifier("Clamp"))
+                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                .WithXmlCommentInheritDoc(
+                    $"global::System.Math.Clamp({typeName.FullName}, {typeName.FullName}, {typeName.FullName})")
+                .WithParameterList(ParameterList(
+                [
+                    Parameter(Identifier("min")).WithType(IdentifierName(quantity.Name)),
+                    Parameter(Identifier("max")).WithType(IdentifierName(quantity.Name))
+                ]))
+                .WithExpressionBody(ArrowExpressionClause(InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,
+                            InvocationExpression(IdentifierName("Max"))
+                                .WithArgumentList(ArgumentList(
+                                    [Argument(IdentifierName("min"))])),
+                            IdentifierName("Min")))
+                    .WithArgumentList(ArgumentList([Argument(IdentifierName("max"))]))))
+                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+
             PropertyDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), Identifier("Sign"))
                 .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
                 .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
