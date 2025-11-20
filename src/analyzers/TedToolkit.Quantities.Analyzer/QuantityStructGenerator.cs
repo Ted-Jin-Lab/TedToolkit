@@ -278,7 +278,7 @@ internal class QuantityStructGenerator(
                                     .WithType(IdentifierName(quantity.UnitName))
                             ]))
                             .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
-                            .WithXmlComment()
+                            .WithXmlCommentInheritDoc((string?)null)
                             .WithBody(Block(
                                 ReturnStatement(CastExpression(
                                     IdentifierName(typeName.FullName), ParenthesizedExpression(

@@ -8,7 +8,7 @@ namespace TedToolkit.Quantities;
 /// <typeparam name="TQuantity"></typeparam>
 /// <typeparam name="TValue"></typeparam>
 /// <typeparam name="TUnit"></typeparam>
-public interface IQuantity<TQuantity, TValue, TUnit> :
+public interface IQuantity<TQuantity, TValue, in TUnit> :
     IQuantityQuantity<TQuantity>,
     IQuantityValue<TValue>
     where TValue : struct,
@@ -23,6 +23,22 @@ public interface IQuantity<TQuantity, TValue, TUnit> :
     /// <summary/>
     static abstract TQuantity From(TValue value, TUnit unit);
 #endif
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    TValue As(TUnit unit);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="format"></param>
+    /// <param name="formatProvider"></param>
+    /// <returns></returns>
+    string ToString(TUnit unit, string? format = null, IFormatProvider? formatProvider = null);
 }
 
 /// <summary>
@@ -41,14 +57,6 @@ public interface IQuantityValue<out TValue> :
     /// The Value. In the most case, you don't need it.
     /// </summary>
     TValue Value { get; }
-
-#if NET7_0_OR_GREATER
-    /// <summary/>
-    static abstract TValue Zero { get; }
-
-    /// <summary/>
-    static abstract TValue One { get; }
-#endif
 }
 
 /// <summary>
@@ -59,7 +67,28 @@ public interface IQuantityQuantity<TQuantity> :
     IQuantity,
     IEquatable<TQuantity>,
     IComparable<TQuantity>
-    where TQuantity : struct, IQuantityQuantity<TQuantity>;
+    where TQuantity : struct, IQuantityQuantity<TQuantity>
+{
+#if NET7_0_OR_GREATER
+    /// <summary/>
+    static abstract TQuantity Zero { get; }
+
+    /// <summary/>
+    static abstract TQuantity One { get; }
+#endif
+
+    /// <inheritdoc cref="Math.Abs(double)"/>
+    TQuantity Abs();
+
+    /// <inheritdoc cref="Math.Min(double, double)"/>
+    TQuantity Min(TQuantity val2);
+
+    /// <inheritdoc cref="Math.Max(double, double)"/>
+    TQuantity Max(TQuantity val2);
+
+    /// <inheritdoc cref="Math.Clamp(double, double, double)"/>
+    TQuantity Clamp(TQuantity min, TQuantity max);
+}
 
 /// <summary>
 /// Quantity
