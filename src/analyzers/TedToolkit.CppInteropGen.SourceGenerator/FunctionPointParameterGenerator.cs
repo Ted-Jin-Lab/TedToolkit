@@ -9,13 +9,13 @@ namespace TedToolkit.CppInteropGen.SourceGenerator;
 using static SyntaxExtensions;
 using static SyntaxFactory;
 
-public class FunctionPointParameterGenerator(string methodName, string name, string returnType, string args)
+public class FunctionPointParameterGenerator(string methodName, string name, string returnType, string args, string[] allClassNames)
     : BaseParameterGenerator
 {
     private readonly IReadOnlyList<BaseParameterGenerator> _parameters =
-        GenerateParameters(methodName + "_" + name, args).ToArray();
+        GenerateParameters(methodName + "_" + name, args, allClassNames).ToArray();
 
-    private readonly ParameterGenerator _return = new(returnType);
+    private readonly ParameterGenerator _return = new(returnType, allClassNames);
     private readonly string _delegateName = methodName + "_" + name + "_Delegate";
     public override string Name { get; } = name;
     public override bool HasHandle => false;

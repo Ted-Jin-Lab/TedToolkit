@@ -31,6 +31,7 @@ public class CppSourceGenerator : IIncrementalGenerator
                         config.IsInternal = true;
                     }
                 }
+
                 return config;
             });
 
@@ -51,20 +52,30 @@ public class CppSourceGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(cppFiles.Collect().Combine(compilation.Combine(configText)), Generate);
     }
 
-    private static void Generate(SourceProductionContext content, (ImmutableArray<(string Path, SourceText? text)> Left, (Compilation compilation, Config option) Right) items)
+    private static void Generate(SourceProductionContext content,
+        (ImmutableArray<(string Path, SourceText? text)> Left, (Compilation compilation, Config option) Right) items)
     {
         var compilation = items.Right.compilation;
         var assemblyName = compilation.AssemblyName;
+        var option = items.Right.option;
 
-        foreach (var (path, text) in items.Left)
+        var classes = items.Left
+            .Where(i => i.text is not null)
+            .Select(item =>
+            {
+                var fileName = Path.GetFileNameWithoutExtension(item.Path);
+                var className = fileName.Substring(0, fileName.Length - 2);
+                return (className, item.text!);
+            })
+            .ToArray();
+
+        var allClassesNames = classes.Select(i => i.className).ToArray();
+
+        foreach (var (className, text) in classes)
         {
-            if (text is null) continue;
-            var fileName = Path.GetFileNameWithoutExtension(path);
-            var className = fileName.Substring(0, fileName.Length - 2);
-
             var nameSpace = assemblyName?.EndsWith(".Wrapper") ?? false ? assemblyName : assemblyName + ".Wrapper";
             var node = NamespaceDeclaration(nameSpace)
-                .WithMembers([new CppClassGenerator(text, className, items.Right.option).Generate()]);
+                .WithMembers([new CppClassGenerator(text, className, option, allClassesNames).Generate()]);
 
             content.AddSource($"{className}.g.cs", node.NodeToString());
         }
