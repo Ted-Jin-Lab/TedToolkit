@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Text.RegularExpressions;
+using PeterO.Numbers;
 using TedToolkit.Assertions;
 using TedToolkit.Assertions.Assertions.Extensions;
 using TedToolkit.Assertions.Execution;
@@ -13,8 +14,14 @@ using TedToolkit.ValidResults;
 using UnitsNet;
 using UnitsNet.Units;
 
+var pi = ERational.FromEDecimal(EDecimal.FromString("3.1415926535897932384626433832795028841971693993751058209749445923"));
+var result = pi * ERational.FromInt32(2);
+var ctx = EContext.ForPrecision(50) // 精度50位
+    .WithExponentRange(-1000, 1000) // 指数在 [-1000, 1000]
+    .WithRounding(ERounding.HalfEven);
+Console.WriteLine(result.ToEDecimal(ctx));
 
-
+return;
 var length = (TedToolkit.Quantities.Length)6.0;
 Console.WriteLine(length);
 unsafe
