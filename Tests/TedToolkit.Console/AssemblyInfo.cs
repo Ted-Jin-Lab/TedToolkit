@@ -8,4 +8,4 @@ using Length = UnitsNet.Length;
 [assembly: NumberExtension<int, Angle>]
 [assembly: NumberExtension<double, Angle>]
 
-[assembly:Quantities<double>(QuantitySystems.SI, "AbsorbedDose")]
+[assembly:Quantities<double>(QuantitySystems.ALL, "AbsorbedDose", "Dimensionless", "DimensionlessRatio")]

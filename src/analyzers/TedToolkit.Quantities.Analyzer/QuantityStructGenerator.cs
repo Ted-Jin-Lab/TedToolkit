@@ -950,6 +950,28 @@ internal class QuantityStructGenerator(
                 Literal(quantity.Name));
         }
 
+        if (quantitySymbol?.GetAttributes().FirstOrDefault(a =>
+                a.AttributeClass is { IsGenericType: true } attributeClass
+                && attributeClass.ConstructUnboundGenericType().GetName().FullName is
+                    "global::TedToolkit.Quantities.QuantityDisplayUnitAttribute<>") is { } displayUnitAttribute)
+        {
+            var syntax = displayUnitAttribute.ApplicationSyntaxReference?.GetSyntax()
+                as AttributeSyntax;
+            var argSyntax = syntax?.ArgumentList?.Arguments[0].Expression;
+            var argText = argSyntax?.ToString();
+            if (argText is not null)
+                return InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName(argText),
+                            IdentifierName("ToString")))
+                    .WithArgumentList(ArgumentList(
+                    [
+                        Argument(IdentifierName("index")),
+                        Argument(IdentifierName("formatProvider"))
+                    ]));
+        }
+
         if (quantity.IsNoDimensions)
         {
             var memberName = allUnits
