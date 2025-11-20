@@ -152,9 +152,11 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
                     .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(ValidResultsGenerator))])
                     .WithMembers([
-                        GenerateCreateTracker(IdentifierName(target.FullName).WithTypeParameterNames(parameterNames), true),
+                        GenerateCreateTracker(IdentifierName(target.FullName).WithTypeParameterNames(parameterNames),
+                            true),
                         GenerateCreateTracker(IdentifierName(data.GetName().FullName), false),
-                        MethodDeclaration(IdentifierName(target.Name).WithTypeParameterNames(parameterNames), Identifier("ToValidResult"))
+                        MethodDeclaration(IdentifierName(target.Name).WithTypeParameterNames(parameterNames),
+                                Identifier("ToValidResult"))
                             .WithTypeParameterNames(parameterNames)
                             .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
                             .WithAttributeLists([
@@ -169,13 +171,15 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
                             ]))
                             .WithExpressionBody(ArrowExpressionClause(InvocationExpression(MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName(target.Name).WithTypeParameterNames(parameterNames), IdentifierName("Ok")))
+                                    IdentifierName(target.Name).WithTypeParameterNames(parameterNames),
+                                    IdentifierName("Ok")))
                                 .WithArgumentList(ArgumentList(
                                 [
                                     Argument(IdentifierName("value"))
                                 ]))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                        ..GenerateStaticMembers(members, dictionary, trackerName, baseDataSymbol, extensionMethods, parameterNames)
+                        ..GenerateStaticMembers(members, dictionary, trackerName, baseDataSymbol, extensionMethods,
+                            parameterNames)
                     ]),
                 ClassDeclaration(trackerName)
                     .WithTypeParameterNames(parameterNames)
@@ -282,6 +286,7 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
                      .OfType<IMethodSymbol>()
                      .Where(p => !p.ReturnType.IsRefLikeType)
                      .Where(p => !p.IsStatic)
+                     .Where(p => p.Name is not "<Clone>$")
                      .Where(p => !staticMethods.Contains(new MethodSignature(p))))
             if (method.MethodKind is MethodKind.Ordinary)
                 yield return OrdinaryMethod(method, dictionary, trackerName, paramNames);
@@ -316,7 +321,8 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
     }
 
     private static IEnumerable<MemberDeclarationSyntax> GenerateMembers(IReadOnlyCollection<ISymbol> members,
-        Dictionary<ISymbol?, SimpleType> dictionary, string trackerName, ITypeSymbol? baseTypeSymbol, IReadOnlyCollection<ITypeParamName> paramNames)
+        Dictionary<ISymbol?, SimpleType> dictionary, string trackerName, ITypeSymbol? baseTypeSymbol,
+        IReadOnlyCollection<ITypeParamName> paramNames)
     {
         var propertyOrFieldNames = baseTypeSymbol?.GetMembers().OfType<IPropertySymbol>().Select(i => i.Name)
             .Concat(baseTypeSymbol.GetMembers().OfType<IFieldSymbol>().Select(i => i.Name)).ToArray() ?? [];
@@ -334,7 +340,8 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
                      .Where(p => !propertyOrFieldNames.Contains(p.Name))
                      .Where(p => !p.Type.IsRefLikeType))
             yield return GenerateProperty(property.Type, property.Name, property.ContainingType,
-                dictionary, property.GetMethod is not null, property.SetMethod is not null, property.Parameters);
+                dictionary, property.GetMethod is not null, property.SetMethod is { IsInitOnly : false },
+                property.Parameters);
 
         foreach (var field in members
                      .OfType<IFieldSymbol>()
@@ -365,7 +372,8 @@ public sealed class ValidResultsGenerator : IIncrementalGenerator
     }
 
     private static MemberDeclarationSyntax StaticOrdinaryMethod(IMethodSymbol method,
-        Dictionary<ISymbol?, SimpleType> dictionary, MethodParametersHelper.MethodType type, string trackerName, IReadOnlyCollection<ITypeParamName> paramNames)
+        Dictionary<ISymbol?, SimpleType> dictionary, MethodParametersHelper.MethodType type, string trackerName,
+        IReadOnlyCollection<ITypeParamName> paramNames)
     {
         return MethodParametersHelper.GenerateMethodByParameters(method,
             [..method.Parameters.Select(p => new ParameterRelay(p))],

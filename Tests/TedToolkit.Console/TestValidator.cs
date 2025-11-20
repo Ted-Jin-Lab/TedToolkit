@@ -15,8 +15,15 @@ public partial class DateTimeResult
 }
 
 [GenerateValidResult<TestClass2>]
-public partial class TestClass2Result
+public partial class TestClass2Result;
+
+
+[GenerateValidResult<TestRecord>]
+public partial class TestRecordResult;
+
+public record TestRecord
 {
+    public int Value { get; init; } = 0;
 }
 
 public struct TestStruct;
