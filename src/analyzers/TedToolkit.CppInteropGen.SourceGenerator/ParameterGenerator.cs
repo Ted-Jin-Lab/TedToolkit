@@ -16,7 +16,7 @@ public sealed class ParameterGenerator : BaseParameterGenerator
     private readonly ParameterType _type;
     public override string Name { get; }
 
-    public ParameterGenerator(string parameterString)
+    public ParameterGenerator(string parameterString, string[] allClassNames)
     {
         var cleanedString = parameterString
             .Replace("const", string.Empty)
@@ -28,7 +28,7 @@ public sealed class ParameterGenerator : BaseParameterGenerator
             .Split(' ');
         var typeName = beautifulStrings.First(s => !string.IsNullOrEmpty(s));
         Name = beautifulStrings.Last(s => !string.IsNullOrEmpty(s));
-        _rawTypeName = GetTypeNameFromCpp(typeName);
+        _rawTypeName = GetTypeNameFromCpp(typeName, allClassNames);
         _type = CheckType();
         return;
 

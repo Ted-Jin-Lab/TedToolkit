@@ -79,14 +79,19 @@ internal static class Helpers
 
         var result = jObject?.ToObject<DataCollection>() ?? throw new NullReferenceException();
 
-        return quantities.Length is 0
-            ? result
-            : result with
-            {
-                Quantities = result.Quantities
-                    .Where(p => p.Value.IsBasic || quantities.Contains(p.Key))
-                    .ToDictionary(i => i.Key, i => i.Value)
-            };
+        return result with
+        {
+            Quantities = result.Quantities
+                .Where(QuantityPredict)
+                .ToDictionary(i => i.Key, i => i.Value)
+        };
+
+        bool QuantityPredict(KeyValuePair<string, Quantity> pair)
+        {
+            if (fileName is null) return pair.Value.IsBasic;
+            if (quantities.Length is not 0) return pair.Value.IsBasic || quantities.Contains(pair.Key);
+            return true;
+        }
 
         void AppendObject(JObject obj)
         {

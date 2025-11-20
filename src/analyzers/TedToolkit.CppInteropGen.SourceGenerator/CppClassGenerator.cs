@@ -18,7 +18,7 @@ public class CppClassGenerator
     private readonly IReadOnlyList<string> _fields;
     private readonly IReadOnlyList<CMethodGenerator> _methods;
 
-    public CppClassGenerator(SourceText text, string className, Config config)
+    public CppClassGenerator(SourceText text, string className, Config config, string[] allClassNames)
     {
         _config = config;
         _className = className;
@@ -60,7 +60,7 @@ public class CppClassGenerator
             var index = str.IndexOf('{');
             if (index < 0) return;
             var methodDeclare = str.Substring(0, index);
-            methods.Add(new CMethodGenerator(methodDeclare, className, privateIt));
+            methods.Add(new CMethodGenerator(methodDeclare, className, privateIt, allClassNames));
         }
     }
 
@@ -163,7 +163,8 @@ public class CppClassGenerator
         private readonly string _methodName;
         private readonly IReadOnlyList<BaseParameterGenerator> _parameters;
 
-        public CMethodGenerator(string methodDeclare, string className, bool isPrivate)
+        public CMethodGenerator(string methodDeclare, string className, bool isPrivate,
+            string[] allClassesName)
         {
             _className = className;
             var startIndex = methodDeclare.IndexOf('(');
@@ -173,7 +174,7 @@ public class CppClassGenerator
             var endIndex = methodDeclare.LastIndexOf(')');
 
             _parameters = BaseParameterGenerator.GenerateParameters(_methodName,
-                methodDeclare.Substring(startIndex + 1, endIndex - startIndex - 1)).ToArray();
+                methodDeclare.Substring(startIndex + 1, endIndex - startIndex - 1), allClassesName).ToArray();
 
             _isPrivate = isPrivate || _parameters.Any(p => p.HasHandle);
         }

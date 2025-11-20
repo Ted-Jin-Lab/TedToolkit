@@ -1,5 +1,6 @@
-﻿using TedToolkit.QuantExtensions;
-using TedToolkit.Quantities;
+﻿global using TedToolkit.Quantities;
+
+using TedToolkit.QuantExtensions;
 using UnitsNet;
 using Length = UnitsNet.Length;
 
