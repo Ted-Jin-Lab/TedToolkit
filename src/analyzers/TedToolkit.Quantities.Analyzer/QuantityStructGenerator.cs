@@ -196,15 +196,15 @@ internal class QuantityStructGenerator(
                                 LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))))
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
-                        FieldDeclaration(
-                                VariableDeclaration(IdentifierName(typeName.FullName))
-                                    .WithVariables(
-                                    [
-                                        VariableDeclarator(Identifier("Value"))
-                                    ]))
-                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword),
-                                Token(SyntaxKind.ReadOnlyKeyword)))
-                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))]),
+                        PropertyDeclaration(IdentifierName(typeName.FullName), Identifier("Value"))
+                            .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword)))
+                            .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                            .WithXmlCommentInheritDoc((string?)null)
+                            .WithAccessorList(AccessorList(
+                            [
+                                AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                            ])),
 
                         ConstructorDeclaration(Identifier(quantity.Name))
                             .WithModifiers(TokenList(Token(quantity.IsNoDimensions
@@ -462,7 +462,7 @@ internal class QuantityStructGenerator(
                             .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
 
                         ConversionOperatorDeclaration(
-                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName 
+                                Token(quantitySymbol?.GetAttributes().Any(a => a.AttributeClass?.GetName().FullName
                                     is "global::TedToolkit.Quantities.QuantityImplicitFromValueTypeAttribute") ?? false
                                     ? SyntaxKind.ImplicitKeyword
                                     : SyntaxKind.ExplicitKeyword),
