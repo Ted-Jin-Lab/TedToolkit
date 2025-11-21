@@ -1,0 +1,87 @@
+<Solution>
+  <Folder Name="/build/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+    <Project Path="build/NukeBuilder.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/libraries/TedToolkit.RoslynHelper/TedToolkit.RoslynHelper.csproj" />
+  </Folder>
+  <Folder Name="/src/Assertions/">
+    <Project Path="src/libraries/TedToolkit.Assertions.FluentValidation/TedToolkit.Assertions.FluentValidation.csproj" />
+    <Project Path="src/libraries/TedToolkit.Assertions.Logging/TedToolkit.Assertions.Logging.csproj" />
+    <Project Path="src/libraries/TedToolkit.Assertions/TedToolkit.Assertions.csproj" />
+    <Project Path="tests/TedToolkit.Assertions.Tests/TedToolkit.Assertions.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/CppInteropGen/">
+    <Project Path="src/analyzers/TedToolkit.CppInteropGen.SourceGenerator/TedToolkit.CppInteropGen.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.CppInteropGen/TedToolkit.CppInteropGen.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.CppInteropGen.SourceGenerator/TedToolkit.CppInteropGen.SourceGenerator.csproj" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/Fluent/">
+    <Project Path="src/analyzers/TedToolkit.Fluent.SourceGenerator/TedToolkit.Fluent.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.Fluent/TedToolkit.Fluent.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.Fluent.SourceGenerator/TedToolkit.Fluent.SourceGenerator.csproj" />
+    </Project>
+    <Project Path="tests/TedToolkit.Fluent.Tests/TedToolkit.Fluent.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/Grasshopper/">
+    <Project Path="src/analyzers/TedToolkit.Grasshopper.SourceGenerator/TedToolkit.Grasshopper.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.Grasshopper.Sources/TedToolkit.Grasshopper.Sources.csproj">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
+    <Project Path="src/libraries/TedToolkit.Grasshopper/TedToolkit.Grasshopper.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.Grasshopper.SourceGenerator/TedToolkit.Grasshopper.SourceGenerator.csproj" />
+    </Project>
+    <Project Path="tests/TedToolkit.Grasshopper.Instance/TedToolkit.Grasshopper.Instance.csproj" />
+  </Folder>
+  <Folder Name="/src/InterpolatedParser/">
+    <Project Path="src/analyzers/TedToolkit.InterpolatedParser.SourceGenerator/TedToolkit.InterpolatedParser.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.InterpolatedParser.Sources/TedToolkit.InterpolatedParser.Sources.csproj">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
+    <Project Path="src/libraries/TedToolkit.InterpolatedParser/TedToolkit.InterpolatedParser.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.InterpolatedParser.SourceGenerator/TedToolkit.InterpolatedParser.SourceGenerator.csproj" />
+    </Project>
+    <Project Path="tests/TedToolkit.InterpolatedParser.Tests/TedToolkit.InterpolatedParser.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/PureConst/">
+    <Project Path="src/analyzers/TedToolkit.PureConst.Analyzer/TedToolkit.PureConst.Analyzer.csproj" />
+    <Project Path="src/libraries/TedToolkit.PureConst/TedToolkit.PureConst.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.PureConst.Analyzer/TedToolkit.PureConst.Analyzer.csproj" />
+    </Project>
+    <Project Path="tests/TedToolkit.PureConst.Tests/TedToolkit.PureConst.Tests.csproj" />
+  </Folder>
+  <Folder Name="/src/QuantExtensions/">
+    <Project Path="src/analyzers/TedToolkit.QuantExtensions.SourceGenerator/TedToolkit.QuantExtensions.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.QuantExtensions/TedToolkit.QuantExtensions.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.QuantExtensions.SourceGenerator/TedToolkit.QuantExtensions.SourceGenerator.csproj" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/Quantities/">
+    <Project Path="src/analyzers/TedToolkit.Quantities.Analyzer/TedToolkit.Quantities.Analyzer.csproj" />
+    <Project Path="src/applications/TedToolkit.Quantities.Generator/TedToolkit.Quantities.Generator.csproj" />
+    <Project Path="src/libraries/TedToolkit.Quantities.Data/TedToolkit.Quantities.Data.csproj" />
+    <Project Path="src/libraries/TedToolkit.Quantities/TedToolkit.Quantities.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.Quantities.Analyzer/TedToolkit.Quantities.Analyzer.csproj" />
+      <BuildDependency Project="src/libraries/TedToolkit.Quantities.Data/TedToolkit.Quantities.Data.csproj" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/Scopes/">
+    <Project Path="src/libraries/TedToolkit.Scopes/TedToolkit.Scopes.csproj" />
+  </Folder>
+  <Folder Name="/src/ValidResults/">
+    <Project Path="src/analyzers/TedToolkit.ValidResults.SourceGenerator/TedToolkit.ValidResults.SourceGenerator.csproj" />
+    <Project Path="src/libraries/TedToolkit.ValidResults/TedToolkit.ValidResults.csproj">
+      <BuildDependency Project="src/analyzers/TedToolkit.ValidResults.SourceGenerator/TedToolkit.ValidResults.SourceGenerator.csproj" />
+    </Project>
+  </Folder>
+  <Project Path="tests/TedToolkit.Console/TedToolkit.Console.csproj">
+    <Build Project="false" />
+  </Project>
+</Solution>
