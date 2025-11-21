@@ -166,20 +166,6 @@ internal class QuantityStructGenerator(
                 CreateMathMethod(nameof(Math.Floor)),
                 CreateMathMethod(nameof(Math.Ceiling)),
                 CreateMathMethod(nameof(Math.Round)),
-                CreateEnumerableMethod(nameof(Enumerable.Sum), $"""
-                                                                /// <summary>
-                                                                /// Computes the sum of a sequence of <see cref="{quantity.Name}"/> values
-                                                                /// </summary>
-                                                                /// <param name="values"></param>
-                                                                /// <returns>The sum of the projected values</returns>
-                                                                """),
-                CreateEnumerableMethod(nameof(Enumerable.Average), $"""
-                                                                    /// <summary>
-                                                                    /// Computes the average of a sequence of <see cref="{quantity.Name}"/> values that are obtained by invoking a transform function on each element of the input sequence
-                                                                    /// </summary>
-                                                                    /// <param name="values"></param>
-                                                                    /// <returns>The average of the sequence of values</returns>
-                                                                    """)
             ]);
         }
 
@@ -890,6 +876,32 @@ internal class QuantityStructGenerator(
                         ..mathsExtensions
                     ])
             ]);
+
+        if (typeName.Symbol.IsFloatingPoint())
+        {
+            nameSpace = nameSpace.AddMembers(
+                ClassDeclaration(quantity.Name + "Extensions")
+                    .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
+                    .WithAttributeLists([GeneratedCodeAttribute(typeof(QuantityStructGenerator))])
+                    .WithXmlComment($"/// <summary>Some extension about {quantity.Name}</summary>")
+                    .WithMembers([
+                        CreateEnumerableMethod(nameof(Enumerable.Sum), $"""
+                                                                        /// <summary>
+                                                                        /// Computes the sum of a sequence of <see cref="{quantity.Name}"/> values
+                                                                        /// </summary>
+                                                                        /// <param name="values"></param>
+                                                                        /// <returns>The sum of the projected values</returns>
+                                                                        """),
+                        CreateEnumerableMethod(nameof(Enumerable.Average), $"""
+                                                                            /// <summary>
+                                                                            /// Computes the average of a sequence of <see cref="{quantity.Name}"/> values that are obtained by invoking a transform function on each element of the input sequence
+                                                                            /// </summary>
+                                                                            /// <param name="values"></param>
+                                                                            /// <returns>The average of the sequence of values</returns>
+                                                                            """)
+                    ]));
+        }
+
         context.AddSource(quantity.Name + ".g.cs", nameSpace.NodeToString());
         return;
 
@@ -917,6 +929,7 @@ internal class QuantityStructGenerator(
                 .WithParameterList(ParameterList(
                 [
                     Parameter(Identifier("values"))
+                        .WithModifiers(TokenList(Token(SyntaxKind.ThisKeyword)))
                         .WithType(GenericName(Identifier("global::System.Collections.Generic.IEnumerable"))
                             .WithTypeArgumentList(TypeArgumentList([IdentifierName(quantity.Name)])))
                 ]))

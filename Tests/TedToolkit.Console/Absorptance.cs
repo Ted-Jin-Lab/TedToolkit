@@ -12,6 +12,9 @@ partial struct AbsorbedDose
         var c = a / b;
         double d = a;
         AbsorbedDose e = 10.0;
+        
+        var list = new List<AbsorbedDose> {a, b};
+        var f = list.Sum();
     }
 }
 
