@@ -17,7 +17,7 @@ public readonly struct UnitSystem(Dictionary<string, string> unitDictionary, Dat
 
         var data = collection;
         var allUnits = data.Units.Values.ToArray();
-        var quantityUnits =quantity.Units
+        var quantityUnits = quantity.Units
             .Select(u => data.Units[u]);
         if (unitDictionary.TryGetValue(key, out var unitKey))
         {
