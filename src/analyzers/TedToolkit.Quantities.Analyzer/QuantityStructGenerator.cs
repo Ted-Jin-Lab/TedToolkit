@@ -998,6 +998,7 @@ internal class QuantityStructGenerator(
         {
             var memberName = allUnits
                 .OrderBy(u => u.DistanceToDefault)
+                .ThenByDescending(u => u.ApplicableSystem)
                 .First().GetUnitName(data.Units.Values);
             return FromMember(quantity.UnitName, memberName);
         }
@@ -1019,6 +1020,7 @@ internal class QuantityStructGenerator(
                     return true;
                 })
                 .OrderBy(u => u.DistanceToDefault)
+                .ThenByDescending(u => u.ApplicableSystem)
                 .FirstOrDefault();
 
             if (!string.IsNullOrEmpty(choiceUnit.Name))
