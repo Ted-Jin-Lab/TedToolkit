@@ -57,20 +57,19 @@ public abstract class CppObject(bool disposed = false) : IDisposable
         Delete();
     }
 
-    [DebuggerStepThrough]
-    protected void SafeRun(Func<NativeFunctionLoader, IntPtr> func)
-    {
-        var loader = NativeFunctionLoader.GetLoader(FileFullPath);
-        var errorPtr = func(loader);
-        if (errorPtr == IntPtr.Zero) return;
-        throw new CppException(GetStringFromIntPtr(errorPtr, loader));
+    /// <summary>
+    /// Get the Method Pointer.
+    /// </summary>
+    protected IntPtr GetFunctionPointer(string name) =>
+        NativeFunctionLoader.GetLoader(FileFullPath).GetFunctionPointer(name);
 
-        static unsafe string GetStringFromIntPtr(IntPtr errorPtr, NativeFunctionLoader loader)
-        {
-            var message = Marshal.PtrToStringAnsi(errorPtr) ?? "Unknown error";
-            ((delegate* unmanaged[Cdecl]<IntPtr, void>)loader.GetFunctionPointer("free_error"))(errorPtr);
-            return message;
-        }
+    [DebuggerStepThrough]
+    protected unsafe void ThrowIfError(IntPtr errorPtr)
+    {
+        if (errorPtr == IntPtr.Zero) return;
+        var message = Marshal.PtrToStringAnsi(errorPtr) ?? "Unknown error";
+        ((delegate* unmanaged[Cdecl]<IntPtr, void>)GetFunctionPointer("free_error"))(errorPtr);
+        throw new CppException(message);
     }
 
     protected virtual void Dispose()

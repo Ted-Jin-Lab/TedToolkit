@@ -18,6 +18,7 @@ public abstract class BaseParameterGenerator
     public abstract bool IsRefOrOut { get; }
     public abstract TypeSyntax PublicType { get; }
     public abstract TypeSyntax InnerType { get; }
+    public abstract TypeSyntax InnerCppType{ get; }
     public abstract ParameterSyntax GenerateParameter();
     public abstract IEnumerable<DelegateDeclarationSyntax> GenerateDelegates();
     public abstract IEnumerable<LocalDeclarationStatementSyntax> GenerateLocalDeclaration();
@@ -25,7 +26,7 @@ public abstract class BaseParameterGenerator
     public abstract ExpressionStatementSyntax GenerateAssignment();
 
     public static IEnumerable<BaseParameterGenerator> GenerateParameters(string methodName, string parameterNames,
-        string[] allClassNames)
+        string[] allClassNames, Dictionary<string, string> parameterTypeReplace)
     {
         var funcPtrRegex = new Regex(
             @"(?<retType>\w[\w\s\*&]*)\s*\(\*(?<name>\w+)\)\s*\((?<args>[^\)]*)\)"
@@ -38,11 +39,11 @@ public abstract class BaseParameterGenerator
                 var name = match.Groups["name"].Value;
                 var args = match.Groups["args"].Value;
                 var retType = match.Groups["retType"].Value;
-                yield return new FunctionPointParameterGenerator(methodName, name, retType, args, allClassNames);
+                yield return new FunctionPointParameterGenerator(methodName, name, retType, args, allClassNames, parameterTypeReplace);
             }
             else
             {
-                yield return new ParameterGenerator(parameterName, allClassNames);
+                yield return new ParameterGenerator(parameterName, allClassNames, parameterTypeReplace);
             }
         }
     }
@@ -74,7 +75,7 @@ public abstract class BaseParameterGenerator
         yield return input.Substring(start).Trim();
     }
 
-    protected static string GetTypeNameFromCpp(string typeName, string[] allClassNames)
+    protected internal static string GetTypeNameFromCpp(string typeName, string[] allClassNames)
     {
         return typeName switch
         {

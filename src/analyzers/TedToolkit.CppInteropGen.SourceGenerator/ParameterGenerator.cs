@@ -1,22 +1,21 @@
-﻿using System.Text;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 using SyntaxExtensions = TedToolkit.RoslynHelper.Extensions.SyntaxExtensions;
 
 namespace TedToolkit.CppInteropGen.SourceGenerator;
 
-using static SyntaxExtensions;
 using static SyntaxFactory;
 
 public sealed class ParameterGenerator : BaseParameterGenerator
 {
     private readonly int _ptrCount;
     private readonly string _rawTypeName;
+    private readonly string _cppTypeName;
     private readonly ParameterType _type;
     public override string Name { get; }
 
-    public ParameterGenerator(string parameterString, string[] allClassNames)
+    public ParameterGenerator(string parameterString, string[] allClassNames,
+        Dictionary<string, string> parameterTypeReplace)
     {
         var cleanedString = parameterString
             .Replace("const", string.Empty)
@@ -29,6 +28,9 @@ public sealed class ParameterGenerator : BaseParameterGenerator
         var typeName = beautifulStrings.First(s => !string.IsNullOrEmpty(s));
         Name = beautifulStrings.Last(s => !string.IsNullOrEmpty(s));
         _rawTypeName = GetTypeNameFromCpp(typeName, allClassNames);
+        _cppTypeName = parameterTypeReplace.TryGetValue(typeName, out var replaceName)
+            ? replaceName
+            : _rawTypeName;
         _type = CheckType();
         return;
 
@@ -85,11 +87,19 @@ public sealed class ParameterGenerator : BaseParameterGenerator
     }
 
     public override TypeSyntax InnerType => IdentifierName(_rawTypeName + new string('*', _ptrCount));
+    public override TypeSyntax InnerCppType => IdentifierName(_cppTypeName + new string('*', _ptrCount));
 
     public override ArgumentSyntax GenerateArgument()
     {
         var name = IsData && _type is not ParameterType.Out ? Name + ".Ptr" : Name;
         if (_type is ParameterType.Out or ParameterType.Ref) name = "__" + name;
+        if (_rawTypeName != _cppTypeName)
+        {
+            return Argument(PrefixUnaryExpression(SyntaxKind.PointerIndirectionExpression,
+                CastExpression(PointerType(IdentifierName(_cppTypeName)),
+                    PrefixUnaryExpression(SyntaxKind.AddressOfExpression, IdentifierName(name)))));
+        }
+
         return Argument(IdentifierName(name));
     }
 
