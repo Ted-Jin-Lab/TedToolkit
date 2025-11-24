@@ -9,7 +9,7 @@ CSHARP_WRAPPER(FunctionPointer2_Create_0(FunctionPointer2*& handle), {
                handle = new FunctionPointer2();
                })
 
-CSHARP_WRAPPER(FunctionPointer2_Test(const FunctionPointer2& handle, const int value, const AbsorbedDose what, const FunctionPointer2 other, int(*method)(int a, int b)), {
+CSHARP_WRAPPER(FunctionPointer2_Test(const FunctionPointer2& handle, const int value, AbsorbedDose & what, const FunctionPointer2 other, int(*method)(int a, int b)), {
                method(1, 2);
                })
 
