@@ -96,7 +96,7 @@ public sealed class ParameterGenerator : BaseParameterGenerator
         if (_rawTypeName != _cppTypeName)
         {
             return Argument(PrefixUnaryExpression(SyntaxKind.PointerIndirectionExpression,
-                CastExpression(PointerType(IdentifierName(_cppTypeName)),
+                CastExpression(PointerType(InnerCppType),
                     PrefixUnaryExpression(SyntaxKind.AddressOfExpression, IdentifierName(name)))));
         }
 
