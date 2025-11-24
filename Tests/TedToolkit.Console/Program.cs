@@ -9,6 +9,7 @@ using TedToolkit.Assertions.Execution;
 using TedToolkit.Assertions.FluentValidation;
 using TedToolkit.Console;
 using TedToolkit.Console.Wrapper;
+using TedToolkit.CppInteropGen;
 using TedToolkit.QuantExtensions;
 using TedToolkit.ValidResults;
 using UnitsNet;
@@ -31,6 +32,8 @@ var length = (TedToolkit.Quantities.Length)6.0;
 Console.WriteLine(length);
 unsafe
 {
+    var hello = 0;
+    double x = *(double*)&hello;
     var ptr = (double*)&length;
     Console.WriteLine(*ptr);
 

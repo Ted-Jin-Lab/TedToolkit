@@ -9,13 +9,13 @@ namespace TedToolkit.CppInteropGen.SourceGenerator;
 using static SyntaxExtensions;
 using static SyntaxFactory;
 
-public class FunctionPointParameterGenerator(string methodName, string name, string returnType, string args, string[] allClassNames)
+public class FunctionPointParameterGenerator(string methodName, string name, string returnType, string args, string[] allClassNames, Dictionary<string, string> parameterTypeReplace)
     : BaseParameterGenerator
 {
     private readonly IReadOnlyList<BaseParameterGenerator> _parameters =
-        GenerateParameters(methodName + "_" + name, args, allClassNames).ToArray();
+        GenerateParameters(methodName + "_" + name, args, allClassNames, parameterTypeReplace).ToArray();
 
-    private readonly ParameterGenerator _return = new(returnType, allClassNames);
+    private readonly ParameterGenerator _return = new(returnType, allClassNames, parameterTypeReplace);
     private readonly string _delegateName = methodName + "_" + name + "_Delegate";
     public override string Name { get; } = name;
     public override bool HasHandle => false;
@@ -24,6 +24,7 @@ public class FunctionPointParameterGenerator(string methodName, string name, str
     public override TypeSyntax PublicType => IdentifierName(_delegateName);
 
     public override TypeSyntax InnerType => IdentifierName(_delegateName);
+    public override TypeSyntax InnerCppType => IdentifierName(_delegateName);
 
     public override ParameterSyntax GenerateParameter()
     {
@@ -52,7 +53,7 @@ public class FunctionPointParameterGenerator(string methodName, string name, str
             .WithParameterList(ParameterList(
             [
                 .._parameters.Select(i =>
-                    Parameter(Identifier(i.Name)).WithType(i.InnerType)),
+                    Parameter(Identifier(i.Name)).WithType(i.InnerCppType)),
             ]));
     }
 
