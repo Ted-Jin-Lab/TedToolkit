@@ -42,9 +42,10 @@ public readonly record struct Conversion(ERational Multiplier, ERational Offset)
     private static ERational Pow(ERational rational, int exponent)
     {
         if (exponent == 0) return ERational.One;
-        for (var i = 0; i < Math.Abs(exponent); i++)
+        var one = rational;
+        for (var i = 1; i < Math.Abs(exponent); i++)
         {
-            rational *= rational;
+            rational *= one;
         }
 
         if (exponent < 0) rational = ERational.One / rational;

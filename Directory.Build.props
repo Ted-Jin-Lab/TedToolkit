@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Version>2025.11.21.0</Version>
+    <Version>2025.11.24.0</Version>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
@@ -22,7 +22,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="$(NeedTestsPackage)">
     <IsPackable>false</IsPackable>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup Condition="$(NeedTestsPackage)">
     <PackageReference Include="TUnit" />
@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
   <PropertyGroup Condition="$(NeedAlmostAllFrameWorks)">
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net472;net48;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0;net472;net48;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup Condition="$(NeedAlmostAllFrameWorks) and !$(MSBuildProjectName.EndsWith('Sources'))">
     <PackageReference Include="PolySharp">

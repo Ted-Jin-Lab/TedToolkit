@@ -13,20 +13,20 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="PeterO.Numbers" Version="1.8.2" />
     <PackageVersion Include="PolySharp" Version="1.15.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageVersion Include="Nuke.Common" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+    <PackageVersion Include="Nuke.Common" Version="10.0.0" />
     <PackageVersion Include="Octokit" Version="14.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageVersion Include="System.CodeDom" Version="8.0.0" />
-    <PackageVersion Include="System.Drawing.Common" Version="9.0.9" />
-    <PackageVersion Include="TUnit" Version="1.0.78" />
+    <PackageVersion Include="System.Drawing.Common" Version="10.0.0" />
+    <PackageVersion Include="TUnit" Version="1.2.11" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.2" />
-    <PackageVersion Include="Seq.Extensions.Logging" Version="8.0.0" />
+    <PackageVersion Include="Seq.Extensions.Logging" Version="9.0.0" />
     <PackageVersion Include="UnitsNet" Version="5.75.0" />
     <PackageVersion Include="WPF-UI" Version="4.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageVersion Include="Grasshopper" Version="7.0.20314.3001" Condition="'$(TargetFramework)' == 'net48'" />
     <PackageVersion Include="Grasshopper" Version="8.0.23304.9001" Condition="'$(TargetFramework)' != 'net48'" />

@@ -71,7 +71,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetRun(s => s
-                .SetProjectFile(Solution.src.Quantities.TedToolkit_Quantities_Generator)
+                .SetProjectFile(Solution.Directory / "src" / "applications" / "TedToolkit.Quantities.Generator" / "TedToolkit.Quantities.Generator.csproj")
                 .SetConfiguration(Configuration.Release));
         });
 
@@ -96,11 +96,10 @@ class Build : NukeBuild
             static void TestProject(Project project)
             {
                 DotNetTasks.DotNetTest(s => s
-                    .SetProjectFile(project)
+                    .AddProcessAdditionalArguments($"--project {project.Path}")
                     .SetConfiguration(Configuration.Release)
                     .EnableNoRestore()
-                    .EnableNoBuild()
-                    .SetLoggers("trx"));
+                    .EnableNoBuild());
             }
         });
 
