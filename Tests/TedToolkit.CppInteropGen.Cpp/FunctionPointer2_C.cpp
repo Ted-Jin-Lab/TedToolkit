@@ -5,7 +5,7 @@
 typedef int FunctionPointer2;
 typedef int AbsorbedDose;
 
-CSHARP_WRAPPER(FunctionPointer2_Create_0(FunctionPointer2*& handle), {
+CSHARP_WRAPPER(FunctionPointer2_Create_0(const AbsorbedDose x, const AbsorbedDose y, const AbsorbedDose z,FunctionPointer2*& handle), {
                handle = new FunctionPointer2();
                })
 

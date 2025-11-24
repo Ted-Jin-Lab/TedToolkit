@@ -214,7 +214,8 @@ public class CppClassGenerator
                         .._parameters.Take(_parameters.Count - 1).Select(p => p.GenerateParameter())
                     ]))
                     .WithBody(Block(
-                        GetFunctionPointer(_parameters.Select(p => FunctionPointerParameter(p.InnerType))),
+                        GetFunctionPointer(_parameters.Select((p, i) =>
+                            FunctionPointerParameter(i == _parameters.Count-1 ? p.InnerType : p.InnerCppType))),
                         FixedStatement(VariableDeclaration(PointerType(PointerType(IdentifierName("Data"))))
                                 .WithVariables([
                                     VariableDeclarator(Identifier("ptr"))
@@ -240,7 +241,8 @@ public class CppClassGenerator
                     .WithModifiers(TokenList(Token(SyntaxKind.ProtectedKeyword), Token(SyntaxKind.OverrideKeyword)))
                     .WithAttributeLists([GeneratedCodeAttribute(typeof(CMethodGenerator))])
                     .WithBody(Block(
-                        GetFunctionPointer(_parameters.Select(p => FunctionPointerParameter(p.InnerType))),
+                        GetFunctionPointer(_parameters.Select((p, i) =>
+                            FunctionPointerParameter(i == 0 ? p.InnerType : p.InnerCppType))),
                         ExpressionStatement(InvocationExpression(IdentifierName("ThrowIfError"))
                             .WithArgumentList(ArgumentList([
                                 Argument(InvocationExpression(IdentifierName("__method"))
