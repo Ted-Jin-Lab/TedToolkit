@@ -35,6 +35,9 @@ public readonly record struct Unit(
     }
 
     [JsonIgnore] public Conversion Conversion => new(EDecimal.FromString(Multiplier), EDecimal.FromString(Offset));
+
+    private const double Weight = 1e4;
+    
     [JsonIgnore]
     public double DistanceToDefault
     {
@@ -45,7 +48,7 @@ public readonly record struct Unit(
             {
                 if (double.TryParse(Multiplier, out var value))
                 {
-                    result += Math.Abs(value - 1);
+                    result += Math.Abs(value - 1) * Weight;
                 }
                 else
                 {
@@ -57,7 +60,7 @@ public readonly record struct Unit(
             {
                 if (double.TryParse(Offset, out var value))
                 {
-                    result += Math.Abs(value);
+                    result += Math.Abs(value) * Weight;
                 }
                 else
                 {
