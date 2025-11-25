@@ -26,6 +26,7 @@ public readonly struct UnitSystem(Dictionary<string, string> unitDictionary, Dat
 
         return quantityUnits
             .OrderBy(i => i.DistanceToDefault)
+            .ThenByDescending(i => i.ApplicableSystem)
             .First();
     }
 }

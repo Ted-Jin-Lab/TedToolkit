@@ -20,6 +20,7 @@ public sealed class QuantitiesAttributeGenerator(DataCollection data)
         var unit = q.Units
             .Select(u => data.Units[u])
             .OrderBy(u => u.DistanceToDefault)
+            .ThenByDescending(u => u.ApplicableSystem)
             .First().GetUnitName(data.Units.Values);
         return new QuantityUnit(q, unit);
     });

@@ -1,5 +1,6 @@
 ﻿namespace TedToolkit.Quantities;
 
+[QuantityDisplayUnit<AbsorbedDoseUnit>(AbsorbedDoseUnit.Centigray)]
 [QuantityImplicitFromValueType]
 [QuantityImplicitToValueType]
 [QuantityOperator<AbsorbedDose, AbsorbedDose, double>(Operator.Divide)]

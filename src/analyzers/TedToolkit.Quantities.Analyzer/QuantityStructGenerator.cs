@@ -329,7 +329,7 @@ internal class QuantityStructGenerator(
                                 ReturnStatement(BinaryExpression(SyntaxKind.AddExpression, BinaryExpression(
                                         SyntaxKind.AddExpression, InvocationExpression(MemberAccessExpression(
                                                 SyntaxKind.SimpleMemberAccessExpression,
-                                                IdentifierName("Value"),
+                                                IdentifierName(UnitString is {} argText ? $"As({argText})" :  "Value"),
                                                 IdentifierName("ToString")))
                                             .WithArgumentList(ArgumentList(
                                             [
@@ -950,6 +950,23 @@ internal class QuantityStructGenerator(
         }
     }
 
+    private string? UnitString
+    {
+        get
+        {
+            if (quantitySymbol?.GetAttributes().FirstOrDefault(a =>
+                    a.AttributeClass is { IsGenericType: true } attributeClass
+                    && attributeClass.ConstructUnboundGenericType().GetName().FullName is
+                        "global::TedToolkit.Quantities.QuantityDisplayUnitAttribute<>") is not
+                { } displayUnitAttribute) return null;
+            
+            var syntax = displayUnitAttribute.ApplicationSyntaxReference?.GetSyntax()
+                as AttributeSyntax;
+            var argSyntax = syntax?.ArgumentList?.Arguments[0].Expression;
+            return argSyntax?.ToString();
+        }
+    }
+
     private ExpressionSyntax GetSystemUnitName()
     {
         var allUnits = quantity.Units
@@ -963,32 +980,25 @@ internal class QuantityStructGenerator(
                 Literal(quantity.Name));
         }
 
-        if (quantitySymbol?.GetAttributes().FirstOrDefault(a =>
-                a.AttributeClass is { IsGenericType: true } attributeClass
-                && attributeClass.ConstructUnboundGenericType().GetName().FullName is
-                    "global::TedToolkit.Quantities.QuantityDisplayUnitAttribute<>") is { } displayUnitAttribute)
+        if (UnitString is { } argText)
         {
-            var syntax = displayUnitAttribute.ApplicationSyntaxReference?.GetSyntax()
-                as AttributeSyntax;
-            var argSyntax = syntax?.ArgumentList?.Arguments[0].Expression;
-            var argText = argSyntax?.ToString();
-            if (argText is not null)
-                return InvocationExpression(
-                        MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName(argText),
-                            IdentifierName("ToString")))
-                    .WithArgumentList(ArgumentList(
-                    [
-                        Argument(IdentifierName("index")),
-                        Argument(IdentifierName("formatProvider"))
-                    ]));
+            return InvocationExpression(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName(argText),
+                        IdentifierName("ToString")))
+                .WithArgumentList(ArgumentList(
+                [
+                    Argument(IdentifierName("index")),
+                    Argument(IdentifierName("formatProvider"))
+                ]));
         }
 
         if (quantity.IsNoDimensions)
         {
             var memberName = allUnits
                 .OrderBy(u => u.DistanceToDefault)
+                .ThenByDescending(u => u.ApplicableSystem)
                 .First().GetUnitName(data.Units.Values);
             return FromMember(quantity.UnitName, memberName);
         }
@@ -1010,6 +1020,7 @@ internal class QuantityStructGenerator(
                     return true;
                 })
                 .OrderBy(u => u.DistanceToDefault)
+                .ThenByDescending(u => u.ApplicableSystem)
                 .FirstOrDefault();
 
             if (!string.IsNullOrEmpty(choiceUnit.Name))

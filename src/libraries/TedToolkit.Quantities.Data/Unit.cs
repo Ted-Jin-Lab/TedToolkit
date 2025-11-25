@@ -35,6 +35,8 @@ public readonly record struct Unit(
     }
 
     [JsonIgnore] public Conversion Conversion => new(EDecimal.FromString(Multiplier), EDecimal.FromString(Offset));
+
+    
     [JsonIgnore]
     public double DistanceToDefault
     {
@@ -65,7 +67,7 @@ public readonly record struct Unit(
                 }
             }
 
-            return result - ApplicableSystem;
+            return result;
         }
     }
 }
