@@ -74,6 +74,7 @@
   </Folder>
   <Folder Name="/src/Scopes/">
     <Project Path="src/libraries/TedToolkit.Scopes/TedToolkit.Scopes.csproj" />
+    <Project Path="tests/TedToolkit.Scopes.Tests/TedToolkit.Scopes.Tests.csproj" />
   </Folder>
   <Folder Name="/src/ValidResults/">
     <Project Path="src/analyzers/TedToolkit.ValidResults.SourceGenerator/TedToolkit.ValidResults.SourceGenerator.csproj" />
