@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\libraries\TedToolkit.Scopes\TedToolkit.Scopes.csproj" />
+  </ItemGroup>
+</Project>
