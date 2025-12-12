@@ -50,7 +50,7 @@ public abstract class BaseName<T> : IName<T> where T : ISymbol
             .ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
     }
 
-    private protected static string ToSummary(string name)
+    private static string ToSummary(string name)
     {
         return name.Replace('<', '{').Replace('>', '}');
     }

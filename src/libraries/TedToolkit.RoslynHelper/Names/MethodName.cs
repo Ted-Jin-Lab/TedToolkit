@@ -17,7 +17,7 @@ public class MethodName : TypeParametersName<IMethodSymbol>
     }
 
     /// <summary>
-    ///     The singature of the method
+    ///     The signature of the method
     /// </summary>
     public MethodSignature Signature { get; }
 
@@ -47,14 +47,26 @@ public class MethodName : TypeParametersName<IMethodSymbol>
             .Append(base.GetSummaryName());
         builder.Append('(').Append(string.Join(",", Parameters.Select(p =>
         {
-            var type = ToSummary(p.Type.FullName);
-            return p.Symbol.RefKind switch
+            var stringBuilder = new StringBuilder();
+            if (p.Symbol.ScopedKind is not ScopedKind.None)
             {
-                RefKind.Ref => "ref " + type,
-                RefKind.In => "in " + type,
-                RefKind.Out => "out " + type,
-                _ => type
-            };
+                stringBuilder.Append("scoped ");
+            }
+
+            switch (p.Symbol.RefKind)
+            {
+                case RefKind.Ref:
+                    stringBuilder.Append("ref ");
+                    break;
+                case RefKind.Out:
+                    stringBuilder.Append("in ");
+                    break;
+                case RefKind.In:
+                    stringBuilder.Append("out ");
+                    break;
+            }
+
+            return stringBuilder.Append(p.Type.SummaryName).ToString();
         }))).Append(')');
         return builder.ToString();
     }
