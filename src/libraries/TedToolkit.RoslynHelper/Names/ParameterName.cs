@@ -39,7 +39,7 @@ public class ParameterName : BaseName<IParameterSymbol>
         {
             var param = Parameter(Identifier(Name)).WithType(IdentifierName(Type.FullName));
 
-            if (Symbol.ScopedKind is ScopedKind.ScopedValue)
+            if (Symbol.ScopedKind is not ScopedKind.None)
             {
                 param = param.AddModifiers(Token(SyntaxKind.ScopedKeyword));
             }
