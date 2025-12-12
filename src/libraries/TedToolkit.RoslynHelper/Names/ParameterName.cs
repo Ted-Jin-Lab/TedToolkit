@@ -38,16 +38,22 @@ public class ParameterName : BaseName<IParameterSymbol>
         get
         {
             var param = Parameter(Identifier(Name)).WithType(IdentifierName(Type.FullName));
+
+            if (Symbol.ScopedKind is ScopedKind.ScopedValue)
+            {
+                param = param.AddModifiers(Token(SyntaxKind.ScopedKeyword));
+            }
+            
             switch (Symbol.RefKind)
             {
                 case RefKind.Ref:
-                    param = param.WithModifiers(TokenList(Token(SyntaxKind.RefKeyword)));
+                    param = param.AddModifiers(Token(SyntaxKind.RefKeyword));
                     break;
                 case RefKind.Out:
-                    param = param.WithModifiers(TokenList(Token(SyntaxKind.OutKeyword)));
+                    param = param.AddModifiers(Token(SyntaxKind.OutKeyword));
                     break;
                 case RefKind.In:
-                    param = param.WithModifiers(TokenList(Token(SyntaxKind.InKeyword)));
+                    param = param.AddModifiers(Token(SyntaxKind.InKeyword));
                     break;
                 case RefKind.None:
                 case RefKind.RefReadOnlyParameter:
