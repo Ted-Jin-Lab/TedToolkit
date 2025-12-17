@@ -16,7 +16,8 @@ public abstract class BaseName<T> : IName<T> where T : ISymbol
         Symbol = symbol;
         _lazyFullName = new Lazy<string>(() => symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
         _lazyFullNameNull = new Lazy<string>(() => symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
-            .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier)));
+            .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier |
+                                      SymbolDisplayMiscellaneousOptions.ExpandNullable)));
         _lazyFullNameNoGlobal = new Lazy<string>(() => symbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
             .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)));
         _lazyMiniName = new Lazy<string>(() => symbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat));
