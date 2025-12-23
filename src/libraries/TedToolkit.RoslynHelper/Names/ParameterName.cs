@@ -88,9 +88,11 @@ public class ParameterName : BaseName<IParameterSymbol>
         var type = parameter.Type;
 
         if (value == null)
-            return type.IsReferenceType
-                ? LiteralExpression(SyntaxKind.NullLiteralExpression)
-                : LiteralExpression(SyntaxKind.DefaultLiteralExpression);
+        {
+            return type.IsValueType
+                ? LiteralExpression(SyntaxKind.DefaultLiteralExpression)
+                : LiteralExpression(SyntaxKind.NullLiteralExpression);
+        }
 
         switch (type.SpecialType)
         {
