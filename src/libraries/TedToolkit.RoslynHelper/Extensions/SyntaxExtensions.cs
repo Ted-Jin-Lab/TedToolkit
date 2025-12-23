@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TedToolkit.RoslynHelper.Names;
@@ -133,7 +134,25 @@ public static class SyntaxExtensions
     /// <returns></returns>
     public static AttributeSyntax NonUserCodeAttribute()
     {
-        return Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode"));
+        return Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCodeAttribute"));
+    }
+
+    /// <summary>
+    /// Method Impl Attribute
+    /// </summary>
+    /// <param name="methodImplOptions"></param>
+    /// <returns></returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static AttributeSyntax MethodImplAttribute(MethodImplOptions methodImplOptions)
+    {
+        return Attribute(IdentifierName("global::System.Runtime.CompilerServices.MethodImplAttribute"))
+            .WithArgumentList(AttributeArgumentList(
+            [
+                AttributeArgument(MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    IdentifierName("global::System.Runtime.CompilerServices.MethodImplOptions"),
+                    IdentifierName("AggressiveInlining")))
+            ]));
     }
 
     /// <summary>
