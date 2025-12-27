@@ -7,10 +7,10 @@
     <LangVersion>preview</LangVersion>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/ArchiDog1998/TedToolkit</RepositoryUrl>
-    <IsTestProject>$(MSBuildProjectDirectory.Contains('\tests\'))</IsTestProject>
-    <IsRoslynProject>$(MSBuildProjectDirectory.Contains('\analyzers\'))</IsRoslynProject>
-    <IsApplicationProject>$(MSBuildProjectDirectory.Contains('\applications\'))</IsApplicationProject>
-    <IsLibraryProject>$(MSBuildProjectDirectory.Contains('\libraries\'))</IsLibraryProject>
+    <IsTestProject>$(MSBuildProjectDirectory.Contains('tests'))</IsTestProject>
+    <IsRoslynProject>$(MSBuildProjectDirectory.Contains('analyzers'))</IsRoslynProject>
+    <IsApplicationProject>$(MSBuildProjectDirectory.Contains('applications'))</IsApplicationProject>
+    <IsLibraryProject>$(MSBuildProjectDirectory.Contains('libraries'))</IsLibraryProject>
     <NeedPackage>False</NeedPackage>
     <NeedPackage Condition="!$(IsTestProject) and !$(IsApplicationProject) and !$(IsRoslynProject)  and '$(Configuration)' == 'Release'">True</NeedPackage>
     <NeedRoslyn>False</NeedRoslyn>
